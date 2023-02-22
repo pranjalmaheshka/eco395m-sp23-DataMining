@@ -246,7 +246,7 @@ ggplot(cv_grid) +
 ## Children and Hotel Reservations
 ### Model Building
 
-```{r setup, include=FALSE}
+```{r, include=FALSE}
 
 hoteldev = read.csv("C:\\Users\\ashac\\Downloads\\Data_mining\\hotels_dev.csv", as.is = T, fill = T, header = T)
 
