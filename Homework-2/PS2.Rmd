@@ -70,7 +70,7 @@ library(ggplot2)
 library(dplyr)
 ```
 
-## German Credit Defaults 
+## Question 2: German Credit Defaults 
 The data here deals with loan defaults from a German bank. The "Default" variable is binary with 1 indicating that loan fell into default during some point. Other variables are characteristics associated with the loan and the borrower, the primary of which is under consideration is the credit history variable. Credit history can be good, poor, or terrible. 
 
 
