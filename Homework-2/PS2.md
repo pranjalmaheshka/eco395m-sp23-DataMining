@@ -151,32 +151,190 @@ as the one with lowest cross-validated errors. The best linear model has
 43 coefficients and the following table presents the estimated
 coefficients for this model.
 
-|:———————————-:|:———————————-:|  
-| (Intercept) | lotSize | | 1.339703e+05 | -2.434482e+03 | | bedrooms |
-fuelelectric | | 5.579980e+03 | -2.523318e+04 | | fueloil |
-newConstructionNo | | 3.914479e+04 | 3.214339e+04 | | centralAirNo |
-waterfrontNo | | -1.349244e+04 | -9.738634e+04 | | rooms | fireplaces |
-| 2.470676e+03 | 1.892046e+04 | | livingArea | pctCollege | |
-5.868298e+01 | -4.862284e+02 | | age | bathrooms | | -2.081983e+03 |
-1.363895e+04 | | heatinghot water/steam | heatingelectric | |
-2.707111e+04 | 6.345186e+03 | | age2 | I(age^2) | | -3.882054e+04 |
--2.508183e+00 | | lotSize:bedrooms | lotSize:fuelelectric | |
-4.384200e+03 | 6.889665e+03 | | lotSize:fueloil | bedrooms:fuelelectric
-| | -2.395283e+03 | 6.277175e+03 | | bedrooms:fueloil | rooms:livingArea
-| | -1.274805e+04 | 1.764660e+00 | | bedrooms:rooms |
-fireplaces:landValue | | -1.181118e+03 | -2.466258e-01 | |
-livingArea:fireplaces | fireplaces:pctCollege | | 1.529200e+01 |
--5.747540e+02 | | livingArea:landValue | livingArea:heatinghot
-water/steam | | -2.689740e-04 | -1.917907e+01 | |
-livingArea:heatingelectric | landValue:pctCollege | | -1.232713e+01 |
-1.334857e-02 | | pctCollege:age | age:sewerpublic/commercial | |
-1.427984e+01 | 3.632516e+02 | | age:sewernone | landValue:bathrooms | |
-3.994448e+03 | 2.855780e-01 | | sewerpublic/commercial:bathrooms |
-sewernone:bathrooms | | -4.912088e+03 | -1.701781e+04 | | age:age2 |
-lotSize:landValue | | 1.546965e+03 | -1.263039e-01 |
-|centralAirNo:heatinghot water/steam | centralAirNo:heatingelectric | |
-1.796120e+03 | 1.767431e+04 | | newConstructionNo:landValue | | |
-3.866956e-01 | |
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">(Intercept)</td>
+<td style="text-align: center;">lotSize</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1.339703e+05</td>
+<td style="text-align: center;">-2.434482e+03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">bedrooms</td>
+<td style="text-align: center;">fuelelectric</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5.579980e+03</td>
+<td style="text-align: center;">-2.523318e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">fueloil</td>
+<td style="text-align: center;">newConstructionNo</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3.914479e+04</td>
+<td style="text-align: center;">3.214339e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">centralAirNo</td>
+<td style="text-align: center;">waterfrontNo</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-1.349244e+04</td>
+<td style="text-align: center;">-9.738634e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">rooms</td>
+<td style="text-align: center;">fireplaces</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2.470676e+03</td>
+<td style="text-align: center;">1.892046e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">livingArea</td>
+<td style="text-align: center;">pctCollege</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5.868298e+01</td>
+<td style="text-align: center;">-4.862284e+02</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">age</td>
+<td style="text-align: center;">bathrooms</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-2.081983e+03</td>
+<td style="text-align: center;">1.363895e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">heatinghot water/steam</td>
+<td style="text-align: center;">heatingelectric</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2.707111e+04</td>
+<td style="text-align: center;">6.345186e+03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">age2</td>
+<td style="text-align: center;">I(age^2)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-3.882054e+04</td>
+<td style="text-align: center;">-2.508183e+00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">lotSize:bedrooms</td>
+<td style="text-align: center;">lotSize:fuelelectric</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4.384200e+03</td>
+<td style="text-align: center;">6.889665e+03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">lotSize:fueloil</td>
+<td style="text-align: center;">bedrooms:fuelelectric</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-2.395283e+03</td>
+<td style="text-align: center;">6.277175e+03</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">bedrooms:fueloil</td>
+<td style="text-align: center;">rooms:livingArea</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-1.274805e+04</td>
+<td style="text-align: center;">1.764660e+00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">bedrooms:rooms</td>
+<td style="text-align: center;">fireplaces:landValue</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-1.181118e+03</td>
+<td style="text-align: center;">-2.466258e-01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">livingArea:fireplaces</td>
+<td style="text-align: center;">fireplaces:pctCollege</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1.529200e+01</td>
+<td style="text-align: center;">-5.747540e+02</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">livingArea:landValue</td>
+<td style="text-align: center;">livingArea:heatinghot water/steam</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-2.689740e-04</td>
+<td style="text-align: center;">-1.917907e+01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">livingArea:heatingelectric</td>
+<td style="text-align: center;">landValue:pctCollege</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-1.232713e+01</td>
+<td style="text-align: center;">1.334857e-02</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">pctCollege:age</td>
+<td style="text-align: center;">age:sewerpublic/commercial</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1.427984e+01</td>
+<td style="text-align: center;">3.632516e+02</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">age:sewernone</td>
+<td style="text-align: center;">landValue:bathrooms</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3.994448e+03</td>
+<td style="text-align: center;">2.855780e-01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">sewerpublic/commercial:bathrooms</td>
+<td style="text-align: center;">sewernone:bathrooms</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-4.912088e+03</td>
+<td style="text-align: center;">-1.701781e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">age:age2</td>
+<td style="text-align: center;">lotSize:landValue</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1.546965e+03</td>
+<td style="text-align: center;">-1.263039e-01</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">centralAirNo:heatinghot water/steam</td>
+<td style="text-align: center;">centralAirNo:heatingelectric</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1.796120e+03</td>
+<td style="text-align: center;">1.767431e+04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">newConstructionNo:landValue</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">3.866956e-01</td>
+<td style="text-align: center;"></td>
+</tr>
+</tbody>
+</table>
 
 #### K-nearest neighbors regression
 
