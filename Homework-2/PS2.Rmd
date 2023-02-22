@@ -3,9 +3,8 @@ title: "DataMining_PS2"
 author: "Pranjal Maheshka, Asha Christensen, Marco Navarro"
 date: "2023-01-30"
 output: md_document
----
-
 <style>body {text-align: justify}</style>
+---
 
 # DataMining_PS2
 
