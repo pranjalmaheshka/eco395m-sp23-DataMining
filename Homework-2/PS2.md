@@ -19,9 +19,11 @@ prediction model of house prices:
 
 -   Linear model: This approach try to estimate coefficients for the
     following linear model
-    *p**r**i**c**e* = *β*<sub>0</sub> + *β*<sub>1</sub>*x*<sub>1</sub> + .... + *β*<sub>1</sub>*x*<sub>*p*</sub> + *u*
-    where (*x*<sub>1</sub>,...,*x*<sub>*p*</sub>) are houses features
-    plus transformations and interactions of this features.
+
+*p**r**i**c**e* = *β*<sub>0</sub> + *β*<sub>1</sub>*x*<sub>1</sub> + .... + *β*<sub>1</sub>*x*<sub>*p*</sub> + *u*
+
+where (*x*<sub>1</sub>,...,*x*<sub>*p*</sub>) are houses features plus
+transformations and interactions of this features.
 
 -   K-nearest neighbors regression: In this method, given a value for K
     and a set of values for the features
@@ -45,12 +47,12 @@ evaluated by checking the root mean square error (RMSE).
 
 Among the K-nearest neighbors regressions, the k-value associated with
 the lowest cross-validated error (mean of the Root Mean Squared Error)
-is k=10. The cross-validated error for k=10 is $61,968 with a standard
-error of 1,667 dollars.
+is k=10. The cross-validated error for k=10 is $61,010 with a standard
+error of 1,384 dollars.
 
 That last result compares poorly against the cross-validated error of
 the best linear model. In the case of this linear model, the cross
-validated error is $56,669 with a standard error of 1,451 dollars.
+validated error is $57,068 with a standard error of 1,903 dollars.
 
 In conclusion, the results have shown that the linear model has the best
 performance among these two methods according to the k-fold cross
@@ -149,48 +151,29 @@ as the one with lowest cross-validated errors. The best linear model has
 43 coefficients and the following table presents the estimated
 coefficients for this model.
 
-                       (Intercept) | lotSize |  
-                      1.339703e+05 | -2.434482e+03 |  
-                          bedrooms | fuelelectric |  
-                      5.579980e+03 | -2.523318e+04 |  
-                           fueloil | newConstructionNo |  
-                      3.914479e+04 | 3.214339e+04 |  
-                      centralAirNo | waterfrontNo |  
-                     -1.349244e+04 | -9.738634e+04 |  
-                             rooms | fireplaces |  
-                      2.470676e+03 | 1.892046e+04 |  
-                        livingArea | pctCollege |  
-                      5.868298e+01 | -4.862284e+02 |  
-                               age | bathrooms |  
-                     -2.081983e+03 | 1.363895e+04 |  
-            heatinghot water/steam | heatingelectric |  
-                      2.707111e+04 | 6.345186e+03 |  
-                              age2 | I(age^2) |  
-                     -3.882054e+04 | -2.508183e+00 |  
-                  lotSize:bedrooms | lotSize:fuelelectric |  
-                      4.384200e+03 | 6.889665e+03 |  
-                   lotSize:fueloil | bedrooms:fuelelectric |  
-                     -2.395283e+03 | 6.277175e+03 |  
-                  bedrooms:fueloil | rooms:livingArea |  
-                     -1.274805e+04 | 1.764660e+00 |  
-                    bedrooms:rooms | fireplaces:landValue |  
-                     -1.181118e+03 | -2.466258e-01 |  
-             livingArea:fireplaces | fireplaces:pctCollege |  
-                      1.529200e+01 | -5.747540e+02 |  
-              livingArea:landValue | livingArea:heatinghot water/steam
-|  
-                     -2.689740e-04 | -1.917907e+01 |  
-        livingArea:heatingelectric | landValue:pctCollege |  
-                     -1.232713e+01 | 1.334857e-02 |  
-                    pctCollege:age | age:sewerpublic/commercial |  
-                      1.427984e+01 | 3.632516e+02 |  
-                     age:sewernone | landValue:bathrooms |  
-                      3.994448e+03 | 2.855780e-01 |  
-  sewerpublic/commercial:bathrooms | sewernone:bathrooms |  
-                     -4.912088e+03 | -1.701781e+04 |  
-                         age:age2 | lotSize:landValue |  
-                      1.546965e+03 | -1.263039e-01 |
-
+|:———————————-:|:———————————-:|  
+| (Intercept) | lotSize | | 1.339703e+05 | -2.434482e+03 | | bedrooms |
+fuelelectric | | 5.579980e+03 | -2.523318e+04 | | fueloil |
+newConstructionNo | | 3.914479e+04 | 3.214339e+04 | | centralAirNo |
+waterfrontNo | | -1.349244e+04 | -9.738634e+04 | | rooms | fireplaces |
+| 2.470676e+03 | 1.892046e+04 | | livingArea | pctCollege | |
+5.868298e+01 | -4.862284e+02 | | age | bathrooms | | -2.081983e+03 |
+1.363895e+04 | | heatinghot water/steam | heatingelectric | |
+2.707111e+04 | 6.345186e+03 | | age2 | I(age^2) | | -3.882054e+04 |
+-2.508183e+00 | | lotSize:bedrooms | lotSize:fuelelectric | |
+4.384200e+03 | 6.889665e+03 | | lotSize:fueloil | bedrooms:fuelelectric
+| | -2.395283e+03 | 6.277175e+03 | | bedrooms:fueloil | rooms:livingArea
+| | -1.274805e+04 | 1.764660e+00 | | bedrooms:rooms |
+fireplaces:landValue | | -1.181118e+03 | -2.466258e-01 | |
+livingArea:fireplaces | fireplaces:pctCollege | | 1.529200e+01 |
+-5.747540e+02 | | livingArea:landValue | livingArea:heatinghot
+water/steam | | -2.689740e-04 | -1.917907e+01 | |
+livingArea:heatingelectric | landValue:pctCollege | | -1.232713e+01 |
+1.334857e-02 | | pctCollege:age | age:sewerpublic/commercial | |
+1.427984e+01 | 3.632516e+02 | | age:sewernone | landValue:bathrooms | |
+3.994448e+03 | 2.855780e-01 | | sewerpublic/commercial:bathrooms |
+sewernone:bathrooms | | -4.912088e+03 | -1.701781e+04 | | age:age2 |
+lotSize:landValue | | 1.546965e+03 | -1.263039e-01 |
 |centralAirNo:heatinghot water/steam | centralAirNo:heatingelectric | |
 1.796120e+03 | 1.767431e+04 | | newConstructionNo:landValue | | |
 3.866956e-01 | |
