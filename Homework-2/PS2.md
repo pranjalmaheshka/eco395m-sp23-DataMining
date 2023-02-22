@@ -1,3 +1,5 @@
+<style>body {text-align: justify}</style>
+
 # DataMining\_PS2
 
 ## Pranjal Maheshka, Asha Christensen, Marco Navarro
