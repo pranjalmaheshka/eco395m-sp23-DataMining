@@ -13,7 +13,7 @@ output: md_document
 
 ## Question 1: Saratoga house prices
 
-```{r setup, include=FALSE}
+```{r setup1, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(ggplot2)
@@ -65,7 +65,114 @@ In conclusion, the results have shown that the linear model has the best perform
 The accuracy of this two methods can be reevaluated after an expansion of the number of observations or number of explanatory variables.
 
 
-## Appendix
+
+
+## Question 3: Children and Hotel Reservations
+### Model Building
+
+```{r, include=FALSE}
+
+hoteldev = read.csv("C:\\Users\\ashac\\Downloads\\Data_mining\\hotels_dev.csv", as.is = T, fill = T, header = T)
+
+hotelval = read.csv("C:\\Users\\ashac\\Downloads\\Data_mining\\hotels_val.csv", as.is = T, fill = T, header = T)
+
+```
+
+```{r, echo=FALSE}
+
+#Split into training and testing sets?
+dev_split = initial_split(hoteldev, prop = 0.8)
+dev_train = training(dev_split)
+dev_test = testing(dev_split)
+```
+Model 1:
+```{r, echo=FALSE}
+#Baseline 1: small model with only market_segment, adults, customer_type and is_repeated_guest as features
+
+lm1 = lm(children ~ market_segment + adults + customer_type + is_repeated_guest, data=dev_train)
+
+summary(lm1)
+```
+Model 2:
+```{r, echo=FALSE}
+#Baseline 2: big model that uses all possible predictors except arrival_date
+
+lm2 = lm(children ~ .-arrival_date, data=dev_train)
+
+summary(lm2)
+
+```
+Model 3:
+```{r, echo=FALSE, include=FALSE}
+#Baseline 3: linear model that I build
+#first, let's figure out coefficients we think would be important:
+#I think if adults == 2, there is more likely to be children (create dummy variable for adults == 2)
+#assigned room types important, so is hotel type, and market_segment and customer_type?
+
+dev_train = dev_train %>%
+  mutate(adults2 = ifelse(adults == 2, 1, 0))
+
+lm3 = lm(children ~ adults + adults2 + hotel + reserved_room_type, data=dev_train)
+
+lm_step = step(lm3, scope=~(adults + adults2 + hotel + reserved_room_type)^2)
+
+```            
+```{r, echo=FALSE}
+summary(lm_step)
+```
+
+The third model used engineered features: a new dummy-variable was created, "adults2" when adults==2. Having 2 adults on the reservation would seemingly increase the probability of children being on the reservation, so we tested including this feature.
+
+Then, we started with a medium model, including adults, adults2, hotel type and the type of room reserved. A step-wise selection model was created allowing for 2-way interaction terms between the prexisting variables in the medium model.
+
+Let's evaluate all three of these models for out-of-sample performance using the testing split from hotels_dev:
+
+```{r, echo=FALSE, warning=FALSE}
+
+dev_test = dev_test %>%
+  mutate(adults2 = ifelse(adults == 2, 1, 0))
+
+rmse(lm1, dev_test)
+rmse(lm2, dev_test)
+rmse(lm_step, dev_test)
+
+
+```
+Baseline model 3 has the lowest rmse.
+
+### Model Validation, Step 1
+
+```{r, echo=FALSE, warning=FALSE}
+#across many 0<t<1, among children, how many are correctly flagged? and among non-children, how many are incorrectly flagged?
+hotelval = hotelval %>%
+  mutate(adults2 = ifelse(adults== 2, 1, 0))
+
+x <- hotelval$children
+y <- predict(lm_step, hotelval)
+rocdata <- data.frame(x,y)
+roc.plot(rocdata$x, rocdata$y, show.thres=FALSE)
+
+```
+
+### Model Validation, Step 2
+
+```{r, echo=FALSE, warning=FALSE}
+
+hotelfold = fold(hotelval, k=20)
+
+hotelfold$predict = predict(lm_step, hotelfold)
+
+hotelfold %>%
+  group_by(.folds) %>%
+  summarize(predicted_child = sum(predict), actual_child = sum(children), overprediction = predicted_child - actual_child) %>%
+  ggplot() +
+  geom_col(aes(x=.folds, y=overprediction))
+```
+
+Our prediction model from the step-wise approach accurately guesses the number of bookings with children within a small margin of error. The actual margins depend on the k-fold splits, but inaccuracy is almost always less than 5-6 bookings. Given that these are groups of 250 bookings, this is a relatively small margin of error-- especially considering that the majority of bookings are less than 1 booking off from estimating the number of bookings with children.
+
+
+## Appendix - Question 1
 
 ### Saratoga house prices
 
@@ -242,111 +349,3 @@ ggplot(cv_grid) +
   ggtitle("Cross-validated errors per k values") + ylab("Mean RMSE")
 
 ```
-
-## Children and Hotel Reservations
-### Model Building
-
-```{r, include=FALSE}
-
-hoteldev = read.csv("C:\\Users\\ashac\\Downloads\\Data_mining\\hotels_dev.csv", as.is = T, fill = T, header = T)
-
-hotelval = read.csv("C:\\Users\\ashac\\Downloads\\Data_mining\\hotels_val.csv", as.is = T, fill = T, header = T)
-
-```
-
-```{r, echo=FALSE}
-
-#Split into training and testing sets?
-dev_split = initial_split(hoteldev, prop = 0.8)
-dev_train = training(dev_split)
-dev_test = testing(dev_split)
-```
-Model 1:
-```{r, echo=FALSE}
-#Baseline 1: small model with only market_segment, adults, customer_type and is_repeated_guest as features
-
-lm1 = lm(children ~ market_segment + adults + customer_type + is_repeated_guest, data=dev_train)
-
-summary(lm1)
-```
-Model 2:
-```{r, echo=FALSE}
-#Baseline 2: big model that uses all possible predictors except arrival_date
-
-lm2 = lm(children ~ .-arrival_date, data=dev_train)
-
-summary(lm2)
-
-```
-Model 3:
-```{r, echo=FALSE, include=FALSE}
-#Baseline 3: linear model that I build
-#first, let's figure out coefficients we think would be important:
-#I think if adults == 2, there is more likely to be children (create dummy variable for adults == 2)
-#assigned room types important, so is hotel type, and market_segment and customer_type?
-
-dev_train = dev_train %>%
-  mutate(adults2 = ifelse(adults == 2, 1, 0))
-
-lm3 = lm(children ~ adults + adults2 + hotel + reserved_room_type, data=dev_train)
-
-lm_step = step(lm3, scope=~(adults + adults2 + hotel + reserved_room_type)^2)
-
-```            
-```{r, echo=FALSE}
-summary(lm_step)
-```
-
-The third model used engineered features: a new dummy-variable was created, "adults2" when adults==2. Having 2 adults on the reservation would seemingly increase the probability of children being on the reservation, so we tested including this feature.
-
-Then, we started with a medium model, including adults, adults2, hotel type and the type of room reserved. A step-wise selection model was created allowing for 2-way interaction terms between the prexisting variables in the medium model.
-
-Let's evaluate all three of these models for out-of-sample performance using the testing split from hotels_dev:
-
-```{r, echo=FALSE, warning=FALSE}
-
-dev_test = dev_test %>%
-  mutate(adults2 = ifelse(adults == 2, 1, 0))
-
-rmse(lm1, dev_test)
-rmse(lm2, dev_test)
-rmse(lm_step, dev_test)
-
-
-```
-Baseline model 3 has the lowest rmse.
-
-### Model Validation, Step 1
-
-```{r, echo=FALSE, warning=FALSE}
-#across many 0<t<1, among children, how many are correctly flagged? and among non-children, how many are incorrectly flagged?
-hotelval = hotelval %>%
-  mutate(adults2 = ifelse(adults== 2, 1, 0))
-
-x <- hotelval$children
-y <- predict(lm_step, hotelval)
-rocdata <- data.frame(x,y)
-roc.plot(rocdata$x, rocdata$y, show.thres=FALSE)
-
-```
-
-### Model Validation, Step 2
-
-```{r, echo=FALSE, warning=FALSE}
-
-hotelfold = fold(hotelval, k=20)
-
-hotelfold$predict = predict(lm_step, hotelfold)
-
-hotelfold %>%
-  group_by(.folds) %>%
-  summarize(predicted_child = sum(predict), actual_child = sum(children), overprediction = predicted_child - actual_child) %>%
-  ggplot() +
-  geom_col(aes(x=.folds, y=overprediction))
-```
-
-Our prediction model from the step-wise approach accurately guesses the number of bookings with children within a small margin of error. The actual margins depend on the k-fold splits, but inaccuracy is almost always less than 5-6 bookings. Given that these are groups of 250 bookings, this is a relatively small margin of error-- especially considering that the majority of bookings are less than 1 booking off from estimating the number of bookings with children.
-
-
-
-
