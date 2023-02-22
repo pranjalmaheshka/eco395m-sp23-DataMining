@@ -1,0 +1,244 @@
+---
+title: "DataMining_PS2"
+author: "Pranjal Maheshka, Asha Christensen, Marco Navarro"
+date: "2023-01-30"
+output: md_document
+---
+
+# DataMining_PS2
+
+## Pranjal Maheshka, Asha Christensen, Marco Navarro
+
+### 2023-01-30
+
+## Saratoga house prices
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(modelr)
+library(rsample)
+library(mosaic)
+library(psych)
+library(rsample)  
+library(caret)
+library(modelr)
+library(parallel)
+library(foreach)
+```
+
+The house price prediction exercise has been carried out using data on 1728 houses in Saratoga County, New York, USA in 2006. In addition to price, this dataset contains 15 variables that capture different characteristics of these houses, such as size of lot (acres), value of land (US dollars), living area (square feet), etc.
+
+### Price prediction strategy
+
+The following two methods were tested in the building process of a prediction model of house prices:
+
+* Linear model: This approach try to estimate coefficients for the following linear model
+$$price=\beta_0+\beta_1x_1+....+\beta_1x_p+u$$
+where $(x_1,...,x_p)$ are houses features plus transformations and interactions of this features. 
+
+* K-nearest neighbors regression: In this method, given a value for K and a set of values for the features $(x_1*,...,x_p*)$ , KNN regression first identifies the K training observations that are closest to $(x_1*,...,x_p*)$  and then estimates the predicted price using the average of those K closest prices.
+
+More details about the estimated models can be found in the Appendix.
+
+### Model evaluation
+
+The k-fold cross validation is the procedure used to evaluate the out-of-sample performance of the models. This is a resampling method that uses different portions of the data to test and train a model on different iterations. The whole dataset was split into 5 different folds to perform this evaluation and the accuracy of the prediction was evaluated by checking the root mean square error (RMSE).
+
+### Results
+
+Among the K-nearest neighbors regressions, the k-value associated with the lowest cross-validated error (mean of the Root Mean Squared Error) is k=10. The cross-validated error for k=10 is $61,968 with a standard error of 1,667 dollars. 
+
+That last result compares poorly against the cross-validated error of the best linear model. In the case of this linear model, the cross validated error is $56,669 with a standard error of 1,451 dollars. 
+
+In conclusion, the results have shown that the linear model has the best performance among these two methods according to the k-fold cross validation. Given this particular set of explanatory variables, the prediction model should be the linear model. The following table presents the results of the evaluations.
+
+|Model              |RMSE_1  |RMSE_2  |RMSE_3  |RMSE_4  |RMSE_5  | Mean   |Sd Dev |
+| ----------------- |:------:|:------:|:------:|:------:|:------:|:------:|:-----:| 
+|Best Linear Model	|56171.2 |55058.87|52071.68|63409.28|58631.75|57068.56|1903.43|
+|KNN k=10           |63348.51|60654.92|63415.53|55872.56|61762.50|61010.80|1384.57|
+
+The accuracy of this two methods can be reevaluated after an expansion of the number of observations or number of explanatory variables.
+
+
+## Appendix
+
+### Saratoga house prices
+
+#### The dataset
+
+The house prices dataset data has 1728 observations on the following 16 variables.
+
+* `price` price (US dollars)
+* `lotSize` size of lot (acres)
+* `age` age of house (years)
+* `landValue` value of land (US dollars)
+* `livingArea` living are (square feet)
+* `pctCollege` percent of neighborhood that graduated college
+* `bedrooms` number of bedrooms
+* `fireplaces` number of fireplaces
+* `bathrooms` number of bathrooms (half bathrooms have no shower or tub)
+* `rooms` number of rooms
+* `heating` type of heating system
+* `fuel` fuel used for heating
+* `sewer` type of sewer system
+* `waterfront` whether property includes waterfront
+* `newConstruction` whether the property is a new construction
+* `centralAir` whether the house has central air
+
+Additionally, these variables were created:
+
+* `age2` whether or not the house its older than 40 years.
+* `bedrooms2` whether or not the house has more than 4 bedrooms.
+
+
+#### Linear model regression
+
+The linear models were estimated using  transformations, polynomial terms, and interactions of the original house features. After comparing different specifications of the linear model, the best model was chosen as the one with lowest cross-validated errors. The best linear model has 43 coefficients and the following table presents the estimated coefficients for this model. 
+
+```{r linearmodel, include=FALSE}
+
+data(SaratogaHouses)
+
+#Create new variables
+
+SaratogaHouses = SaratogaHouses %>%
+  mutate(age2 = ifelse(SaratogaHouses$age>40,1,0))
+
+SaratogaHouses = SaratogaHouses %>%
+  mutate(bedrooms2 = ifelse(SaratogaHouses$bedrooms>4,1,0))
+
+# Create folds for cross-validation.  
+K_folds = 5
+SaratogaHouses = SaratogaHouses %>%
+  mutate(fold_id = rep(1:K_folds, length=nrow(SaratogaHouses)) %>% sample)
+
+err_save2 = matrix(0, nrow=1, ncol=5)
+
+# Linear models
+
+for(i in 1:K_folds) {
+  train_set = which(SaratogaHouses$fold_id != i)
+  y_test = SaratogaHouses$price[-train_set]
+lm1 = lm(price ~ lotSize+bedrooms+fuel+lotSize:bedrooms +lotSize:fuel+bedrooms:fuel + newConstruction + centralAir + waterfront + rooms + livingArea:rooms + bedrooms:rooms +fireplaces+landValue:fireplaces+livingArea:fireplaces+pctCollege:fireplaces +livingArea+ landValue:livingArea + livingArea:heating+pctCollege+landValue:pctCollege+age:pctCollege+age+age:sewer +bathrooms+landValue:bathrooms +bathrooms:sewer+bathrooms+heating+age2+age2:age+lotSize:landValue+centralAir:heating+I(age^2)+landValue:newConstruction , data=SaratogaHouses[train_set,])
+
+  # Predictions out of sample
+  # Root mean squared error
+  err_save2[1, i] =rmse(lm1, data=SaratogaHouses[-train_set,])
+}
+
+err_save2 = as.data.frame(err_save2)
+
+err_save2 = err_save2 %>%
+  mutate(err_save2, std_err = apply(err_save2, 1, sd)/sqrt(K_folds))
+
+err_save2 = err_save2 %>%
+  mutate(err_save2, mean = (V1+V2+V3+V4+V5)/K_folds)
+
+```
+
+```{r linearmodel2, include=FALSE}
+
+lm1$coefficients
+
+```
+                        
+|                        (Intercept) |                            lotSize |
+|                       1.339703e+05 |                      -2.434482e+03 |
+|                           bedrooms |                       fuelelectric |
+|                       5.579980e+03 |                      -2.523318e+04 |
+|                            fueloil |                  newConstructionNo |
+|                       3.914479e+04 |                       3.214339e+04 |
+|                       centralAirNo |                       waterfrontNo |
+|                      -1.349244e+04 |                      -9.738634e+04 |
+|                              rooms |                         fireplaces |
+|                       2.470676e+03 |                       1.892046e+04 |
+|                         livingArea |                         pctCollege |
+|                       5.868298e+01 |                      -4.862284e+02 |
+|                                age |                          bathrooms |
+|                      -2.081983e+03 |                       1.363895e+04 |
+|             heatinghot water/steam |                    heatingelectric |
+|                       2.707111e+04 |                       6.345186e+03 |
+|                               age2 |                           I(age^2) |
+|                      -3.882054e+04 |                      -2.508183e+00 |
+|                   lotSize:bedrooms |               lotSize:fuelelectric |
+|                       4.384200e+03 |                       6.889665e+03 |
+|                    lotSize:fueloil |              bedrooms:fuelelectric |
+|                      -2.395283e+03 |                       6.277175e+03 |
+|                   bedrooms:fueloil |                   rooms:livingArea |
+|                      -1.274805e+04 |                       1.764660e+00 |
+|                     bedrooms:rooms |               fireplaces:landValue |
+|                      -1.181118e+03 |                      -2.466258e-01 |
+|              livingArea:fireplaces |              fireplaces:pctCollege |
+|                       1.529200e+01 |                      -5.747540e+02 |
+|               livingArea:landValue |  livingArea:heatinghot water/steam |
+|                      -2.689740e-04 |                      -1.917907e+01 |
+|         livingArea:heatingelectric |               landValue:pctCollege |
+|                      -1.232713e+01 |                       1.334857e-02 |
+|                     pctCollege:age |         age:sewerpublic/commercial |
+|                       1.427984e+01 |                       3.632516e+02 |
+|                      age:sewernone |                landValue:bathrooms |
+|                       3.994448e+03 |                       2.855780e-01 |
+|   sewerpublic/commercial:bathrooms |                sewernone:bathrooms |
+|                      -4.912088e+03 |                      -1.701781e+04 |
+|                          age:age2  |                 lotSize:landValue  |
+|                       1.546965e+03 |                      -1.263039e-01 |
+|centralAirNo:heatinghot water/steam |       centralAirNo:heatingelectric |
+|                       1.796120e+03 |                      1.767431e+04  |
+|        newConstructionNo:landValue |                                    |
+|                       3.866956e-01 |                                    |
+
+
+#### K-nearest neighbors regression
+
+Before running the KNN regression, all continuous variables, such as landValue or lotSize, were standardize. In addition, the categorical variables, such as heating or sewer, were split in a series of dichotomous variables for each category. After this transformations to the dataset, the KNN regression considered the following different values of K: 2, 4, 6, 8, 10, 12, 15,17, 20,22, 25,27, 30, 35, 40, 45,50, 60, 70, 80, 90, 100. Among these values, K=10 was chosen because it was associated with the minimum cross-validated errors.  
+
+```{r knn, echo=FALSE, warning=FALSE}
+
+# KNN
+
+SaratogaHousesknn = SaratogaHouses
+
+# Scale numerical variables
+SaratogaHousesknn[, c("lotSize", "age", "landValue", "livingArea", "pctCollege", "bedrooms", "fireplaces", "bathrooms", "rooms")] <- scale(SaratogaHousesknn[, c("lotSize", "age", "landValue", "livingArea", "pctCollege", "bedrooms", "fireplaces", "bathrooms", "rooms")])
+
+# Dummy code  variables that have just two levels
+SaratogaHousesknn$waterfront <- ifelse(SaratogaHousesknn$waterfront == "Yes", 1, 0)
+SaratogaHousesknn$newConstruction <- ifelse(SaratogaHousesknn$newConstruction  == "Yes", 1, 0)
+SaratogaHousesknn$centralAir <- ifelse(SaratogaHousesknn$centralAir  == "Yes", 1, 0)
+
+# Dummy code variables that have three or more levels.
+heat <- as.data.frame(dummy.code(SaratogaHousesknn$heating))
+Fuel <- as.data.frame(dummy.code(SaratogaHousesknn$fuel))
+Sewer <- as.data.frame(dummy.code(SaratogaHousesknn$sewer))
+heat <- rename(heat, Electric = electric)
+heat <- rename(heat, hot_air = 'hot air')
+heat <- rename(heat, hot_water = 'hot water/steam')
+SaratogaHousesknn <- cbind(SaratogaHousesknn, Sewer, Fuel, heat)
+
+
+SaratogaHousesknn_folds = crossv_kfold(SaratogaHousesknn, k=K_folds)
+
+# so now we can do this across a range of k
+k_grid = c(2, 4, 6, 8, 10, 12, 15,17, 20,22, 25,27, 30, 35, 40, 45,
+           50, 60, 70, 80, 90, 100)
+
+cv_grid = foreach(k = k_grid, .combine='rbind') %dopar% {
+  models = map(SaratogaHousesknn_folds$train, ~ knnreg(price ~ landValue + lotSize + age + livingArea+pctCollege+bedrooms+fireplaces+bathrooms+rooms+waterfront+newConstruction+centralAir+septic+none+gas+electric+oil+Electric, k=k, data = ., use.all=FALSE))
+  errs = map2_dbl(models, SaratogaHousesknn_folds$test, modelr::rmse)
+  c(k=k, errs, err = mean(errs), std_err = sd(errs)/sqrt(K_folds))
+} %>% as.data.frame
+
+ggplot(cv_grid) + 
+  geom_point(aes(x=k, y=err),color= '#4682b4') + 
+  geom_errorbar(aes(x=k, ymin = err-std_err, ymax = err+std_err)) + 
+  scale_x_log10()+
+  ggtitle("Cross-validated errors per k values") + ylab("Mean RMSE")
+
+```
+
+
+
+
+
