@@ -302,7 +302,7 @@ The third model used engineered features: a new dummy-variable was created, "adu
 Then, we started with a medium model, including adults, adults2, hotel type and the type of room reserved. A stepwise selection model was created allowing for 2-way interaction terms between the variables in the medium model.
 
 
-Let's evaluate all three of these models for out-of-sample performance using the training split from hotels_dev:
+Let's evaluate all three of these models for out-of-sample performance using the testing split from hotels_dev:
 
 ```{r, echo=FALSE, warning=FALSE}
 
