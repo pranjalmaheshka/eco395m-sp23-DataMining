@@ -261,7 +261,7 @@ dev_split = initial_split(hoteldev, prop = 0.8)
 dev_train = training(dev_split)
 dev_test = testing(dev_split)
 ```
-
+Model 1:
 ```{r, echo=FALSE}
 #Baseline 1: small model with only market_segment, adults, customer_type and is_repeated_guest as features
 
@@ -269,7 +269,7 @@ lm1 = lm(children ~ market_segment + adults + customer_type + is_repeated_guest,
 
 summary(lm1)
 ```
-
+Model 2:
 ```{r, echo=FALSE}
 #Baseline 2: big model that uses all possible predictors except arrival_date
 
@@ -278,7 +278,7 @@ lm2 = lm(children ~ .-arrival_date, data=dev_train)
 summary(lm2)
 
 ```
-
+Model 3:
 ```{r, echo=FALSE, include=FALSE}
 #Baseline 3: linear model that I build
 #first, let's figure out coefficients we think would be important:
@@ -292,9 +292,11 @@ lm3 = lm(children ~ adults + adults2 + hotel + reserved_room_type, data=dev_trai
 
 lm_step = step(lm3, scope=~(adults + adults2 + hotel + reserved_room_type)^2)
 
-summary(lm_step)
-
 ```            
+```{r, echo=FALSE}
+summary(lm_step)
+```
+
 The third model used engineered features: a new dummy-variable was created, "adults2" when adults==2. Having 2 adults on the reservation would seemingly increase the probability of children begin on the reservation, so we testing including this feature.
 
 Then, we started with a medium model, including adults, adults2, hotel type and the type of room reserved. A stepwise selection model was created allowing for 2-way interaction terms between the variables in the medium model.
