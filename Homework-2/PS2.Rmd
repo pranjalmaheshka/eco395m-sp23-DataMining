@@ -35,7 +35,9 @@ The house price prediction exercise has been carried out using data on 1728 hous
 The following two methods were tested in the building process of a prediction model of house prices:
 
 * Linear model: This approach try to estimate coefficients for the following linear model
+
 $$price=\beta_0+\beta_1x_1+....+\beta_1x_p+u$$
+
 where $(x_1,...,x_p)$ are houses features plus transformations and interactions of this features. 
 
 * K-nearest neighbors regression: In this method, given a value for K and a set of values for the features $(x_1*,...,x_p*)$ , KNN regression first identifies the K training observations that are closest to $(x_1*,...,x_p*)$  and then estimates the predicted price using the average of those K closest prices.
@@ -48,9 +50,9 @@ The k-fold cross validation is the procedure used to evaluate the out-of-sample 
 
 ### Results
 
-Among the K-nearest neighbors regressions, the k-value associated with the lowest cross-validated error (mean of the Root Mean Squared Error) is k=10. The cross-validated error for k=10 is $61,968 with a standard error of 1,667 dollars. 
+Among the K-nearest neighbors regressions, the k-value associated with the lowest cross-validated error (mean of the Root Mean Squared Error) is k=10. The cross-validated error for k=10 is $61,010 with a standard error of 1,384 dollars. 
 
-That last result compares poorly against the cross-validated error of the best linear model. In the case of this linear model, the cross validated error is $56,669 with a standard error of 1,451 dollars. 
+That last result compares poorly against the cross-validated error of the best linear model. In the case of this linear model, the cross validated error is $57,068 with a standard error of 1,903 dollars. 
 
 In conclusion, the results have shown that the linear model has the best performance among these two methods according to the k-fold cross validation. Given this particular set of explanatory variables, the prediction model should be the linear model. The following table presents the results of the evaluations.
 
@@ -143,7 +145,9 @@ err_save2 = err_save2 %>%
 lm1$coefficients
 
 ```
-                        
+ 
+ 
+|:----------------------------------:|:----------------------------------:|                        
 |                        (Intercept) |                            lotSize |
 |                       1.339703e+05 |                      -2.434482e+03 |
 |                           bedrooms |                       fuelelectric |
