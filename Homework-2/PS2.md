@@ -348,3 +348,140 @@ values of K: 2, 4, 6, 8, 10, 12, 15,17, 20,22, 25,27, 30, 35, 40, 45,50,
 associated with the minimum cross-validated errors.
 
 ![](PS2_files/figure-markdown_strict/knn-1.png)
+
+## Children and Hotel Reservations
+
+### Model Building
+
+    ## 
+    ## Call:
+    ## lm(formula = children ~ market_segment + adults + customer_type + 
+    ##     is_repeated_guest, data = dev_train)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -0.18351 -0.11163 -0.09071 -0.02805  1.03052 
+    ## 
+    ## Coefficients:
+    ##                               Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)                  -0.024136   0.030031  -0.804 0.421583    
+    ## market_segmentComplementary   0.093990   0.032637   2.880 0.003981 ** 
+    ## market_segmentCorporate       0.014090   0.029390   0.479 0.631647    
+    ## market_segmentDirect          0.113283   0.029154   3.886 0.000102 ***
+    ## market_segmentGroups          0.005415   0.029478   0.184 0.854255    
+    ## market_segmentOffline_TA/TO   0.020213   0.029137   0.694 0.487868    
+    ## market_segmentOnline_TA       0.078122   0.029030   2.691 0.007126 ** 
+    ## adults                        0.018360   0.002990   6.140 8.35e-10 ***
+    ## customer_typeGroup           -0.016821   0.018107  -0.929 0.352909    
+    ## customer_typeTransient        0.020921   0.007708   2.714 0.006646 ** 
+    ## customer_typeTransient-Party -0.004745   0.008198  -0.579 0.562711    
+    ## is_repeated_guest            -0.043779   0.007637  -5.733 9.96e-09 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.2682 on 35988 degrees of freedom
+    ## Multiple R-squared:  0.03062,    Adjusted R-squared:  0.03032 
+    ## F-statistic: 103.3 on 11 and 35988 DF,  p-value: < 2.2e-16
+
+    ## 
+    ## Call:
+    ## lm(formula = children ~ . - arrival_date, data = dev_train)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -0.92659 -0.08336 -0.03866  0.00755  1.09121 
+    ## 
+    ## Coefficients:
+    ##                                      Estimate Std. Error t value Pr(>|t|)    
+    ## (Intercept)                        -5.832e-02  2.648e-02  -2.203 0.027622 *  
+    ## hotelResort_Hotel                  -3.472e-02  3.218e-03 -10.791  < 2e-16 ***
+    ## lead_time                           4.985e-05  1.596e-05   3.124 0.001786 ** 
+    ## stays_in_weekend_nights             4.121e-03  1.467e-03   2.810 0.004963 ** 
+    ## stays_in_week_nights               -8.896e-04  7.972e-04  -1.116 0.264474    
+    ## adults                             -3.790e-02  2.826e-03 -13.414  < 2e-16 ***
+    ## mealFB                              5.274e-02  1.867e-02   2.825 0.004725 ** 
+    ## mealHB                             -1.612e-04  4.103e-03  -0.039 0.968662    
+    ## mealSC                             -5.238e-02  4.743e-03 -11.044  < 2e-16 ***
+    ## mealUndefined                       2.066e-02  1.216e-02   1.699 0.089307 .  
+    ## market_segmentComplementary         6.320e-02  3.018e-02   2.094 0.036280 *  
+    ## market_segmentCorporate             4.779e-02  2.574e-02   1.857 0.063329 .  
+    ## market_segmentDirect                4.984e-02  2.766e-02   1.802 0.071607 .  
+    ## market_segmentGroups                5.847e-02  2.697e-02   2.168 0.030149 *  
+    ## market_segmentOffline_TA/TO         7.172e-02  2.703e-02   2.653 0.007981 ** 
+    ## market_segmentOnline_TA             6.649e-02  2.697e-02   2.465 0.013703 *  
+    ## distribution_channelDirect          1.767e-02  1.137e-02   1.554 0.120279    
+    ## distribution_channelGDS            -7.591e-02  2.814e-02  -2.697 0.006994 ** 
+    ## distribution_channelTA/TO           3.835e-04  9.638e-03   0.040 0.968261    
+    ## is_repeated_guest                  -3.067e-02  7.230e-03  -4.242 2.22e-05 ***
+    ## previous_cancellations              1.736e-03  4.684e-03   0.371 0.710878    
+    ## previous_bookings_not_canceled     -2.399e-03  8.898e-04  -2.696 0.007017 ** 
+    ## reserved_room_typeB                 2.097e-01  1.515e-02  13.843  < 2e-16 ***
+    ## reserved_room_typeC                 5.317e-01  1.621e-02  32.796  < 2e-16 ***
+    ## reserved_room_typeD                -6.564e-02  4.817e-03 -13.626  < 2e-16 ***
+    ## reserved_room_typeE                -2.579e-02  8.657e-03  -2.979 0.002893 ** 
+    ## reserved_room_typeF                 3.201e-01  1.300e-02  24.616  < 2e-16 ***
+    ## reserved_room_typeG                 4.355e-01  1.783e-02  24.422  < 2e-16 ***
+    ## reserved_room_typeH                 5.856e-01  3.245e-02  18.048  < 2e-16 ***
+    ## reserved_room_typeL                -8.449e-02  1.651e-01  -0.512 0.608757    
+    ## assigned_room_typeB                 3.187e-04  1.028e-02   0.031 0.975261    
+    ## assigned_room_typeC                 9.586e-02  9.304e-03  10.303  < 2e-16 ***
+    ## assigned_room_typeD                 5.804e-02  4.176e-03  13.901  < 2e-16 ***
+    ## assigned_room_typeE                 5.150e-02  7.714e-03   6.677 2.48e-11 ***
+    ## assigned_room_typeF                 6.482e-02  1.110e-02   5.837 5.35e-09 ***
+    ## assigned_room_typeG                 9.296e-02  1.567e-02   5.933 3.00e-09 ***
+    ## assigned_room_typeH                 8.814e-02  2.820e-02   3.126 0.001775 ** 
+    ## assigned_room_typeI                 9.207e-02  1.824e-02   5.048 4.48e-07 ***
+    ## assigned_room_typeK                 1.246e-02  2.087e-02   0.597 0.550514    
+    ## booking_changes                     1.838e-02  1.727e-03  10.642  < 2e-16 ***
+    ## deposit_typeNon_Refund              2.937e-02  3.294e-02   0.892 0.372548    
+    ## deposit_typeRefundable              2.903e-02  2.890e-02   1.005 0.315014    
+    ## days_in_waiting_list               -4.053e-05  8.509e-05  -0.476 0.633836    
+    ## customer_typeGroup                 -7.175e-03  1.585e-02  -0.453 0.650835    
+    ## customer_typeTransient              1.502e-02  6.833e-03   2.199 0.027905 *  
+    ## customer_typeTransient-Party       -2.492e-02  7.400e-03  -3.368 0.000757 ***
+    ## average_daily_rate                  8.534e-04  3.313e-05  25.759  < 2e-16 ***
+    ## required_car_parking_spacesparking -1.518e-03  4.339e-03  -0.350 0.726449    
+    ## total_of_special_requests           3.161e-02  1.678e-03  18.837  < 2e-16 ***
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 0.2332 on 35951 degrees of freedom
+    ## Multiple R-squared:  0.268,  Adjusted R-squared:  0.267 
+    ## F-statistic: 274.2 on 48 and 35951 DF,  p-value: < 2.2e-16
+
+The third model used engineered features: a new dummy-variable was
+created, “adults2” when adults==2. Having 2 adults on the reservation
+would seemingly increase the probability of children begin on the
+reservation, so we testing including this feature.
+
+Then, we started with a medium model, including adults, adults2, hotel
+type and the type of room reserved. A stepwise selection model was
+created allowing for 2-way interaction terms between the variables in
+the medium model.
+
+Let’s evaluate all three of these models for out-of-sample performance
+using the training split from hotels\_dev:
+
+    ## [1] 0.2684486
+
+    ## [1] 0.2327078
+
+    ## [1] 0.2274519
+
+Baseline model 3 has the lowest rmse.
+
+### Model Validation, Step 1
+
+![](PS2_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+
+### Model Validation, Step 2
+
+![](PS2_files/figure-markdown_strict/unnamed-chunk-8-1.png) Our
+prediction model from the step-wise approach accurately guesses the
+number of bookings with children within a small margin of error. The
+model does tend to over-predict the number of bookings more than
+under-predict– but over-predictions are less than about 6 bookings, and
+under-predictions are less than about 5. Given that these are groups of
+250 bookings, this is a relatively small margin of error– especially
+considering that the majority of bookings are less than 1 booking off
+from estimating the number of bookings with children.
