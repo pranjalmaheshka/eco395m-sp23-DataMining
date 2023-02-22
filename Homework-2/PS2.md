@@ -362,28 +362,28 @@ Model 1:
     ## 
     ## Residuals:
     ##      Min       1Q   Median       3Q      Max 
-    ## -0.17594 -0.11149 -0.08750 -0.02658  1.02927 
+    ## -0.17788 -0.11335 -0.08580 -0.02713  1.03183 
     ## 
     ## Coefficients:
     ##                               Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                  -0.024283   0.030433  -0.798 0.424914    
-    ## market_segmentComplementary   0.083495   0.032990   2.531 0.011380 *  
-    ## market_segmentCorporate       0.012671   0.029768   0.426 0.670357    
-    ## market_segmentDirect          0.112922   0.029552   3.821 0.000133 ***
-    ## market_segmentGroups          0.007906   0.029854   0.265 0.791158    
-    ## market_segmentOffline_TA/TO   0.023704   0.029532   0.803 0.422182    
-    ## market_segmentOnline_TA       0.080128   0.029430   2.723 0.006480 ** 
-    ## adults                        0.015827   0.002984   5.303 1.14e-07 ***
-    ## customer_typeGroup           -0.014057   0.018184  -0.773 0.439512    
-    ## customer_typeTransient        0.023993   0.007769   3.088 0.002014 ** 
-    ## customer_typeTransient-Party -0.004491   0.008240  -0.545 0.585720    
-    ## is_repeated_guest            -0.040052   0.007641  -5.242 1.60e-07 ***
+    ## (Intercept)                  -0.020449   0.029559  -0.692  0.48907    
+    ## market_segmentComplementary   0.085514   0.032272   2.650  0.00806 ** 
+    ## market_segmentCorporate       0.012256   0.028895   0.424  0.67145    
+    ## market_segmentDirect          0.113774   0.028656   3.970 7.19e-05 ***
+    ## market_segmentGroups          0.008232   0.028978   0.284  0.77636    
+    ## market_segmentOffline_TA/TO   0.022101   0.028637   0.772  0.44026    
+    ## market_segmentOnline_TA       0.080770   0.028528   2.831  0.00464 ** 
+    ## adults                        0.015765   0.003002   5.252 1.51e-07 ***
+    ## customer_typeGroup           -0.008751   0.018396  -0.476  0.63429    
+    ## customer_typeTransient        0.021496   0.007737   2.778  0.00547 ** 
+    ## customer_typeTransient-Party -0.006050   0.008209  -0.737  0.46109    
+    ## is_repeated_guest            -0.045094   0.007652  -5.893 3.83e-09 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.2672 on 35988 degrees of freedom
-    ## Multiple R-squared:  0.0304, Adjusted R-squared:  0.03011 
-    ## F-statistic: 102.6 on 11 and 35988 DF,  p-value: < 2.2e-16
+    ## Residual standard error: 0.2694 on 35988 degrees of freedom
+    ## Multiple R-squared:  0.03049,    Adjusted R-squared:  0.03019 
+    ## F-statistic: 102.9 on 11 and 35988 DF,  p-value: < 2.2e-16
 
 Model 2:
 
@@ -393,65 +393,65 @@ Model 2:
     ## 
     ## Residuals:
     ##      Min       1Q   Median       3Q      Max 
-    ## -0.95643 -0.08313 -0.03815  0.00806  1.08858 
+    ## -0.94144 -0.08426 -0.03846  0.00777  1.08426 
     ## 
     ## Coefficients:
     ##                                      Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                        -5.866e-02  2.683e-02  -2.186  0.02879 *  
-    ## hotelResort_Hotel                  -3.132e-02  3.207e-03  -9.767  < 2e-16 ***
-    ## lead_time                           4.069e-05  1.584e-05   2.569  0.01021 *  
-    ## stays_in_weekend_nights             3.570e-03  1.464e-03   2.438  0.01476 *  
-    ## stays_in_week_nights               -1.598e-03  7.930e-04  -2.015  0.04395 *  
-    ## adults                             -3.816e-02  2.813e-03 -13.564  < 2e-16 ***
-    ## mealFB                              5.850e-02  1.861e-02   3.143  0.00167 ** 
-    ## mealHB                             -5.882e-04  4.116e-03  -0.143  0.88637    
-    ## mealSC                             -5.333e-02  4.729e-03 -11.276  < 2e-16 ***
-    ## mealUndefined                       2.142e-02  1.215e-02   1.764  0.07778 .  
-    ## market_segmentComplementary         5.467e-02  3.055e-02   1.789  0.07355 .  
-    ## market_segmentCorporate             4.401e-02  2.608e-02   1.687  0.09160 .  
-    ## market_segmentDirect                4.165e-02  2.807e-02   1.484  0.13790    
-    ## market_segmentGroups                5.310e-02  2.731e-02   1.945  0.05184 .  
-    ## market_segmentOffline_TA/TO         6.665e-02  2.739e-02   2.434  0.01495 *  
-    ## market_segmentOnline_TA             5.952e-02  2.734e-02   2.177  0.02948 *  
-    ## distribution_channelDirect          2.331e-02  1.144e-02   2.037  0.04161 *  
-    ## distribution_channelGDS            -7.171e-02  2.803e-02  -2.559  0.01051 *  
-    ## distribution_channelTA/TO           6.358e-03  9.496e-03   0.669  0.50318    
-    ## is_repeated_guest                  -2.881e-02  7.248e-03  -3.975 7.04e-05 ***
-    ## previous_cancellations              4.031e-05  4.934e-03   0.008  0.99348    
-    ## previous_bookings_not_canceled     -2.145e-03  9.009e-04  -2.380  0.01729 *  
-    ## reserved_room_typeB                 2.067e-01  1.508e-02  13.707  < 2e-16 ***
-    ## reserved_room_typeC                 5.318e-01  1.588e-02  33.494  < 2e-16 ***
-    ## reserved_room_typeD                -6.467e-02  4.788e-03 -13.506  < 2e-16 ***
-    ## reserved_room_typeE                -2.582e-02  8.647e-03  -2.986  0.00283 ** 
-    ## reserved_room_typeF                 3.084e-01  1.284e-02  24.020  < 2e-16 ***
-    ## reserved_room_typeG                 4.098e-01  1.749e-02  23.428  < 2e-16 ***
-    ## reserved_room_typeH                 5.900e-01  3.237e-02  18.230  < 2e-16 ***
-    ## reserved_room_typeL                -8.609e-02  1.646e-01  -0.523  0.60084    
-    ## assigned_room_typeB                 1.571e-02  1.013e-02   1.551  0.12087    
-    ## assigned_room_typeC                 9.650e-02  9.284e-03  10.395  < 2e-16 ***
-    ## assigned_room_typeD                 5.498e-02  4.141e-03  13.278  < 2e-16 ***
-    ## assigned_room_typeE                 5.289e-02  7.707e-03   6.863 6.86e-12 ***
-    ## assigned_room_typeF                 6.040e-02  1.098e-02   5.501 3.79e-08 ***
-    ## assigned_room_typeG                 1.065e-01  1.525e-02   6.986 2.87e-12 ***
-    ## assigned_room_typeH                 7.678e-02  2.751e-02   2.791  0.00526 ** 
-    ## assigned_room_typeI                 8.203e-02  1.813e-02   4.525 6.07e-06 ***
-    ## assigned_room_typeK                 2.858e-02  2.118e-02   1.349  0.17729    
-    ## booking_changes                     1.978e-02  1.731e-03  11.427  < 2e-16 ***
-    ## deposit_typeNon_Refund              2.813e-02  3.383e-02   0.831  0.40575    
-    ## deposit_typeRefundable              8.838e-03  2.819e-02   0.313  0.75390    
-    ## days_in_waiting_list               -3.032e-05  8.841e-05  -0.343  0.73161    
-    ## customer_typeGroup                 -4.140e-03  1.593e-02  -0.260  0.79490    
-    ## customer_typeTransient              1.535e-02  6.887e-03   2.229  0.02584 *  
-    ## customer_typeTransient-Party       -2.696e-02  7.438e-03  -3.624  0.00029 ***
-    ## average_daily_rate                  8.823e-04  3.313e-05  26.631  < 2e-16 ***
-    ## required_car_parking_spacesparking -5.791e-04  4.334e-03  -0.134  0.89369    
-    ## total_of_special_requests           3.188e-02  1.674e-03  19.044  < 2e-16 ***
+    ## (Intercept)                        -5.560e-02  2.605e-02  -2.134 0.032812 *  
+    ## hotelResort_Hotel                  -3.108e-02  3.228e-03  -9.630  < 2e-16 ***
+    ## lead_time                           3.847e-05  1.602e-05   2.402 0.016331 *  
+    ## stays_in_weekend_nights             4.039e-03  1.477e-03   2.734 0.006269 ** 
+    ## stays_in_week_nights               -1.210e-03  7.978e-04  -1.517 0.129373    
+    ## adults                             -4.084e-02  2.830e-03 -14.429  < 2e-16 ***
+    ## mealFB                              5.420e-02  1.854e-02   2.924 0.003456 ** 
+    ## mealHB                             -1.254e-03  4.115e-03  -0.305 0.760663    
+    ## mealSC                             -5.009e-02  4.771e-03 -10.497  < 2e-16 ***
+    ## mealUndefined                       2.570e-02  1.213e-02   2.119 0.034089 *  
+    ## market_segmentComplementary         5.241e-02  2.994e-02   1.750 0.080069 .  
+    ## market_segmentCorporate             4.534e-02  2.529e-02   1.792 0.073094 .  
+    ## market_segmentDirect                5.263e-02  2.733e-02   1.926 0.054164 .  
+    ## market_segmentGroups                5.950e-02  2.654e-02   2.242 0.024968 *  
+    ## market_segmentOffline_TA/TO         7.115e-02  2.661e-02   2.674 0.007506 ** 
+    ## market_segmentOnline_TA             6.449e-02  2.655e-02   2.429 0.015133 *  
+    ## distribution_channelDirect          1.591e-02  1.155e-02   1.377 0.168597    
+    ## distribution_channelGDS            -8.300e-02  2.838e-02  -2.924 0.003454 ** 
+    ## distribution_channelTA/TO           3.216e-03  9.638e-03   0.334 0.738581    
+    ## is_repeated_guest                  -3.416e-02  7.271e-03  -4.698 2.64e-06 ***
+    ## previous_cancellations              9.267e-04  5.000e-03   0.185 0.852957    
+    ## previous_bookings_not_canceled     -2.200e-03  9.423e-04  -2.335 0.019557 *  
+    ## reserved_room_typeB                 1.993e-01  1.499e-02  13.295  < 2e-16 ***
+    ## reserved_room_typeC                 5.206e-01  1.631e-02  31.921  < 2e-16 ***
+    ## reserved_room_typeD                -6.627e-02  4.841e-03 -13.689  < 2e-16 ***
+    ## reserved_room_typeE                -2.614e-02  8.716e-03  -2.999 0.002715 ** 
+    ## reserved_room_typeF                 3.157e-01  1.300e-02  24.287  < 2e-16 ***
+    ## reserved_room_typeG                 4.470e-01  1.781e-02  25.102  < 2e-16 ***
+    ## reserved_room_typeH                 6.043e-01  3.243e-02  18.633  < 2e-16 ***
+    ## reserved_room_typeL                -8.643e-02  1.657e-01  -0.522 0.601950    
+    ## assigned_room_typeB                 2.563e-02  1.013e-02   2.531 0.011382 *  
+    ## assigned_room_typeC                 9.820e-02  9.390e-03  10.459  < 2e-16 ***
+    ## assigned_room_typeD                 5.951e-02  4.190e-03  14.201  < 2e-16 ***
+    ## assigned_room_typeE                 5.294e-02  7.746e-03   6.834 8.40e-12 ***
+    ## assigned_room_typeF                 5.870e-02  1.118e-02   5.250 1.53e-07 ***
+    ## assigned_room_typeG                 9.093e-02  1.567e-02   5.803 6.57e-09 ***
+    ## assigned_room_typeH                 9.139e-02  2.753e-02   3.319 0.000904 ***
+    ## assigned_room_typeI                 8.405e-02  1.879e-02   4.473 7.73e-06 ***
+    ## assigned_room_typeK                 3.081e-02  2.034e-02   1.515 0.129733    
+    ## booking_changes                     1.884e-02  1.724e-03  10.929  < 2e-16 ***
+    ## deposit_typeNon_Refund              1.867e-02  3.372e-02   0.554 0.579770    
+    ## deposit_typeRefundable              3.277e-02  2.907e-02   1.127 0.259664    
+    ## days_in_waiting_list               -2.473e-05  8.680e-05  -0.285 0.775703    
+    ## customer_typeGroup                 -6.023e-04  1.608e-02  -0.037 0.970129    
+    ## customer_typeTransient              1.414e-02  6.862e-03   2.061 0.039336 *  
+    ## customer_typeTransient-Party       -2.850e-02  7.417e-03  -3.842 0.000122 ***
+    ## average_daily_rate                  8.763e-04  3.335e-05  26.277  < 2e-16 ***
+    ## required_car_parking_spacesparking -1.373e-03  4.373e-03  -0.314 0.753597    
+    ## total_of_special_requests           3.282e-02  1.684e-03  19.492  < 2e-16 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.2325 on 35951 degrees of freedom
-    ## Multiple R-squared:  0.2666, Adjusted R-squared:  0.2656 
-    ## F-statistic: 272.2 on 48 and 35951 DF,  p-value: < 2.2e-16
+    ## Residual standard error: 0.2341 on 35951 degrees of freedom
+    ## Multiple R-squared:  0.2685, Adjusted R-squared:  0.2675 
+    ## F-statistic: 274.9 on 48 and 35951 DF,  p-value: < 2.2e-16
 
 Model 3:
 
@@ -463,73 +463,112 @@ Model 3:
     ## 
     ## Residuals:
     ##      Min       1Q   Median       3Q      Max 
-    ## -0.95482 -0.06086 -0.05893 -0.01554  1.05891 
+    ## -0.94502 -0.06156 -0.05769 -0.01691  1.05614 
     ## 
     ## Coefficients: (3 not defined because of singularities)
-    ##                                        Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)                            0.027358   0.007416   3.689 0.000225 ***
-    ## adults                                -0.013441   0.005882  -2.285 0.022304 *  
-    ## adults2                                0.060388   0.006268   9.634  < 2e-16 ***
-    ## hotelResort_Hotel                     -0.011736   0.010608  -1.106 0.268584    
-    ## reserved_room_typeB                    0.927461   0.028830  32.171  < 2e-16 ***
-    ## reserved_room_typeC                    0.090005   0.120766   0.745 0.456105    
-    ## reserved_room_typeD                    0.041409   0.015774   2.625 0.008663 ** 
-    ## reserved_room_typeE                    0.160285   0.025685   6.240 4.41e-10 ***
-    ## reserved_room_typeF                    0.872106   0.053344  16.349  < 2e-16 ***
-    ## reserved_room_typeG                   -0.049164   0.064854  -0.758 0.448416    
-    ## reserved_room_typeH                    0.529959   0.143759   3.686 0.000228 ***
-    ## reserved_room_typeL                   -0.015538   0.227060  -0.068 0.945443    
-    ## hotelResort_Hotel:reserved_room_typeB -0.100039   0.227477  -0.440 0.660102    
-    ## hotelResort_Hotel:reserved_room_typeC  0.733266   0.126405   5.801 6.65e-09 ***
-    ## hotelResort_Hotel:reserved_room_typeD  0.003756   0.007002   0.536 0.591720    
-    ## hotelResort_Hotel:reserved_room_typeE -0.224872   0.013060 -17.218  < 2e-16 ***
-    ## hotelResort_Hotel:reserved_room_typeF -0.739775   0.015482 -47.782  < 2e-16 ***
-    ## hotelResort_Hotel:reserved_room_typeG -0.029992   0.021611  -1.388 0.165200    
-    ## hotelResort_Hotel:reserved_room_typeH        NA         NA      NA       NA    
-    ## hotelResort_Hotel:reserved_room_typeL        NA         NA      NA       NA    
-    ## adults2:reserved_room_typeB           -0.121587   0.060851  -1.998 0.045711 *  
-    ## adults2:reserved_room_typeC            0.297039   0.041786   7.109 1.19e-12 ***
-    ## adults2:reserved_room_typeD           -0.013316   0.009093  -1.464 0.143085    
-    ## adults2:reserved_room_typeE            0.097019   0.015071   6.438 1.23e-10 ***
-    ## adults2:reserved_room_typeF            0.250893   0.023958  10.472  < 2e-16 ***
-    ## adults2:reserved_room_typeG            0.388470   0.028267  13.743  < 2e-16 ***
-    ## adults2:reserved_room_typeH           -0.069545   0.059918  -1.161 0.245790    
-    ## adults2:reserved_room_typeL           -0.030861   0.321093  -0.096 0.923433    
-    ## adults:reserved_room_typeB            -0.376117   0.034248 -10.982  < 2e-16 ***
-    ## adults:reserved_room_typeC            -0.193278   0.035613  -5.427 5.76e-08 ***
-    ## adults:reserved_room_typeD            -0.009660   0.008010  -1.206 0.227820    
-    ## adults:reserved_room_typeE            -0.009858   0.012630  -0.781 0.435064    
-    ## adults:reserved_room_typeF            -0.163054   0.022374  -7.288 3.22e-13 ***
-    ## adults:reserved_room_typeG             0.155454   0.023708   6.557 5.57e-11 ***
-    ## adults:reserved_room_typeH             0.077363   0.047843   1.617 0.105885    
-    ## adults:reserved_room_typeL                   NA         NA      NA       NA    
-    ## adults2:hotelResort_Hotel             -0.029444   0.008175  -3.602 0.000316 ***
-    ## adults:hotelResort_Hotel               0.013358   0.007577   1.763 0.077920 .  
+    ##                                         Estimate Std. Error t value Pr(>|t|)
+    ## (Intercept)                            0.0330416  0.0074925   4.410 1.04e-05
+    ## adults                                -0.0161326  0.0059671  -2.704 0.006863
+    ## adults2                                0.0607786  0.0063602   9.556  < 2e-16
+    ## hotelResort_Hotel                     -0.0184747  0.0106619  -1.733 0.083144
+    ## reserved_room_typeB                    0.9119792  0.0282969  32.229  < 2e-16
+    ## reserved_room_typeC                    0.0706321  0.1341729   0.526 0.598596
+    ## reserved_room_typeD                    0.0320162  0.0157194   2.037 0.041684
+    ## reserved_room_typeE                    0.1454205  0.0266051   5.466 4.64e-08
+    ## reserved_room_typeF                    0.9038882  0.0557892  16.202  < 2e-16
+    ## reserved_room_typeG                   -0.0656205  0.0606331  -1.082 0.279146
+    ## reserved_room_typeH                    0.5558799  0.1473139   3.773 0.000161
+    ## reserved_room_typeL                   -0.0150438  0.2285198  -0.066 0.947512
+    ## hotelResort_Hotel:reserved_room_typeB -0.0882734  0.2289372  -0.386 0.699811
+    ## hotelResort_Hotel:reserved_room_typeC  0.5606647  0.1514852   3.701 0.000215
+    ## hotelResort_Hotel:reserved_room_typeD  0.0060977  0.0070194   0.869 0.385023
+    ## hotelResort_Hotel:reserved_room_typeE -0.2161889  0.0132217 -16.351  < 2e-16
+    ## hotelResort_Hotel:reserved_room_typeF -0.7432479  0.0155126 -47.912  < 2e-16
+    ## hotelResort_Hotel:reserved_room_typeG  0.0224301  0.0214705   1.045 0.296171
+    ## hotelResort_Hotel:reserved_room_typeH         NA         NA      NA       NA
+    ## hotelResort_Hotel:reserved_room_typeL         NA         NA      NA       NA
+    ## adults2:reserved_room_typeB           -0.1047715  0.0642146  -1.632 0.102776
+    ## adults2:reserved_room_typeC            0.3707366  0.0424428   8.735  < 2e-16
+    ## adults2:reserved_room_typeD           -0.0126202  0.0091447  -1.380 0.167579
+    ## adults2:reserved_room_typeE            0.0817317  0.0152780   5.350 8.87e-08
+    ## adults2:reserved_room_typeF            0.2475701  0.0250929   9.866  < 2e-16
+    ## adults2:reserved_room_typeG            0.3938302  0.0273579  14.395  < 2e-16
+    ## adults2:reserved_room_typeH           -0.0332289  0.0609903  -0.545 0.585879
+    ## adults2:reserved_room_typeL           -0.0325119  0.3231574  -0.101 0.919863
+    ## adults:reserved_room_typeB            -0.3832450  0.0363551 -10.542  < 2e-16
+    ## adults:reserved_room_typeC            -0.1393779  0.0360476  -3.866 0.000111
+    ## adults:reserved_room_typeD            -0.0053294  0.0080620  -0.661 0.508588
+    ## adults:reserved_room_typeE            -0.0004167  0.0128159  -0.033 0.974062
+    ## adults:reserved_room_typeF            -0.1761151  0.0232506  -7.575 3.69e-14
+    ## adults:reserved_room_typeG             0.1524962  0.0227130   6.714 1.92e-11
+    ## adults:reserved_room_typeH             0.0708289  0.0492330   1.439 0.150259
+    ## adults:reserved_room_typeL                    NA         NA      NA       NA
+    ## adults2:hotelResort_Hotel             -0.0287437  0.0082528  -3.483 0.000497
+    ## adults:hotelResort_Hotel               0.0166096  0.0076514   2.171 0.029955
+    ##                                          
+    ## (Intercept)                           ***
+    ## adults                                ** 
+    ## adults2                               ***
+    ## hotelResort_Hotel                     .  
+    ## reserved_room_typeB                   ***
+    ## reserved_room_typeC                      
+    ## reserved_room_typeD                   *  
+    ## reserved_room_typeE                   ***
+    ## reserved_room_typeF                   ***
+    ## reserved_room_typeG                      
+    ## reserved_room_typeH                   ***
+    ## reserved_room_typeL                      
+    ## hotelResort_Hotel:reserved_room_typeB    
+    ## hotelResort_Hotel:reserved_room_typeC ***
+    ## hotelResort_Hotel:reserved_room_typeD    
+    ## hotelResort_Hotel:reserved_room_typeE ***
+    ## hotelResort_Hotel:reserved_room_typeF ***
+    ## hotelResort_Hotel:reserved_room_typeG    
+    ## hotelResort_Hotel:reserved_room_typeH    
+    ## hotelResort_Hotel:reserved_room_typeL    
+    ## adults2:reserved_room_typeB              
+    ## adults2:reserved_room_typeC           ***
+    ## adults2:reserved_room_typeD              
+    ## adults2:reserved_room_typeE           ***
+    ## adults2:reserved_room_typeF           ***
+    ## adults2:reserved_room_typeG           ***
+    ## adults2:reserved_room_typeH              
+    ## adults2:reserved_room_typeL              
+    ## adults:reserved_room_typeB            ***
+    ## adults:reserved_room_typeC            ***
+    ## adults:reserved_room_typeD               
+    ## adults:reserved_room_typeE               
+    ## adults:reserved_room_typeF            ***
+    ## adults:reserved_room_typeG            ***
+    ## adults:reserved_room_typeH               
+    ## adults:reserved_room_typeL               
+    ## adults2:hotelResort_Hotel             ***
+    ## adults:hotelResort_Hotel              *  
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## Residual standard error: 0.227 on 35965 degrees of freedom
-    ## Multiple R-squared:  0.3005, Adjusted R-squared:  0.2998 
-    ## F-statistic: 454.3 on 34 and 35965 DF,  p-value: < 2.2e-16
+    ## Residual standard error: 0.2285 on 35965 degrees of freedom
+    ## Multiple R-squared:  0.3031, Adjusted R-squared:  0.3025 
+    ## F-statistic: 460.1 on 34 and 35965 DF,  p-value: < 2.2e-16
 
 The third model used engineered features: a new dummy-variable was
 created, “adults2” when adults==2. Having 2 adults on the reservation
-would seemingly increase the probability of children begin on the
-reservation, so we testing including this feature.
+would seemingly increase the probability of children being on the
+reservation, so we tested including this feature.
 
 Then, we started with a medium model, including adults, adults2, hotel
-type and the type of room reserved. A stepwise selection model was
-created allowing for 2-way interaction terms between the variables in
-the medium model.
+type and the type of room reserved. A step-wise selection model was
+created allowing for 2-way interaction terms between the prexisting
+variables in the medium model.
 
 Let’s evaluate all three of these models for out-of-sample performance
 using the testing split from hotels\_dev:
 
-    ## [1] 0.2726798
+    ## [1] 0.2637913
 
-    ## [1] 0.2355716
+    ## [1] 0.2290787
 
-    ## [1] 0.2305181
+    ## [1] 0.2246702
 
 Baseline model 3 has the lowest rmse.
 
