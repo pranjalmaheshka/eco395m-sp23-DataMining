@@ -345,7 +345,8 @@ hotelfold %>%
   ggplot() +
   geom_col(aes(x=.folds, y=overprediction))
 ```
-Our prediction model from the step-wise approach accurately guesses the number of bookings with children within a small margin of error. The model does tend to over-predict the number of bookings more than under-predict-- but over-predictions are less than about 6 bookings, and under-predictions are less than about 5. Given that these are groups of 250 bookings, this is a relatively small margin of error-- especially considering that the majority of bookings are less than 1 booking off from estimating the number of bookings with children.
+
+Our prediction model from the step-wise approach accurately guesses the number of bookings with children within a small margin of error. The actual margins depend on the k-fold splits, but inaccuracy is almost always less than 5-6 bookings. Given that these are groups of 250 bookings, this is a relatively small margin of error-- especially considering that the majority of bookings are less than 1 booking off from estimating the number of bookings with children.
 
 
 
