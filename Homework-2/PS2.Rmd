@@ -297,10 +297,9 @@ lm_step = step(lm3, scope=~(adults + adults2 + hotel + reserved_room_type)^2)
 summary(lm_step)
 ```
 
-The third model used engineered features: a new dummy-variable was created, "adults2" when adults==2. Having 2 adults on the reservation would seemingly increase the probability of children begin on the reservation, so we testing including this feature.
+The third model used engineered features: a new dummy-variable was created, "adults2" when adults==2. Having 2 adults on the reservation would seemingly increase the probability of children being on the reservation, so we tested including this feature.
 
-Then, we started with a medium model, including adults, adults2, hotel type and the type of room reserved. A stepwise selection model was created allowing for 2-way interaction terms between the variables in the medium model.
-
+Then, we started with a medium model, including adults, adults2, hotel type and the type of room reserved. A step-wise selection model was created allowing for 2-way interaction terms between the prexisting variables in the medium model.
 
 Let's evaluate all three of these models for out-of-sample performance using the testing split from hotels_dev:
 
