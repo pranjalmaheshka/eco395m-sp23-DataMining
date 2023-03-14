@@ -7,12 +7,80 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(modelr)
+library(mosaic)
+library(psych)
+library(rsample)  
+library(caret)
+library(parallel)
+library(foreach)
+library(gamlr)
+library(verification)
+library(groupdata2)
 ```
 
 ## Predictive model building: green certification
 
 ```{r, echo=FALSE}
-greendf = read.csv("C:\Users\ashac\OneDrive\Documents\GitHub\eco395m-sp23-DataMining\Homework-3\greenbuildings.csv", 
-                    as.is = T, fill = T, header = T)
+greendf = read.csv("C:\\Users\\ashac\\OneDrive\\Documents\\GitHub\\eco395m-sp23-DataMining\\Homework-3\\greenbuildings.csv", as.is = T, fill = T, header = T)
+#change this during upload? don't know how to run it tbh
+
+greendf = greendf %>%
+  mutate(revsqftyr = Rent*leasing_rate)
+
+green_split = initial_split(greendf, prop = 0.8)
+green_train = training(green_split)
+green_test = testing(green_split)
+
+```
+
+I'd like to do variable selection for regression rather than trees, as this will give a clearer picture of the partial effect of green cert on revsqftyr.
+
+Using step methodology: we'll start with a few different medium models and pick the one with the lowest out-of-sample rmse. (should we also do n-fold cross-validation and pick the model with the lowest mean out-of-sample rmse?)
+
+``` {r, echo=FALSE}
+
+lm1 = lm(revsqftyr ~ green_rating + size + empl_gr + age + renovated + amenities + City_Market_Rent, data=green_train)
+
+lm2 = lm(revsqftyr ~ green_rating + cd_total_07 + hd_total07 + Gas_Costs + Electricity_Costs, data=green_train)
+
+lm3 = lm(revsqftyr ~ (. - Rent - leasing_rate - CS_PropertyID - revsqftyr)^2, data=green_train)
+
+lm4 = lm(revsqftyr ~ 1, data=green_train)
+```
+
+
+``` {r, echo=FALSE, include=FALSE}
+lm_step1 = step(lm1, scope=~(green_rating + size + empl_gr + age + renovated + amenities + City_Market_Rent + cd_total_07 + hd_total07 + total_dd_07 + Gas_Costs + Electricity_Costs + class_a + class_b)^2)
+
+```
+
+```{r, echo=FALSE, include=FALSE, warning=FALSE}
+lm_step2 = step(lm2, scope=~(green_rating + size + empl_gr + age + renovated + amenities + City_Market_Rent + cd_total_07 + hd_total07 + Gas_Costs + Electricity_Costs + class_a + class_b)^2)
+
+```
+
+```{r, echo=FALSE}
+rmse(lm_step1, data=green_test)
+rmse(lm_step2, data=green_test)
+
+```
+```{R, echo=FALSE, warning=FALSE}
+set.seed(123)
+train.control = trainControl(method = "repeatedcv", number=10, repeats = 3)
+
+row.has.na = apply(green_train, 1, function(x){any(is.na(x))})
+green_train_noNA = green_train[!row.has.na, ]
+
+model = train(revsqftyr ~(. - Rent - CS_PropertyID - leasing_rate - revsqftyr - empl_gr), data = green_train_noNA, method = "lm", trControl = train.control)
+
+print(model)
+
+```
+
+```{R, echo=FALSE, warning=FALS}
+rmse(model, data=green_test)
 
 ```
