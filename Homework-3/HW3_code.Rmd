@@ -1,0 +1,18 @@
+---
+title: "Data Mining HW 3"
+author: "Asha Christensen, Pranjal Maheshka, Marco Navarro"
+date: "2023-03-14"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Predictive model building: green certification
+
+```{r, echo=FALSE}
+greendf = read.csv("C:\Users\ashac\OneDrive\Documents\GitHub\eco395m-sp23-DataMining\Homework-3\greenbuildings.csv", 
+                    as.is = T, fill = T, header = T)
+
+```
