@@ -42,45 +42,52 @@ Using step methodology: we'll start with a few different medium models and pick 
 
 ``` {r, echo=FALSE}
 
-lm1 = lm(revsqftyr ~ green_rating + size + empl_gr + age + renovated + amenities + City_Market_Rent, data=green_train)
+lm1 = lm(revsqftyr ~ green_rating + size + age + renovated + amenities + City_Market_Rent, data=green_train)
 
 lm2 = lm(revsqftyr ~ green_rating + cd_total_07 + hd_total07 + Gas_Costs + Electricity_Costs, data=green_train)
 
-lm3 = lm(revsqftyr ~ (. - Rent - leasing_rate - CS_PropertyID - revsqftyr)^2, data=green_train)
-
-lm4 = lm(revsqftyr ~ 1, data=green_train)
 ```
 
 
 ``` {r, echo=FALSE, include=FALSE}
-lm_step1 = step(lm1, scope=~(green_rating + size + empl_gr + age + renovated + amenities + City_Market_Rent + cd_total_07 + hd_total07 + total_dd_07 + Gas_Costs + Electricity_Costs + class_a + class_b)^2)
+lm_step1 = step(lm1, scope=~(green_rating + size + age + renovated + amenities + City_Market_Rent + cd_total_07 + hd_total07 + total_dd_07 + Gas_Costs + Electricity_Costs + class_a + class_b)^2)
 
 ```
 
 ```{r, echo=FALSE, include=FALSE, warning=FALSE}
-lm_step2 = step(lm2, scope=~(green_rating + size + empl_gr + age + renovated + amenities + City_Market_Rent + cd_total_07 + hd_total07 + Gas_Costs + Electricity_Costs + class_a + class_b)^2)
+lm_step2 = step(lm2, scope=~(green_rating + size + age + renovated + amenities + City_Market_Rent + cd_total_07 + hd_total07 + Gas_Costs + Electricity_Costs + class_a + class_b)^2)
 
 ```
 
+Here are the rmse(s) for the testing data:
 ```{r, echo=FALSE}
 rmse(lm_step1, data=green_test)
 rmse(lm_step2, data=green_test)
 
 ```
-```{R, echo=FALSE, warning=FALSE}
-set.seed(123)
-train.control = trainControl(method = "repeatedcv", number=10, repeats = 3)
+These are pretty close to one another, which means even though one model has a lower RMSE, it may just be due to the specific train/test split. Therefore, we should estimate the RMSE using k-fold cross validation to determine which model is a better predictor.
 
-row.has.na = apply(green_train, 1, function(x){any(is.na(x))})
-green_train_noNA = green_train[!row.has.na, ]
+What if we just say screw this and use regression trees?
 
-model = train(revsqftyr ~(. - Rent - CS_PropertyID - leasing_rate - revsqftyr - empl_gr), data = green_train_noNA, method = "lm", trControl = train.control)
+```{r, echo=FALSE}
+library(rpart)
+library(randomForest)
 
-print(model)
+green_train_noNA = na.omit(green_train)
 
-```
-
-```{R, echo=FALSE, warning=FALS}
-rmse(model, data=green_test)
+load.tree = randomForest(revsqftyr ~ (.-Rent - leasing_rate - CS_PropertyID -LEED - Energystar) ,
+                  data=green_train_noNA, importance = TRUE)
 
 ```
+
+```{r, echo=FALSE}
+
+plot(load.tree)
+
+modelr::rmse(load.tree, green_test)
+
+partialPlot(load.tree, green_test, c('green_rating', 'age'), las=1)
+```
+
+
+
