@@ -8,12 +8,12 @@ output: md_document
 # DataMining_PS2
 
 ## Pranjal Maheshka, Asha Christensen, Marco Navarro
-
 ### 2023-01-30
 
-## Saratoga house prices
 
-```{r setup, include=FALSE}
+## Question 1: Saratoga house prices
+
+```{r setup1, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(ggplot2)
@@ -64,8 +64,164 @@ In conclusion, the results have shown that the linear model has the best perform
 
 The accuracy of this two methods can be reevaluated after an expansion of the number of observations or number of explanatory variables.
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+```
 
-## Appendix
+## Question 2: German Credit Defaults 
+The data here deals with loan defaults from a German bank. The "Default" variable is binary with 1 indicating that loan fell into default during some point. Other variables are characteristics associated with the loan and the borrower, the primary of which is under consideration is the credit history variable. Credit history can be good, poor, or terrible. 
+
+
+```{r main, echo=FALSE}
+credit <-  read.csv('german_credit.csv')
+
+credit1 <- credit %>% as.data.frame %>%
+  group_by(history) %>% summarise(mean(Default))
+colnames(credit1)[2] ="Default_Prob"
+```
+
+## Credit History
+
+Below is a bar plot showing default probability by a borrower's credit history rating. This is a very interesting plot because it seems that "good" borrowers have a 60% chance of default while terrible borrowers only have a 17% chance of default. This is misleading information as it does not encompass all the loans given out by the German and this will be discussed next. 
+
+
+
+```{r plots, echo=FALSE}
+
+ggplot(data=credit1, aes(x=history, y=Default_Prob)) + geom_bar(stat="identity") + 
+  geom_text(aes(label = sprintf("%.2f", Default_Prob)), vjust = -0.2) + 
+  labs(y = "Probability of Default", x = "Credit History Rating", title = "Default probability by credit history") + 
+  scale_x_discrete(labels = c('Good','Poor','Terrible')) + 
+  theme_minimal()
+
+```
+
+```{r logit, echo=FALSE}
+logit <- glm(Default~duration + amount + installment + age + history + purpose + foreign, family="binomial", data=credit)
+logit
+``` 
+
+
+## Logit Regression
+
+A logit regression (shown above) on default was run using the variables duration, amount, installment, age, history, purpose, foreign. For the credit history variable, the "good" rating is the default (indicated by the intercept) which means that the coefficient of -1.108 for a "poor" history and a -1.885 for a "terrible" history are surprising results at first glance. This means that borrowers with a poor history are 67.0% less likely to default than borrowers with a good history. Terrible credit histories are actually predicted to be 84.8% less likely to default. These results are in stark contrast to what one might expect. Normally, borrowers with a better credit history are more likely to receive a loan at a lower interest rate and more likely to pay it back on time. 
+
+This data was considered and collected in a retrospective, case-control design manner. This means that it conditioned on defaults implicitly given that 30% of the observations show Default = 1 and the other observations were picked to match similar sets of non-defaulting loans to the defaulted loans. This was not a random selection of the population of data available to the bank, the data were chosen with a strong selection bias. Given that good ratings are more likely to approved for loans than terrible ratings, there is bias in selection. Individuals with terrible ratings might have other factors that lend to their credibility that allow them to get approved on a more selective, stringent basis. It is possible then that they have the same rates of default in the overall sample. It is also possible that there are fewer other non-defaulting borrowers to compare them against making their default rate in this sample just 17%. Defaulting good rating borrowers might have more comparable non-defaulting borrowers so this sample skews the data to show a 60% default rate. We will not know the exact cause of the skew in data because the exact data selection and sub-sampling method is unknown here. 
+
+This is data is not appropriate for building a predictive model because it is not representative of the population. This is true for many reasons listed above like the default rates for different credit histories but also because it is not possible that bank sees a 30% default rate overall. The bank can either consider the entire population of data it has and then create a train/test split before creating a predictive model or it randomly sample the data such the dataset is smaller and perhaps easier to train the model on. The important thing is that the sample should be randomized and free of selection bias such that it is representative of the true population. 
+
+Note: The interpretation of the logit model was done as follows: A negative coefficient can be converted to a probability percentage using the formula: 1 - (e^coef). 
+
+
+
+## Question 3: Children and Hotel Reservations
+### Model Building
+
+```{r, include=FALSE}
+
+hoteldev = read.csv("hotels_dev.csv", as.is = T, fill = T, header = T)
+
+hotelval = read.csv("hotels_val.csv", as.is = T, fill = T, header = T)
+
+```
+
+```{r, echo=FALSE}
+
+#Split into training and testing sets?
+dev_split = initial_split(hoteldev, prop = 0.8)
+dev_train = training(dev_split)
+dev_test = testing(dev_split)
+```
+Model 1:
+```{r, echo=FALSE}
+#Baseline 1: small model with only market_segment, adults, customer_type and is_repeated_guest as features
+
+lm1 = lm(children ~ market_segment + adults + customer_type + is_repeated_guest, data=dev_train)
+
+summary(lm1)
+```
+Model 2:
+```{r, echo=FALSE}
+#Baseline 2: big model that uses all possible predictors except arrival_date
+
+lm2 = lm(children ~ .-arrival_date, data=dev_train)
+
+summary(lm2)
+
+```
+Model 3:
+```{r, echo=FALSE, include=FALSE}
+#Baseline 3: linear model that I build
+#first, let's figure out coefficients we think would be important:
+#I think if adults == 2, there is more likely to be children (create dummy variable for adults == 2)
+#assigned room types important, so is hotel type, and market_segment and customer_type?
+
+dev_train = dev_train %>%
+  mutate(adults2 = ifelse(adults == 2, 1, 0))
+
+lm3 = lm(children ~ adults + adults2 + hotel + reserved_room_type, data=dev_train)
+
+lm_step = step(lm3, scope=~(adults + adults2 + hotel + reserved_room_type)^2)
+
+```            
+```{r, echo=FALSE}
+summary(lm_step)
+```
+
+The third model used engineered features: a new dummy-variable was created, "adults2" when adults==2. Having 2 adults on the reservation would seemingly increase the probability of children being on the reservation, so we tested including this feature.
+
+Then, we started with a medium model, including adults, adults2, hotel type and the type of room reserved. A step-wise selection model was created allowing for 2-way interaction terms between the prexisting variables in the medium model.
+
+Let's evaluate all three of these models for out-of-sample performance using the testing split from hotels_dev:
+
+```{r, echo=FALSE, warning=FALSE}
+
+dev_test = dev_test %>%
+  mutate(adults2 = ifelse(adults == 2, 1, 0))
+
+rmse(lm1, dev_test)
+rmse(lm2, dev_test)
+rmse(lm_step, dev_test)
+
+
+```
+Baseline model 3 has the lowest rmse.
+
+### Model Validation, Step 1
+
+```{r, echo=FALSE, warning=FALSE}
+#across many 0<t<1, among children, how many are correctly flagged? and among non-children, how many are incorrectly flagged?
+hotelval = hotelval %>%
+  mutate(adults2 = ifelse(adults== 2, 1, 0))
+
+x <- hotelval$children
+y <- predict(lm_step, hotelval)
+rocdata <- data.frame(x,y)
+roc.plot(rocdata$x, rocdata$y, show.thres=FALSE)
+
+```
+
+### Model Validation, Step 2
+
+```{r, echo=FALSE, warning=FALSE}
+
+hotelfold = fold(hotelval, k=20)
+
+hotelfold$predict = predict(lm_step, hotelfold)
+
+hotelfold %>%
+  group_by(.folds) %>%
+  summarize(predicted_child = sum(predict), actual_child = sum(children), overprediction = predicted_child - actual_child) %>%
+  ggplot() +
+  geom_col(aes(x=.folds, y=overprediction))
+```
+
+Our prediction model from the step-wise approach accurately guesses the number of bookings with children within a small margin of error. The actual margins depend on the k-fold splits, but inaccuracy is almost always less than 5-6 bookings. Given that these are groups of 250 bookings, this is a relatively small margin of error-- especially considering that the majority of bookings are less than 1 booking off from estimating the number of bookings with children.
+
+
+## Appendix - Question 1
 
 ### Saratoga house prices
 
@@ -242,111 +398,5 @@ ggplot(cv_grid) +
   ggtitle("Cross-validated errors per k values") + ylab("Mean RMSE")
 
 ```
-
-## Children and Hotel Reservations
-### Model Building
-
-```{r, include=FALSE}
-
-hoteldev = read.csv("C:\\Users\\ashac\\Downloads\\Data_mining\\hotels_dev.csv", as.is = T, fill = T, header = T)
-
-hotelval = read.csv("C:\\Users\\ashac\\Downloads\\Data_mining\\hotels_val.csv", as.is = T, fill = T, header = T)
-
-```
-
-```{r, echo=FALSE}
-
-#Split into training and testing sets?
-dev_split = initial_split(hoteldev, prop = 0.8)
-dev_train = training(dev_split)
-dev_test = testing(dev_split)
-```
-Model 1:
-```{r, echo=FALSE}
-#Baseline 1: small model with only market_segment, adults, customer_type and is_repeated_guest as features
-
-lm1 = lm(children ~ market_segment + adults + customer_type + is_repeated_guest, data=dev_train)
-
-summary(lm1)
-```
-Model 2:
-```{r, echo=FALSE}
-#Baseline 2: big model that uses all possible predictors except arrival_date
-
-lm2 = lm(children ~ .-arrival_date, data=dev_train)
-
-summary(lm2)
-
-```
-Model 3:
-```{r, echo=FALSE, include=FALSE}
-#Baseline 3: linear model that I build
-#first, let's figure out coefficients we think would be important:
-#I think if adults == 2, there is more likely to be children (create dummy variable for adults == 2)
-#assigned room types important, so is hotel type, and market_segment and customer_type?
-
-dev_train = dev_train %>%
-  mutate(adults2 = ifelse(adults == 2, 1, 0))
-
-lm3 = lm(children ~ adults + adults2 + hotel + reserved_room_type, data=dev_train)
-
-lm_step = step(lm3, scope=~(adults + adults2 + hotel + reserved_room_type)^2)
-
-```            
-```{r, echo=FALSE}
-summary(lm_step)
-```
-
-The third model used engineered features: a new dummy-variable was created, "adults2" when adults==2. Having 2 adults on the reservation would seemingly increase the probability of children being on the reservation, so we tested including this feature.
-
-Then, we started with a medium model, including adults, adults2, hotel type and the type of room reserved. A step-wise selection model was created allowing for 2-way interaction terms between the prexisting variables in the medium model.
-
-Let's evaluate all three of these models for out-of-sample performance using the testing split from hotels_dev:
-
-```{r, echo=FALSE, warning=FALSE}
-
-dev_test = dev_test %>%
-  mutate(adults2 = ifelse(adults == 2, 1, 0))
-
-rmse(lm1, dev_test)
-rmse(lm2, dev_test)
-rmse(lm_step, dev_test)
-
-
-```
-Baseline model 3 has the lowest rmse.
-
-### Model Validation, Step 1
-
-```{r, echo=FALSE, warning=FALSE}
-#across many 0<t<1, among children, how many are correctly flagged? and among non-children, how many are incorrectly flagged?
-hotelval = hotelval %>%
-  mutate(adults2 = ifelse(adults== 2, 1, 0))
-
-x <- hotelval$children
-y <- predict(lm_step, hotelval)
-rocdata <- data.frame(x,y)
-roc.plot(rocdata$x, rocdata$y, show.thres=FALSE)
-
-```
-
-### Model Validation, Step 2
-
-```{r, echo=FALSE, warning=FALSE}
-
-hotelfold = fold(hotelval, k=20)
-
-hotelfold$predict = predict(lm_step, hotelfold)
-
-hotelfold %>%
-  group_by(.folds) %>%
-  summarize(predicted_child = sum(predict), actual_child = sum(children), overprediction = predicted_child - actual_child) %>%
-  ggplot() +
-  geom_col(aes(x=.folds, y=overprediction))
-```
-
-Our prediction model from the step-wise approach accurately guesses the number of bookings with children within a small margin of error. The actual margins depend on the k-fold splits, but inaccuracy is almost always less than 5-6 bookings. Given that these are groups of 250 bookings, this is a relatively small margin of error-- especially considering that the majority of bookings are less than 1 booking off from estimating the number of bookings with children.
-
-
 
 
