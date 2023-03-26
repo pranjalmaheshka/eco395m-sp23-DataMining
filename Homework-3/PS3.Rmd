@@ -48,22 +48,17 @@ For the K-nearest neighbors regression method, different values of K were evalua
 
 The k-fold cross validation is the procedure used to evaluate the out-of-sample performance of the linear model, the K-nearest neighbors regression and the regression tree. This is a resampling method that uses different portions of the data to test and train a model on different iterations. The whole dataset was split into 10 different folds to perform this evaluation and the accuracy of the prediction was evaluated by checking the root mean square error (RMSE).
 
-Among these three different methods, the tree regression model presents the best out-of-sample performance. The root mean squared error for this tree model equals 60,000.
+Among these three different methods, the tree regression model presents the best out-of-sample performance. The cross validated error for this tree model equals 59,621.
 
-That last result compares poorly against the cross-validated error of the best linear model. In the case of this linear model, the cross validated error is $57,068 with a standard error of 1,903 dollars. 
+In the case of the random forest, due to the estimation process, we already have a measure of the out-of-sample performance with the “out-of-bag” predictions. However, We split our our observations in a training and test set in order to have a comparable out of sample error. Using this entirely fresh subset of the data, the root mean squared error on the test set equals 50,520.
 
-In conclusion, the results have shown that the linear model has the best performance among these two methods according to the k-fold cross validation. Given this particular set of explanatory variables, the prediction model should be the linear model. The following table presents the results of the evaluations.
+In conclusion, the results have shown that the random forest model has the best performance among these methods. Given this particular set of explanatory variables, the prediction model should be the random forest. 
 
-|Model              |RMSE_1  |RMSE_2  |RMSE_3  |RMSE_4  |RMSE_5  | Mean   |Sd Dev |
-| ----------------- |:------:|:------:|:------:|:------:|:------:|:------:|:-----:| 
-|Best Linear Model	|56171.2 |55058.87|52071.68|63409.28|58631.75|57068.56|1903.43|
-|KNN k=10           |63348.51|60654.92|63415.53|55872.56|61762.50|61010.80|1384.57|
-
-The accuracy of this two methods can be reevaluated after an expansion of the number of observations or number of explanatory variables.
+The accuracy of these methods can be reevaluated after an expansion of the number of observations or number of explanatory variables.
 
 ```{r , include=FALSE}
 ################################### Read dataset
-CAhousing = read.csv("C:/Users/ACER/Desktop/Stats Learning/CAhousing.csv")
+CAhousing = read.csv("CAhousing.csv")
 
 ########### Scale some variables
 CAhousing2 = CAhousing  %>%
@@ -187,8 +182,9 @@ sqrt(mean(CAhousing3$pred_errort))
 sqrt(mean(CAhousing3$pred_errorrf))
 ```
 
+## original values
 
-```{r , echo=FALSE, warning=FALSE}
+```{r , echo=FALSE, warning=FALSE,message=FALSE}
 ############################### Graphs
 
 #### Additional variable for errors
@@ -214,11 +210,13 @@ ggplot(CA_tracts) +
   scale_colour_viridis_c(option = "E",labels = comma)+
   theme_bw() +
   theme(legend.key.size = unit(0.5, 'cm'),legend.position = c(0.8, 0.8))+
-  labs(y = "", x = "", title = "Original values")+
+  labs(y = "", x = "", title = "Median House Value (Dollars)")+
   theme(legend.title = element_blank(),legend.text = element_text(size = 8, colour = "black",face = "bold"))+
   theme(axis.text.y = element_blank(),axis.text.x = element_blank())+
   theme(plot.title = element_text(hjust = 0.5))
 ```
+
+## Predicted Values
 
 ```{r , echo=FALSE, warning=FALSE}
 #### Predicted Values
@@ -229,11 +227,13 @@ ggplot(CA_tracts) +
   scale_colour_viridis_c(option = "E",labels = comma)+
   theme_bw() +
   theme(legend.key.size = unit(0.5, 'cm'),legend.position = c(0.8, 0.8))+
-  labs(y = "", x = "", title = "Predicted Values")+
+  labs(y = "", x = "", title = "Median House Value (Dollars)")+
   theme(legend.title = element_blank(),legend.text = element_text(size = 8, colour = "black",face = "bold"))+
   theme(axis.text.y = element_blank(),axis.text.x = element_blank())+
   theme(plot.title = element_text(hjust = 0.5))
 ```
+
+## Model's errors
 
 ```{r , echo=FALSE, warning=FALSE}
 #### Errors graph
@@ -244,7 +244,7 @@ ggplot(CA_tracts) +
   scale_colour_gradientn(values =rescale(c(0,20000,25000,30000,200000)), colours=c('yellow3','darkblue'),labels = comma)+
   theme_bw() +
   theme(legend.key.size = unit(0.5, 'cm'),legend.position = c(0.8, 0.8))+
-  labs(y = "", x = "", title = "Forecast errors")+
+  labs(y = "", x = "", title = "Errors (Dollars)")+
   theme(legend.title = element_blank(),legend.text = element_text(size = 8, colour = "black",face="bold"))+
   theme(axis.text.y = element_blank(),axis.text.x = element_blank())+
   theme(plot.title = element_text(hjust = 0.5))
