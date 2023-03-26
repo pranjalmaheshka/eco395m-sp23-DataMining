@@ -182,7 +182,7 @@ sqrt(mean(CAhousing3$pred_errort))
 sqrt(mean(CAhousing3$pred_errorrf))
 ```
 
-```{r , INCLUDE=FALSE, warning=FALSE,message=FALSE}
+```{r , include=FALSE, warning=FALSE,message=FALSE}
 #### Counties map
 
 CA_tracts <- counties("CA")
