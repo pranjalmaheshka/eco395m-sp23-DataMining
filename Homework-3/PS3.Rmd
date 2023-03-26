@@ -182,7 +182,13 @@ sqrt(mean(CAhousing3$pred_errort))
 sqrt(mean(CAhousing3$pred_errorrf))
 ```
 
-## original values
+```{r , INCLUDE=FALSE, warning=FALSE,message=FALSE}
+#### Counties map
+
+CA_tracts <- counties("CA")
+```
+
+## Original values
 
 ```{r , echo=FALSE, warning=FALSE,message=FALSE}
 ############################### Graphs
@@ -197,10 +203,6 @@ CAhousing3 = CAhousing3 %>%
 
 CAhousing3 = CAhousing3 %>%
   mutate(logsqpred_errorrf=log(sqpred_errorrf))
-
-#### Counties map
-
-CA_tracts <- counties("CA")
 
 #### Original values
 
