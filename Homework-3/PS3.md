@@ -55,6 +55,6 @@ the number of observations or number of explanatory variables.
 
 ![](PS3_files/figure-markdown_strict/unnamed-chunk-4-1.png)
 
-## Model’s errors
+## Model’s errors (Original values - Predicted values)
 
 ![](PS3_files/figure-markdown_strict/unnamed-chunk-5-1.png)

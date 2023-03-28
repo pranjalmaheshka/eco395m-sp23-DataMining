@@ -229,7 +229,7 @@ ggplot(CA_tracts) +
   theme(plot.title = element_text(hjust = 0.5))
 ```
 
-## Model's errors
+## Model's errors (Original values - Predicted values)
 
 ```{r , echo=FALSE, warning=FALSE}
 #### Errors graph
