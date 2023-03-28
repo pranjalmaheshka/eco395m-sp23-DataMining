@@ -175,11 +175,11 @@ CAhousing3 = CAhousing2 %>%
   mutate(value_predt = predict(cahousing.tree_min,CAhousing2),pred_errort=(medianHouseValue-value_predt)^2)
  
 CAhousing3 = CAhousing3 %>%
-  mutate(value_predrf = predict(CAhousing2.forest,CAhousing2),pred_errorrf=(medianHouseValue-value_predrf)^2)
+  mutate(value_predrf = predict(CAhousing2.forest,CAhousing2),pred_errorrfsq=(medianHouseValue-value_predrf)^2)
 
 sqrt(mean(CAhousing3$pred_errort))
 
-sqrt(mean(CAhousing3$pred_errorrf))
+sqrt(mean(CAhousing3$pred_errorrfsq))
 ```
 
 ```{r , include=FALSE, warning=FALSE,message=FALSE}
@@ -196,13 +196,7 @@ CA_tracts <- counties("CA")
 #### Additional variable for errors
 
 CAhousing3 = CAhousing3 %>%
-  mutate(above30k=as.factor(ifelse(sqrt(pred_errorrf) >= 30000, 1, 0)))
-
-CAhousing3 = CAhousing3 %>%
-  mutate(sqpred_errorrf=sqrt(pred_errorrf))
-
-CAhousing3 = CAhousing3 %>%
-  mutate(logsqpred_errorrf=log(sqpred_errorrf))
+  mutate(pred_errorrf=medianHouseValue-value_predrf)
 
 #### Original values
 
@@ -242,8 +236,9 @@ ggplot(CA_tracts) +
 
 ggplot(CA_tracts) +
   geom_sf() + 
-  geom_point(data=CAhousing3,aes(x=longitude,y=latitude,color=sqpred_errorrf),size= 1.2) +
-  scale_colour_gradientn(values =rescale(c(0,20000,25000,30000,200000)), colours=c('yellow3','darkblue'),labels = comma)+
+  geom_point(data=CAhousing3,aes(x=longitude,y=latitude,color=pred_errorrf),size= 1.2) +
+ scale_colour_binned(type = "viridis",
+                      breaks = c(-30000, 0, 30000))+
   theme_bw() +
   theme(legend.key.size = unit(0.5, 'cm'),legend.position = c(0.8, 0.8))+
   labs(y = "", x = "", title = "Errors (Dollars)")+
