@@ -168,11 +168,13 @@ The k-fold cross validation is the procedure used to evaluate the out-of-sample 
 
 Among these three different methods, the tree regression model presents the best out-of-sample performance. The cross validated error for this tree model equals 59,621.
 
-In the case of the random forest, due to the estimation process, we already have a measure of the out-of-sample performance with the “out-of-bag” predictions. However, We split our our observations in a training and test set in order to have a comparable out of sample error. Using this entirely fresh subset of the data, the root mean squared error on the test set equals 50,520.
+In the case of the random forest, due to the estimation process, we already have a measure of the out-of-sample performance with the “out-of-bag” predictions. However, we split our observations in a training and test set in order to have a comparable out of sample error. Using this entirely fresh subset of the data, the root mean squared error on the test set equals 50,520.
 
 In conclusion, the results have shown that the random forest model has the best performance among these methods. Given this particular set of explanatory variables, the prediction model should be the random forest. 
 
 The accuracy of these methods can be reevaluated after an expansion of the number of observations or number of explanatory variables.
+
+After selecting the best model, we proceed to present  graphs of the original values, random forest predicted values and random forest model's error.
 
 ```{r , include=FALSE}
 ################################### Read dataset
@@ -355,8 +357,7 @@ ggplot(CA_tracts) +
 ggplot(CA_tracts) +
   geom_sf() + 
   geom_point(data=CAhousing3,aes(x=longitude,y=latitude,color=pred_errorrf),size= 1.2) +
- scale_colour_binned(type = "viridis",
-                      breaks = c(-30000, 0, 30000))+
+ scale_colour_viridis_c(limit=c(-50000,50000),label=comma,option = "H")+
   theme_bw() +
   theme(legend.key.size = unit(0.5, 'cm'),legend.position = c(0.8, 0.8))+
   labs(y = "", x = "", title = "Errors (Dollars)")+
@@ -366,6 +367,6 @@ ggplot(CA_tracts) +
 
 ```
 
-
+In the error graph, grey points correspond to those errors that are higher than 50,000 or lower than -50,000.
 
 

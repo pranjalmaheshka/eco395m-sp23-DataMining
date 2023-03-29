@@ -40,23 +40,23 @@ significant after controlling for metro mid-day ridership.
 Let’s start with some step-wise models, using some medium linear models.
 Here are our initial out-of-sample RMSEs for both linear models:
 
-    ## [1] 970.9323
+    ## [1] 979.7368
 
-    ## [1] 1346.841
+    ## [1] 1357.384
 
 In these step-wise regressions, we allow the use of all variables except
 rent, leasing rate, property ID, LEED and Energystar, allowing for
 second-level interactions.
 
-    ## [1] 965.3916
+    ## [1] 967.8153
 
-    ## [1] 1252.233
+    ## [1] 1291.632
 
 There’s a slight improvement on out-of-sample RMSE, but not a large
 decrease. We may be able to use a random forest model to more accurately
 predict revenue per square foot per year.
 
-    ## [1] 679.1928
+    ## [1] 409.1368
 
 Our out-of-sample RMSE is much lower than the linear step models
 produced, so this is our best model to predict revenue per square foot
@@ -124,7 +124,7 @@ tree model equals 59,621.
 
 In the case of the random forest, due to the estimation process, we
 already have a measure of the out-of-sample performance with the
-“out-of-bag” predictions. However, We split our our observations in a
+“out-of-bag” predictions. However, we split our observations in a
 training and test set in order to have a comparable out of sample error.
 Using this entirely fresh subset of the data, the root mean squared
 error on the test set equals 50,520.
@@ -135,6 +135,10 @@ explanatory variables, the prediction model should be the random forest.
 
 The accuracy of these methods can be reevaluated after an expansion of
 the number of observations or number of explanatory variables.
+
+After selecting the best model, we proceed to present graphs of the
+original values, random forest predicted values and random forest
+model’s error.
 
 ## Original values
 
@@ -147,3 +151,6 @@ the number of observations or number of explanatory variables.
 ## Model’s errors (Original values - Predicted values)
 
 ![](PS3_files/figure-markdown_strict/unnamed-chunk-14-1.png)
+
+In the error graph, grey points correspond to those errors that are
+higher than 50,000 or lower than -50,000.
