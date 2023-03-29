@@ -1,0 +1,253 @@
+---
+title: "HW3"
+author: "Marco Navarro"
+date: "2023-03-26"
+output: md_document
+---
+
+
+## Question 4 Predictive model building: California housing
+
+```{r setup1, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(gamlr)
+library(tidyverse)
+library(ggmap)
+library(ggplot2)
+library(tidycensus)
+library(tigris)
+library(sf)
+library(rgdal)
+library(broom)
+library(maptools)
+library(modelr)
+library(mosaic)
+library(psych)
+library(rsample)  
+library(caret)
+library(parallel)
+library(foreach)
+library(verification)
+library(groupdata2)
+library(ggrepel)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
+library(scales)
+```
+
+The median house value at the census tract level prediction exercise has been carried out using data on 20,640 census tracts in the state of California. In addition to median house value, this dataset contains 8 variables that capture different characteristics of the census tracks and their houses, such as population, number of households, median age in years of all residential households, total of bedrooms, etc.
+
+### Median house value prediction strategy
+
+Four different methods were tested in the building process of a prediction model of house prices: linear model, K-nearest neighbors regression, regression tree and random forests.
+
+For the K-nearest neighbors regression method, different values of K were evaluated and we picked the one with the the minimum root mean square error (RMSE) after k-fold cross validation. On the other hand, recursive partitioning was applied to generate a sequence of trees and select the regression tree with the minimum cross-validated error.
+
+### Model evaluation of the different methods and results
+
+The k-fold cross validation is the procedure used to evaluate the out-of-sample performance of the linear model, the K-nearest neighbors regression and the regression tree. This is a resampling method that uses different portions of the data to test and train a model on different iterations. The whole dataset was split into 10 different folds to perform this evaluation and the accuracy of the prediction was evaluated by checking the root mean square error (RMSE).
+
+Among these three different methods, the tree regression model presents the best out-of-sample performance. The cross validated error for this tree model equals 59,621.
+
+In the case of the random forest, due to the estimation process, we already have a measure of the out-of-sample performance with the “out-of-bag” predictions. However, We split our our observations in a training and test set in order to have a comparable out of sample error. Using this entirely fresh subset of the data, the root mean squared error on the test set equals 50,520.
+
+In conclusion, the results have shown that the random forest model has the best performance among these methods. Given this particular set of explanatory variables, the prediction model should be the random forest. 
+
+The accuracy of these methods can be reevaluated after an expansion of the number of observations or number of explanatory variables.
+
+```{r , include=FALSE}
+################################### Read dataset
+CAhousing = read.csv("CAhousing.csv")
+
+########### Scale some variables
+CAhousing2 = CAhousing  %>%
+  mutate(meanrooms = totalRooms/households,meanbedrooms=totalBedrooms/households)
+CAhousing2 = CAhousing2[,-c(4,5)]
+
+################################## Linear model and KNN
+
+########## Create folds for cross-validation  
+K_folds = 10
+CAhousing2 = CAhousing2 %>%
+  mutate(fold_id = rep(1:K_folds, length=nrow(CAhousing2)) %>% sample)
+
+###################### Linear model
+
+##### Error matrix
+err_save2 = matrix(0, nrow=1, ncol=10)
+
+##### Linear regression
+
+for(i in 1:K_folds) {
+  train_set = which(CAhousing2$fold_id != i)
+  y_test = CAhousing2$medianHouseValue[-train_set]
+  lm1 = lm(medianHouseValue ~ (.-fold_id)^2 + I(housingMedianAge^2)+ I(medianIncome^2) , data=CAhousing2[train_set,])
+   # Predictions out of sample
+    # Root mean squared error
+  err_save2[1, i] =rmse(lm1, data=CAhousing2[-train_set,])
+}
+
+##### Error matrix output
+
+err_save2 = as.data.frame(err_save2)
+err_save2 = err_save2 %>%
+           mutate(err_save2, mean = (V1+V2+V3+V4+V5+V6+V7+V8+V9+V10)/K_folds)
+
+############################################### KNN
+
+########### Prepare dataset
+
+CAhousing2knn = CAhousing2
+
+#### Scale numerical variables
+
+CAhousing2knn[, c("longitude", "latitude", "housingMedianAge", "population", "households", "medianIncome", "meanrooms", "meanbedrooms")] <- scale(CAhousing2knn[, c("longitude", "latitude", "housingMedianAge", "population", "households", "medianIncome", "meanrooms", "meanbedrooms")])
+
+#### Create an auxiliary matrix
+
+CAhousing2knn_folds = crossv_kfold(CAhousing2knn, k=K_folds)
+
+##### We can run this across a range of k
+
+k_grid = c(2, 4, 6, 8, 10, 12, 15,17, 20,22, 25,27, 30, 35, 40, 45,
+           50, 60, 70, 80, 90, 100)
+
+############ KNN regression
+
+cv_grid = foreach(k = k_grid, .combine='rbind') %dopar% {
+  models = map(CAhousing2knn_folds$train, ~ knnreg(medianHouseValue ~ .-fold_id , k=k, data = ., use.all=FALSE))
+  errs = map2_dbl(models, CAhousing2knn_folds$test, modelr::rmse)
+  c(k=k, errs, err = mean(errs), std_err = sd(errs)/sqrt(K_folds))
+} %>% as.data.frame
+
+############################################### Trees 
+
+########## Tree regression
+
+cahousing.tree2 = rpart(medianHouseValue ~ .-fold_id , data=CAhousing2,
+                   control = rpart.control(cp = 0.00001))
+
+#### cross-validated error 
+
+cx1 = as.data.frame(printcp(cahousing.tree2))
+
+######### Separate Cross-fold validation for tree with minimum standard error
+
+Err_save3 = matrix(0, nrow=1, ncol=10)
+
+for(i in 1:K_folds) {
+  train_set = which(CAhousing2$fold_id != i)
+  y_test = CAhousing2$medianHouseValue[-train_set]
+  cahousing.tree_min = rpart(medianHouseValue ~ .-fold_id , 
+  data=CAhousing2[train_set,],control = rpart.control(cp = 0.00006003052))
+# Predictions out of sample
+# Root mean squared error
+  Err_save3[1, i] =rmse(cahousing.tree_min, data=CAhousing2[-train_set,])
+}
+
+##### Error matrix output
+
+Err_save3 = as.data.frame(Err_save3)
+Err_save3 = Err_save3 %>%
+  mutate(Err_save3, mean = (V1+V2+V3+V4+V5+V6+V7+V8+V9+V10)/K_folds)
+
+######################################### Random forest
+
+###########         Split data into training and testing
+
+CAhousing2_split =  initial_split(CAhousing2, prop=0.8)
+CAhousing2_train = training(CAhousing2_split)
+CAhousing2_test  = testing(CAhousing2_split)
+
+############### Random forest code
+
+CAhousing2.forest = randomForest(medianHouseValue ~ .-fold_id,
+                                 data=CAhousing2_train, importance = TRUE)
+
+############################### Compare RMSE on the test set TREE VS FOREST
+
+modelr::rmse(CAhousing2.forest, CAhousing2_test)
+
+###############################   Predictions and errors
+
+CAhousing3 = CAhousing2 %>%
+  mutate(value_predt = predict(cahousing.tree_min,CAhousing2),pred_errort=(medianHouseValue-value_predt)^2)
+ 
+CAhousing3 = CAhousing3 %>%
+  mutate(value_predrf = predict(CAhousing2.forest,CAhousing2),pred_errorrfsq=(medianHouseValue-value_predrf)^2)
+
+sqrt(mean(CAhousing3$pred_errort))
+
+sqrt(mean(CAhousing3$pred_errorrfsq))
+```
+
+```{r , include=FALSE, warning=FALSE,message=FALSE}
+#### Counties map
+
+CA_tracts <- counties("CA")
+```
+
+## Original values
+
+```{r , echo=FALSE, warning=FALSE,message=FALSE}
+############################### Graphs
+
+#### Additional variable for errors
+
+CAhousing3 = CAhousing3 %>%
+  mutate(pred_errorrf=medianHouseValue-value_predrf)
+
+#### Original values
+
+ggplot(CA_tracts) +
+  geom_sf() + 
+  geom_point(data=CAhousing3,aes(x=longitude,y=latitude,color=medianHouseValue),size= 1.2) +
+  scale_colour_viridis_c(option = "E",labels = comma)+
+  theme_bw() +
+  theme(legend.key.size = unit(0.5, 'cm'),legend.position = c(0.8, 0.8))+
+  labs(y = "", x = "", title = "Median House Value (Dollars)")+
+  theme(legend.title = element_blank(),legend.text = element_text(size = 8, colour = "black",face = "bold"))+
+  theme(axis.text.y = element_blank(),axis.text.x = element_blank())+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+## Predicted Values
+
+```{r , echo=FALSE, warning=FALSE}
+#### Predicted Values
+
+ggplot(CA_tracts) +
+  geom_sf() + 
+  geom_point(data=CAhousing3,aes(x=longitude,y=latitude,color=value_predrf),size= 1.2) +
+  scale_colour_viridis_c(option = "E",labels = comma)+
+  theme_bw() +
+  theme(legend.key.size = unit(0.5, 'cm'),legend.position = c(0.8, 0.8))+
+  labs(y = "", x = "", title = "Median House Value (Dollars)")+
+  theme(legend.title = element_blank(),legend.text = element_text(size = 8, colour = "black",face = "bold"))+
+  theme(axis.text.y = element_blank(),axis.text.x = element_blank())+
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+## Model's errors (Original values - Predicted values)
+
+```{r , echo=FALSE, warning=FALSE}
+#### Errors graph
+
+ggplot(CA_tracts) +
+  geom_sf() + 
+  geom_point(data=CAhousing3,aes(x=longitude,y=latitude,color=pred_errorrf),size= 1.2) +
+ scale_colour_binned(type = "viridis",
+                      breaks = c(-30000, 0, 30000))+
+  theme_bw() +
+  theme(legend.key.size = unit(0.5, 'cm'),legend.position = c(0.8, 0.8))+
+  labs(y = "", x = "", title = "Errors (Dollars)")+
+  theme(legend.title = element_blank(),legend.text = element_text(size = 8, colour = "black",face="bold"))+
+  theme(axis.text.y = element_blank(),axis.text.x = element_blank())+
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+
+
+
