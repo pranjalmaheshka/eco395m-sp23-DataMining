@@ -1,3 +1,9 @@
+# DataMining\_PS3
+
+## Pranjal Maheshka, Asha Christensen, Marco Navarro
+
+### 2023-03-30
+
 ## Question 1: What Causes What?
 
 1.  Cities with high levels of crime are incentivized to hire more cops:
@@ -35,28 +41,100 @@ significant after controlling for metro mid-day ridership.
     for the rest of the city is not statistically significant, whereas
     the reduction in crimes in the national mall is 2.62 crimes.
 
+## Question 2 Tree modeling: dengue cases
+
+Dengue cases in two Latin American cities: San Juan, Puerto Rico and
+Iquitos, Peru are being considered in this data set. The environmental
+factors are being used as predictors for the number of dengue cases in
+each city. 3 approaches are used here; CART, Random Forests, and
+Gradient-Boosted trees and different models are considered for each
+approach. The best model was determined to be Random Forest when the
+Model 3 was used (see below) and the corresponding RMSE (out of sample)
+is XXX. The partial dependence plots for specific\_humidity,
+precipitation\_amt, and avg\_temp\_k are shown at the end.
+
+I used different models to find the best predictor for dengue cases in
+both cities. Since the train/test splits are random and the results are
+aggregated over 25 iterations, the RMSE values shown below are results
+from one such run and will change if the code is run again.
+
+\*Base Model: Season, Specific Humidity, Average Diurnal Temperature
+Difference, Precipitation Amount
+
+\*Model 1: Base + Average Temperature (K)
+
+\*Model 2: Base + Dew Point (K)
+
+\*Model 3: Base + Average Temperature (K) and Dew Point (K)
+
+Other notes: The CART model was not allowed to grow at a node with fewer
+than 10 observations. The Gradient Boosted Trees model used 1000 trees
+at an interaction depth not exceeding 4.
+
+### Table: In-Sample RMSE (Train data)
+
+    ##        Model   AdditionalVariables     CART RandomForest Boosting
+    ## 1 Base Model                       40.06343     39.18147 38.81250
+    ## 2    Model 1              Avg Temp 40.71429     39.26917 39.74696
+    ## 3    Model 2             Dew Point 40.64232     39.23472 40.19432
+    ## 4    Model 3  Avg Temp + Dew Point 40.40401     39.37158 39.69921
+
+### Table: Out-of-Sample RMSE (Test set)
+
+    ##        Model   AdditionalVariables     CART RandomForest Boosting
+    ## 1 Base Model                       39.89598     39.75333 41.44555
+    ## 2    Model 1              Avg Temp 39.43882     39.54192 37.50081
+    ## 3    Model 2             Dew Point 40.09200     39.47140 35.82435
+    ## 4    Model 3  Avg Temp + Dew Point 39.95536     39.40884 37.93455
+
+### Conclusion
+
+The final results show that Gradient-Boosted Trees is associated with
+the least RMSE in sample. The best model is Model 3 which uses the
+variables city, season, specific\_humidity, tdtr\_k, precipitation\_amt,
+avg\_temp\_k, and dew\_point\_temp\_k. The corresponding RMSE out of
+sample for each model can be seen in the table above.
+
+Other variables combinations can be considered and all variables can
+also be used but the RMSE will not change significantly. Lastly, for
+gradient boosting only 1000 trees were used each time due to
+computational limitations.
+
+### Plots
+
+Plots for partial dependence shown below for specific\_humidity,
+precipitation\_amt, and avg\_temp\_k. The data show that dengue cases
+increase sharply at different thresholds of specific humidity and
+precipitation - conditions that are likely associated with the ideal
+conditions for the Aegypti mosquito to breed, thrive, and infect. The
+last partial dependence plot shows that the dengue cases rise sharply at
+the 297K (75degF) mark for dew point temperature - which supports what
+we know about dengue and its propensity to affect more humid regions.
+
+![](PS3_files/figure-markdown_strict/q2_plots-1.png)![](PS3_files/figure-markdown_strict/q2_plots-2.png)![](PS3_files/figure-markdown_strict/q2_plots-3.png)
+
 ## Question 3 Predictive model building: green certification
 
 Let’s start with some step-wise models, using some medium linear models.
 Here are our initial out-of-sample RMSEs for both linear models:
 
-    ## [1] 944.1203
+    ## [1] 1090.731
 
-    ## [1] 1355.516
+    ## [1] 1496.006
 
 In these step-wise regressions, we allow the use of all variables except
 rent, leasing rate, property ID, LEED and Energystar, allowing for
 second-level interactions.
 
-    ## [1] 906.6273
+    ## [1] 1037.748
 
-    ## [1] 1257.398
+    ## [1] 1395.767
 
 There’s a slight improvement on out-of-sample RMSE, but not a large
 decrease. We may be able to use a random forest model to more accurately
 predict revenue per square foot per year.
 
-    ## [1] 386.8777
+    ## [1] 460.2725
 
 Our out-of-sample RMSE is much lower than the linear step models
 produced, so this is our best model to predict revenue per square foot

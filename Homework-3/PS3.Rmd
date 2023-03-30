@@ -4,6 +4,13 @@ author: "Marco Navarro, Asha Christensen, Pranjal Maheshka"
 date: "2023-03-26"
 output: md_document
 ---
+
+# DataMining_PS3
+
+## Pranjal Maheshka, Asha Christensen, Marco Navarro
+### 2023-03-30
+
+
 ```{r setup1, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
@@ -37,6 +44,315 @@ The table shows that high alert terrorism days decreased the number of daily cri
 
 
 4. When we separate out crimes that occur in the national mall versus the rest of the city, we find that the reduction in crime due to high alert days primarily takes place in the national mall-- this may be due to the fact that the majority of increased police presence during a terrorism alert is concentrated on the national mall since these are the most likely terrorism threats. The decrease in crimes for the rest of the city is not statistically significant, whereas the reduction in crimes in the national mall is 2.62 crimes.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(rpart)
+library(rpart.plot)
+library(rsample) 
+library(randomForest)
+library(caret)
+library(parallel)
+library(dplyr)
+library(gbm)
+library(mosaic)
+```
+
+## Question 2 Tree modeling: dengue cases
+
+Dengue cases in two Latin American cities: San Juan, Puerto Rico and Iquitos, Peru are being considered in this data set. The environmental factors are being used as predictors for the number of dengue cases in each city. 3 approaches are used here; CART, Random Forests, and Gradient-Boosted trees and different models are considered for each approach. The best model was determined to be Random Forest when the Model 3 was used (see below) and the corresponding RMSE (out of sample) is XXX. The partial dependence plots for specific_humidity, precipitation_amt, and avg_temp_k are shown at the end. 
+
+I used different models to find the best predictor for dengue cases in both cities. Since the train/test splits are random and the results are aggregated over 25 iterations, the RMSE values shown below are results from one such run and will change if the code is run again. 
+
+  *Base Model: Season, Specific Humidity, Average Diurnal Temperature Difference, Precipitation Amount 
+  
+  *Model 1: Base + Average Temperature (K) 
+  
+  *Model 2: Base + Dew Point (K)
+  
+  *Model 3: Base + Average Temperature (K) and Dew Point (K)
+
+Other notes: The CART model was not allowed to grow at a node with fewer than 10 observations. The Gradient Boosted Trees model used 1000 trees at an interaction depth not exceeding 4. 
+
+```{r cart_base, include=FALSE, echo=FALSE}
+dengue <-  read.csv('dengue.csv')
+
+city = factor(dengue$city)
+season = factor(dengue$season)
+
+# CART Base Model
+load_split = initial_split(dengue, prop=0.8)
+load_train = training(load_split)
+load_test  = testing(load_split)
+load.tree = rpart(total_cases ~ city + season + specific_humidity + tdtr_k + precipitation_amt,
+                  data=load_train, control = rpart.control(cp = 0.000001, minsplit=10))
+
+rmse_simulation = do(25)*{
+  # Split data into training and testing sets
+  load_split = initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+    load.tree = update(load.tree, data=load_train)
+  
+  # Picking tree using 1SE rule 
+  cp_1se = function(my_tree) {
+    out = as.data.frame(my_tree$cptable)
+    thresh = min(out$xerror + out$xstd)
+    cp_opt = max(out$CP[out$xerror <= thresh])
+    cp_opt}
+  cp_1se(load.tree)
+
+  # Pruning tree at 1SE level
+  prune_1se = function(my_tree) {
+    out = as.data.frame(my_tree$cptable)
+    thresh = min(out$xerror + out$xstd)
+    cp_opt = max(out$CP[out$xerror <= thresh])
+    prune(my_tree, cp=cp_opt)}
+  load.tree_prune = prune_1se(load.tree)
+  
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)
+  }
+cart_means0 = colMeans(rmse_simulation)
+
+Model <- c("Base Model", "Model 1", "Model 2", "Model 3")
+AddtionalVariables <-c("","Avg Temp", "Dew Point", " Avg Temp + Dew Point")
+
+```
+
+
+```{r cart_new, include=FALSE, echo=FALSE}
+# CART Model 1 - Air Temp + Dew Point 
+load.tree = rpart(total_cases ~ city + season + specific_humidity + tdtr_k + precipitation_amt + air_temp_k,
+                  data=load_train, control = rpart.control(cp = 0.000001, minsplit=10))
+rmse_simulation = do(25)*{
+  load_split = initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+    load.tree = update(load.tree, data=load_train)
+  
+    cp_1se(load.tree)
+  load.tree_prune = prune_1se(load.tree)
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)
+  }
+cart_means1= colMeans(rmse_simulation)
+
+# CART Model 2
+load.tree = rpart(total_cases ~ city + season + specific_humidity + tdtr_k + precipitation_amt + dew_point_temp_k,
+                  data=load_train, control = rpart.control(cp = 0.000001, minsplit=10))
+rmse_simulation = do(25)*{
+  load_split = initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+    load.tree = update(load.tree, data=load_train)
+  
+    cp_1se(load.tree)
+  load.tree_prune = prune_1se(load.tree)
+  
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)
+  }
+cart_means2 = colMeans(rmse_simulation)
+
+# CART Model 3
+load.tree = rpart(total_cases ~ city + season + specific_humidity + tdtr_k + precipitation_amt + air_temp_k + dew_point_temp_k,
+                  data=load_train, control = rpart.control(cp = 0.000001, minsplit=10))
+rmse_simulation = do(25)*{
+  load_split = initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+    load.tree = update(load.tree, data=load_train)
+  
+    cp_1se(load.tree)
+  load.tree_prune = prune_1se(load.tree)
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)
+  }
+cart_means3 = colMeans(rmse_simulation)
+
+```
+
+
+```{r forest_base, include=FALSE, echo=FALSE}
+rmse_simulation = do(25)*{
+  # Split data into training and testing sets
+  load_split =  initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+  
+  # Random forest
+  load.forest = randomForest(total_cases ~ city + season + specific_humidity + tdtr_k + precipitation_amt,
+                             data=load_train, na.action=na.exclude)
+  
+  # Calculate RMSE
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)
+  }
+forest_means0 = colMeans(rmse_simulation)
+
+```
+
+```{r forest_new, echo=FALSE, include=FALSE}
+# Random Forest 1: Avg Temp
+rmse_simulation = do(25)*{
+  load_split =  initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+  load.forest = randomForest(total_cases ~ city + season + specific_humidity + tdtr_k + precipitation_amt+ air_temp_k,
+                             data=load_train, na.action=na.exclude)
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)
+  }
+forest_means1 = colMeans(rmse_simulation)
+
+# Random Forest 2: Dew Point
+rmse_simulation = do(25)*{
+  load_split =  initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+  load.forest = randomForest(total_cases ~ city + season + specific_humidity + tdtr_k + precipitation_amt + dew_point_temp_k,
+                             data=load_train, na.action=na.exclude)
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)
+  }
+forest_means2 = colMeans(rmse_simulation)
+
+# Random Forest 3: Avg Temp + Dew Point
+rmse_simulation = do(25)*{
+  load_split =  initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+  load.forest = randomForest(total_cases ~ city + season + specific_humidity + tdtr_k + precipitation_amt + air_temp_k + dew_point_temp_k,
+                             data=load_train, na.action=na.exclude)
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)
+  }
+forest_means3 = colMeans(rmse_simulation)
+
+```
+
+```{r boost_base, include=FALSE, echo=FALSE}
+rmse_simulation = do(25)*{
+  # Split data into training and testing sets
+  load_split =  initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+  
+  # Gradient-Boosted Trees
+  boost = gbm(total_cases ~ factor(city) + factor(season) + specific_humidity + tdtr_k + precipitation_amt, 
+              data = load_train, distribution='gaussian', interaction.depth=4, n.trees=1000, shrinkage=.05)
+  
+  # Calculate RMSE
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)}
+colMeans0 = colMeans(rmse_simulation)
+```
+
+```{r boost_new, include=FALSE, echo=FALSE}
+# Gradient Boosted Trees 1: Avg Temp
+rmse_simulation = do(25)*{
+  load_split =  initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+  
+  boost = gbm(total_cases ~ factor(city) + factor(season) + specific_humidity + tdtr_k + precipitation_amt+ air_temp_k, 
+              data = load_train, distribution='gaussian', interaction.depth=4, n.trees=1000, shrinkage=.05)
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)}
+colMeans1 = colMeans(rmse_simulation)
+
+# Gradient Boosted Trees 2: Dew Point
+rmse_simulation = do(25)*{
+  load_split =  initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+  
+  boost = gbm(total_cases ~ factor(city) + factor(season) + specific_humidity + tdtr_k + precipitation_amt +  dew_point_temp_k, 
+              data = load_train, distribution='gaussian', interaction.depth=4, n.trees=1000, shrinkage=.05)
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)}
+colMeans2 = colMeans(rmse_simulation)
+
+# Gradient Boosted Trees 3: Avg Temp + Dew Point
+rmse_simulation = do(25)*{
+  load_split =  initial_split(dengue, prop=0.8)
+  load_train = training(load_split)
+  load_test  = testing(load_split)
+  
+  boost = gbm(total_cases ~ factor(city) + factor(season) + specific_humidity + tdtr_k + precipitation_amt + air_temp_k + dew_point_temp_k, 
+              data = load_train, distribution='gaussian', interaction.depth=4, n.trees=1000, shrinkage=.05)
+  rmse_in = modelr::rmse(load.tree_prune, load_train)
+  rmse_out = modelr::rmse(load.tree_prune, load_test)
+  rmse = c(rmse_in, rmse_out)}
+colMeans3 = colMeans(rmse_simulation)
+
+
+
+# Generate results table
+Model <- c("Base Model", "Model 1", "Model 2", "Model 3")
+AdditionalVariables <-c("","Avg Temp", "Dew Point", " Avg Temp + Dew Point")
+CART <- c(cart_means0[1], cart_means1[1], cart_means2[1], cart_means3[1])
+RandomForest <- c(forest_means0[1], forest_means1[1], forest_means2[1], forest_means3[1])
+Boosting <- c(colMeans0[1], colMeans1[1], colMeans2[1], colMeans3[1])
+rmse_in_table <- data.frame(Model, AdditionalVariables, CART, RandomForest, Boosting)
+
+Approach <-c("CART", "Random Forest", "Boosting")
+RMSE_Out <- c(cart_means3[2], forest_means3[2], colMeans3[2])
+
+CART <- c(cart_means0[2], cart_means1[2], cart_means2[2], cart_means3[2])
+RandomForest <- c(forest_means0[2], forest_means1[2], forest_means2[2], forest_means3[2])
+Boosting <- c(colMeans0[2], colMeans1[2], colMeans2[2], colMeans3[2])
+rmse_out_table <- data.frame(Model, AdditionalVariables, CART, RandomForest, Boosting)
+```
+
+
+### Table: In-Sample RMSE (Train data)
+
+```{r q2_table1, echo=FALSE}
+rmse_in_table
+
+```
+
+### Table: Out-of-Sample RMSE (Test set)
+
+```{r q2_table2, echo=FALSE}
+rmse_out_table
+```
+
+### Conclusion
+
+The final results show that Gradient-Boosted Trees is associated with the least RMSE in sample. The best model is Model 3 which uses the variables city, season, specific_humidity, tdtr_k, precipitation_amt, avg_temp_k, and dew_point_temp_k. The corresponding RMSE out of sample for each model can be seen in the table above. 
+
+Other variables combinations can be considered and all variables can also be used but the RMSE will not change significantly. Lastly, for gradient boosting only 1000 trees were used each time due to computational limitations. 
+
+
+
+### Plots
+
+Plots for partial dependence shown below for specific_humidity, precipitation_amt, and avg_temp_k. The data show that dengue cases increase sharply at different thresholds of specific humidity and precipitation - conditions that are likely associated with the ideal conditions for the Aegypti mosquito to breed, thrive, and infect. The last partial dependence plot shows that the dengue cases rise sharply at the 297K (75degF) mark for dew point temperature - which supports what we know about dengue and its propensity to affect more humid regions. 
+
+``` {r q2_plots, echo=FALSE}
+# Partial dependence plots
+p1=pdp::partial(load.forest, pred.var='specific_humidity', las=1)
+plot(p1,type = "l", xlab = "Specific Humidity", ylab = "Dengue Cases", main = "Predicted Dengue Cases vs Specific Humidity")
+p2=pdp::partial(load.forest, pred.var='precipitation_amt', las=1)
+plot(p2,type = "l", xlab = "Precipitation Amount", ylab = "Dengue Cases", main = "Predicted Dengue Cases vs Precipitation Amount")
+p3=pdp::partial(load.forest, pred.var='dew_point_temp_k', las=1)
+plot(p3,type = "l", xlab = "Dew Point Temp (K)", ylab = "Dengue Cases", main = "Predicted Dengue Cases vs Dew Point Temp (K)")
+```
 
 
 ## Question 3 Predictive model building: green certification
@@ -320,7 +636,6 @@ sqrt(mean(CAhousing3$pred_errorrfsq))
 
 ```{r , include=FALSE, warning=FALSE,message=FALSE}
 #### Counties map
-
 CA_tracts <- counties("CA")
 ```
 
