@@ -74,26 +74,27 @@ at an interaction depth not exceeding 4.
 ### Table: In-Sample RMSE (Train data)
 
     ##        Model   AdditionalVariables     CART RandomForest Boosting
-    ## 1 Base Model                       40.06343     39.18147 38.81250
-    ## 2    Model 1              Avg Temp 40.71429     39.26917 39.74696
-    ## 3    Model 2             Dew Point 40.64232     39.23472 40.19432
-    ## 4    Model 3  Avg Temp + Dew Point 40.40401     39.37158 39.69921
+    ## 1 Base Model                       40.23294     39.86985 38.98656
+    ## 2    Model 1              Avg Temp 40.72347     39.49682 39.74830
+    ## 3    Model 2             Dew Point 40.31699     38.92858 39.61322
+    ## 4    Model 3  Avg Temp + Dew Point 39.71648     39.26602 38.69442
 
 ### Table: Out-of-Sample RMSE (Test set)
 
     ##        Model   AdditionalVariables     CART RandomForest Boosting
-    ## 1 Base Model                       39.89598     39.75333 41.44555
-    ## 2    Model 1              Avg Temp 39.43882     39.54192 37.50081
-    ## 3    Model 2             Dew Point 40.09200     39.47140 35.82435
-    ## 4    Model 3  Avg Temp + Dew Point 39.95536     39.40884 37.93455
+    ## 1 Base Model                       39.95200     37.11590 40.08010
+    ## 2    Model 1              Avg Temp 40.86846     38.76352 37.81001
+    ## 3    Model 2             Dew Point 39.07750     40.93488 37.97765
+    ## 4    Model 3  Avg Temp + Dew Point 39.85330     39.45791 41.74876
 
 ### Conclusion
 
 The final results show that Gradient-Boosted Trees is associated with
-the least RMSE in sample. The best model is Model 3 which uses the
-variables city, season, specific\_humidity, tdtr\_k, precipitation\_amt,
-avg\_temp\_k, and dew\_point\_temp\_k. The corresponding RMSE out of
-sample for each model can be seen in the table above.
+the least RMSE out of sample during most runs. The best model is Model 3
+which uses the variables city, season, specific\_humidity, tdtr\_k,
+precipitation\_amt, avg\_temp\_k, and dew\_point\_temp\_k. The
+corresponding RMSE out of sample for each model can be seen in the table
+above.
 
 Other variables combinations can be considered and all variables can
 also be used but the RMSE will not change significantly. Lastly, for
@@ -118,23 +119,23 @@ we know about dengue and its propensity to affect more humid regions.
 Let’s start with some step-wise models, using some medium linear models.
 Here are our initial out-of-sample RMSEs for both linear models:
 
-    ## [1] 1090.731
+    ## [1] 1026.309
 
-    ## [1] 1496.006
+    ## [1] 1391.774
 
 In these step-wise regressions, we allow the use of all variables except
 rent, leasing rate, property ID, LEED and Energystar, allowing for
 second-level interactions.
 
-    ## [1] 1037.748
+    ## [1] 1018.628
 
-    ## [1] 1395.767
+    ## [1] 1302.756
 
 There’s a slight improvement on out-of-sample RMSE, but not a large
 decrease. We may be able to use a random forest model to more accurately
 predict revenue per square foot per year.
 
-    ## [1] 460.2725
+    ## [1] 518.0006
 
 Our out-of-sample RMSE is much lower than the linear step models
 produced, so this is our best model to predict revenue per square foot

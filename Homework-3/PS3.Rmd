@@ -334,7 +334,7 @@ rmse_out_table
 
 ### Conclusion
 
-The final results show that Gradient-Boosted Trees is associated with the least RMSE in sample. The best model is Model 3 which uses the variables city, season, specific_humidity, tdtr_k, precipitation_amt, avg_temp_k, and dew_point_temp_k. The corresponding RMSE out of sample for each model can be seen in the table above. 
+The final results show that Gradient-Boosted Trees is associated with the least RMSE out of sample during most runs. The best model is Model 3 which uses the variables city, season, specific_humidity, tdtr_k, precipitation_amt, avg_temp_k, and dew_point_temp_k. The corresponding RMSE out of sample for each model can be seen in the table above. 
 
 Other variables combinations can be considered and all variables can also be used but the RMSE will not change significantly. Lastly, for gradient boosting only 1000 trees were used each time due to computational limitations. 
 
@@ -699,5 +699,4 @@ ggplot(CA_tracts) +
 ```
 
 In the error graph, grey points correspond to those errors that are higher than 50,000 or lower than -50,000.
-
 
