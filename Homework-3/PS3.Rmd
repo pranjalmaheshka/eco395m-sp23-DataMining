@@ -166,7 +166,7 @@ For the K-nearest neighbors regression method, different values of K were evalua
 
 The k-fold cross validation is the procedure used to evaluate the out-of-sample performance of the linear model, the K-nearest neighbors regression and the regression tree. This is a resampling method that uses different portions of the data to test and train a model on different iterations. The whole dataset was split into 10 different folds to perform this evaluation and the accuracy of the prediction was evaluated by checking the root mean square error (RMSE).Among these three different methods, the tree regression model presents the best out-of-sample performance. The cross validated error for this tree model equals 59,621.
 
-In the case of the random forest, due to the estimation process, we already have a measure of the out-of-sample performance with the “out-of-bag” predictions. However, we split our observations in a training and test set in order to have a comparable out of sample error. Using this entirely fresh subset of the data, the root mean squared error on the test set equals 50,520.
+In the case of the random forest, due to the estimation process, we already have a measure of the out-of-sample performance with the “out-of-bag” predictions. However, we split our observations in a training and test set several times and calculate the root mean squared error for every partition in order to have a comparable out of sample error. Using this approach, the average RMSE on the test sets equals 51,375.
 
 In conclusion, the results have shown that the random forest model has the best performance among these methods. Given this particular set of explanatory variables, the prediction model should be the random forest. 
 The accuracy of these methods can be reevaluated after an expansion of the number of observations or number of explanatory variables.
@@ -284,9 +284,26 @@ CAhousing2_test  = testing(CAhousing2_split)
 CAhousing2.forest = randomForest(medianHouseValue ~ .-fold_id,
                                  data=CAhousing2_train, importance = TRUE)
 
-############################### Compare RMSE on the test set TREE VS FOREST
+############################### Compare RMSE  FOREST
 
 modelr::rmse(CAhousing2.forest, CAhousing2_test)
+
+##### Split train/test set several times for random forest (very time consuming)
+
+#rmse_10 = do(10)*{
+  # Split data into training and testing sets
+#  load_split =  initial_split(CAhousing2, prop=0.8)
+#  load_train = training(load_split)
+#  load_test  = testing(load_split)
+  
+  # Random forest
+#  load.forest = randomForest(medianHouseValue ~ .-fold_id,
+#                             data=load_train, na.action=na.exclude)
+  
+  # Calculate RMSE
+#  modelr::rmse(load.forest, load_test)}
+#colMeans(rmse_10)
+
 
 ###############################   Predictions and errors
 
