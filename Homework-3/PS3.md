@@ -40,23 +40,23 @@ significant after controlling for metro mid-day ridership.
 Let’s start with some step-wise models, using some medium linear models.
 Here are our initial out-of-sample RMSEs for both linear models:
 
-    ## [1] 979.7368
+    ## [1] 1115.016
 
-    ## [1] 1357.384
+    ## [1] 1474.34
 
 In these step-wise regressions, we allow the use of all variables except
 rent, leasing rate, property ID, LEED and Energystar, allowing for
 second-level interactions.
 
-    ## [1] 967.8153
+    ## [1] 1123.489
 
-    ## [1] 1291.632
+    ## [1] 1394.055
 
 There’s a slight improvement on out-of-sample RMSE, but not a large
 decrease. We may be able to use a random forest model to more accurately
 predict revenue per square foot per year.
 
-    ## [1] 409.1368
+    ## [1] 534.4651
 
 Our out-of-sample RMSE is much lower than the linear step models
 produced, so this is our best model to predict revenue per square foot
@@ -94,7 +94,9 @@ been carried out using data on 20,640 census tracts in the state of
 California. In addition to median house value, this dataset contains 8
 variables that capture different characteristics of the census tracks
 and their houses, such as population, number of households, median age
-in years of all residential households, total of bedrooms, etc.
+in years of all residential households, total of bedrooms, etc. Before
+testing different methods, we standardize some variables, such as total
+bedrooms and total rooms.
 
 ### Median house value prediction strategy
 
@@ -116,11 +118,10 @@ regression and the regression tree. This is a resampling method that
 uses different portions of the data to test and train a model on
 different iterations. The whole dataset was split into 10 different
 folds to perform this evaluation and the accuracy of the prediction was
-evaluated by checking the root mean square error (RMSE).
-
-Among these three different methods, the tree regression model presents
-the best out-of-sample performance. The cross validated error for this
-tree model equals 59,621.
+evaluated by checking the root mean square error (RMSE).Among these
+three different methods, the tree regression model presents the best
+out-of-sample performance. The cross validated error for this tree model
+equals 59,621.
 
 In the case of the random forest, due to the estimation process, we
 already have a measure of the out-of-sample performance with the
@@ -132,9 +133,17 @@ error on the test set equals 50,520.
 In conclusion, the results have shown that the random forest model has
 the best performance among these methods. Given this particular set of
 explanatory variables, the prediction model should be the random forest.
-
 The accuracy of these methods can be reevaluated after an expansion of
 the number of observations or number of explanatory variables.
+
+Brief description of the best method: Random forests involve the
+creation of several decision trees. These decision trees are models
+composed of a collection of “questions” organized hierarchically that
+lead to a prediction. In the random forest model, each tree is trained
+with a different resampling of the available data and a randomly
+selected subset of the available features. After this first stage, the
+algorithm combines the predictions of all the created decision trees to
+provide a final prediction.
 
 After selecting the best model, we proceed to present graphs of the
 original values, random forest predicted values and random forest
