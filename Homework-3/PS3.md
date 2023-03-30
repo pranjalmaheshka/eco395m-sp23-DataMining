@@ -40,23 +40,23 @@ significant after controlling for metro mid-day ridership.
 Let’s start with some step-wise models, using some medium linear models.
 Here are our initial out-of-sample RMSEs for both linear models:
 
-    ## [1] 1115.016
+    ## [1] 944.1203
 
-    ## [1] 1474.34
+    ## [1] 1355.516
 
 In these step-wise regressions, we allow the use of all variables except
 rent, leasing rate, property ID, LEED and Energystar, allowing for
 second-level interactions.
 
-    ## [1] 1123.489
+    ## [1] 906.6273
 
-    ## [1] 1394.055
+    ## [1] 1257.398
 
 There’s a slight improvement on out-of-sample RMSE, but not a large
 decrease. We may be able to use a random forest model to more accurately
 predict revenue per square foot per year.
 
-    ## [1] 534.4651
+    ## [1] 386.8777
 
 Our out-of-sample RMSE is much lower than the linear step models
 produced, so this is our best model to predict revenue per square foot
@@ -126,9 +126,10 @@ equals 59,621.
 In the case of the random forest, due to the estimation process, we
 already have a measure of the out-of-sample performance with the
 “out-of-bag” predictions. However, we split our observations in a
-training and test set in order to have a comparable out of sample error.
-Using this entirely fresh subset of the data, the root mean squared
-error on the test set equals 50,520.
+training and test set several times and calculate the root mean squared
+error for every partition in order to have a comparable out of sample
+error. Using this approach, the average RMSE on the test sets equals
+51,375.
 
 In conclusion, the results have shown that the random forest model has
 the best performance among these methods. Given this particular set of
