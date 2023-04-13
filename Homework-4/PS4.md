@@ -12,23 +12,23 @@ categorized based on its content using a pre-specified scheme of 36
 different categories, each representing a broad area of interest
 (e.g. politics, sports, family, etc.).
 
-First of all, we eliminate some categories of the data base, such as
-“spam”, “adult” and “chatter”. That is because, we do not want to have
-“bots” among the observations and categories that do not add interesting
-information. Then, we calculate the ratio between the number of posts by
-a given user that fell into the given category and the total number
-annotations for each user.
+First of all, we eliminate some categories of the data base that do not
+add interesting information, such as “spam”, “adult” and “chatter”.
+Then, we calculate the ratio between the number of posts by a given user
+that fell into the given category and the total number annotations for
+each user before centering and scaling the data.
 
-For the market segmentation we try to divide customers into different
-groups according to similarities in their tweets categories. That is
-because people with the same interests will probably tend to respond to
-similar marketing strategies. As a result, accounts whose tweets are
-classified to the same or similar categories end up in the same group,
-cluster or market segment.
+For the market segmentation we try to divide followers (probably
+costumers) into different groups according to similarities in their
+tweets categories. Once we have identified these groups, the company
+will have more knowledge about their followers (costumers) and design
+marketing strategies accordingly.
 
-In order to construct these groups, we use a method known as K-means++.
-We pick 5 clusters or market segments for a better interpretation of the
-results.
+In order to separate followers in distinct groups, we use a popular
+unsupervised learning method known as K-means++. As a result of this
+process, we divide followers in 5 different clusters and accounts whose
+tweets are classified to the same or similar categories end up in the
+same group, cluster or market segment.
 
 Once we have identified these 5 clusters, we need to associate each
 cluster to a category or set of categories in order to provide more
@@ -36,32 +36,33 @@ useful information. To accomplish that, we perform a principal component
 analysis in order to know which principal component is more related to
 each cluster.
 
-We present the graphs of the clusters and their relationships with the
-principal components.
+In the following graphs, we can visualize relationships between each
+cluster and the principal components. These relationships and the
+loadings of the principal components can be used to identify relevant
+categories for each cluster.
 
 ![](PS4_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 The first cluster is associated with positive values of the second and
 third principal component (PC2 and PC3). Taking that information into
 account, we can see that important categories of this cluster are
-politics,
-travel,college\_uni,tv\_film,current\_events,news,health\_nutrition and
-personal\_fitness. Consequently, this market segment includes young
-adults who are probably in college and are political enthusiasts. They
-also have a healthy lifestyle and are also well aware of the current
-social and political problems.
+politics, travel, college\_uni, tv\_film, current\_events, news,
+health\_nutrition and personal\_fitness. Consequently, this market
+segment includes young adults who are probably in college and are
+political enthusiasts. They also have a healthy lifestyle and are also
+well aware of the current social and political problems.
 
 The second cluster is associated with positive values of PC2 and
 negative values of PC5. In this cluster, the important categories are
-politics, travel,college\_uni,tv\_film,current\_events,news,shopping,
-photo\_sharing and eco. It is similar to the firs group (college
-students and interested in politics and current events), but they are
-probably also interested in spending their free time shopping, creating
-social media content instead of doing physical activities.
+politics, travel, college\_uni, tv\_film, current\_events,
+news,shopping, photo\_sharing and eco. It is similar to the firs group
+(college students and interested in politics and current events), but
+they are probably also interested in spending their free time shopping,
+creating social media content instead of doing physical activities.
 
 The third cluster is associated with positive values of PC2 and PC5. For
-this cluster, important categories are politics,
-travel,college\_uni,tv\_film,current\_events,news, fashion, cooking and
+this cluster, important categories are politics, travel,
+college\_uni,tv\_film, current\_events, news, fashion, cooking and
 beauty. Again, this group includes young adults in college and they care
 about their appearance an political events.
 
