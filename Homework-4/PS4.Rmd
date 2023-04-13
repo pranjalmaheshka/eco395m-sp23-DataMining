@@ -42,7 +42,7 @@ ZZ = scale(Z, center=TRUE, scale=TRUE)
 
 For the market segmentation we try to divide followers (probably costumers) into different groups according to similarities in their tweets categories. Once we have identified these groups, the company will have more knowledge about their followers (costumers) and design marketing strategies accordingly.
 
-In order to separate followers in distinct groups, we use a popular unsupervised learning method known as K-means++. As a result of this process, we divide followers in 5 different clusters and accounts whose tweets are classified to the same or similar categories end up in the same group, cluster or market segment. 
+In order to separate followers in distinct groups, we use a popular unsupervised learning method known as K-means++. As a result of this process, we divide followers in 5 different clusters, and accounts whose tweets are classified to the same or similar categories end up in the same group, cluster or market segment. 
 
 ```{r , include=FALSE}
 k_grid = seq(2, 30, by=1)
@@ -100,8 +100,8 @@ The first cluster is associated with positive values of the second and third pri
 
 The second cluster is associated with positive values of PC2 and negative values of PC5. In this cluster, the important categories are politics, travel, college_uni, tv_film, current_events, news,shopping, photo_sharing and eco. It is similar to the firs group (college students and interested in politics and current events), but they are probably also interested in spending their free time shopping, creating social media content instead of doing physical activities. 
 
-The third cluster is associated with positive values of PC2 and PC5. For this cluster, important categories are politics, travel, college_uni,tv_film, current_events, news, fashion, cooking and beauty. Again, this group includes young adults in college and they care about their appearance an political events. 
+The third cluster is associated with positive values of PC2 and PC5. For this cluster, important categories are politics, travel, college_uni,tv_film, current_events, news, fashion, cooking and beauty. Again, this group includes young adults in college, and they care about their appearance and political events. 
 
-The fourth Cluster is associated with negative values of PC2. The most important categories with negative loadings in this component are health_nutrition, personal_fitness, outdoors and cooking. So, we can conclude that one of the market segments is composed by people with an active and healthy lifestyle who spend a considerable part of their free time doing physical activities, and also cares about the type of food they consume.
+The fourth cluster is associated with negative values of PC2. The most important categories with negative loadings in this component are health_nutrition, personal_fitness, outdoors and cooking. So, we can conclude that one of the market segments is composed by people with an active and healthy lifestyle who spend a considerable part of their free time doing physical activities, and also cares about the type of food they consume.
 
-The last cluster is associated to negative values of PC3. Categories with the lowest negative loadings in PC3 are fashion,beauty,cooking,photo_sharing,school and religion. As a result, we can conclude that one of the market segments includes adults with kids who spend a considerable amount of time sharing content on social media, In addition, they care about religion and are concerned about their own appearance.
+The last cluster is associated to negative values of PC3. Categories with the lowest negative loadings in PC3 are fashion,beauty,cooking,photo_sharing,school and religion. As a result, we can conclude that one of the market segments includes adults with kids who spend a considerable amount of time sharing content on social media. In addition, they care about religion and are concerned about their own appearance.
