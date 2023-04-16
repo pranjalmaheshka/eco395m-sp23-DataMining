@@ -31,7 +31,7 @@ First of all, we eliminate some categories of the data base that do not add inte
 
 ```{r , include=FALSE}
 ################################### Read dataset
-social = read.csv("C:/Users/ACER/Desktop/Stats Learning/social_marketing.csv")
+social = read.csv("social_marketing.csv")
 
 social2 = social[,-c(1,2,36,37)]
 
