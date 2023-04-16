@@ -19,6 +19,10 @@ library(ClusterR)  # for kmeans++
 library(foreach)
 library(mosaic)
 library(cowplot)
+
+library(igraph)
+library(arules)  # has a big ecosystem of packages built around it
+library(arulesViz)
 ```
 
 In order to carry out this market segmentation exercise, we used tweets from followers of the Twitter account of the brand. Each tweet was categorized based on its content using a pre-specified scheme of 36 different categories, each representing a broad area of interest (e.g. politics, sports, family, etc.).
@@ -105,3 +109,110 @@ The third cluster is associated with positive values of PC2 and PC5. For this cl
 The fourth cluster is associated with negative values of PC2. The most important categories with negative loadings in this component are health_nutrition, personal_fitness, outdoors and cooking. So, we can conclude that one of the market segments is composed by people with an active and healthy lifestyle who spend a considerable part of their free time doing physical activities, and also cares about the type of food they consume.
 
 The last cluster is associated to negative values of PC3. Categories with the lowest negative loadings in PC3 are fashion,beauty,cooking,photo_sharing,school and religion. As a result, we can conclude that one of the market segments includes adults with kids who spend a considerable amount of time sharing content on social media. In addition, they care about religion and are concerned about their own appearance.
+
+## Question 3: Association rules for grocery purchases
+
+
+```{r, echo=FALSE, warning=FALSE}
+
+groceries = read.table('groceries.txt', header=FALSE, sep = "\n", fill=TRUE)
+
+groceries = separate(groceries, V1, c("1", "2", "3", "4", "5","6","7","8","9","10", "11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32"), sep = ",")
+
+
+#shopper 1 to start us off
+grocerydf = as.data.frame(t(groceries[1, 1:32]))
+grocerydf = na.omit(grocerydf)
+grocerydf$shopper = 1
+grocerydf = grocerydf %>%
+  rename("good" = "1")
+
+for (i in 2:length(groceries$"1")) {
+tempdf = as.data.frame(t(groceries[i, 1:32]))
+tempdf = na.omit(tempdf)
+tempdf$shopper = i
+tempdf = tempdf %>%
+  rename("good" = toString(i))
+grocerydf = rbind(grocerydf, tempdf)
+}
+
+grocerydf$shopper = factor(grocerydf$shopper)
+grocerydf = split(x=grocerydf$good, f=grocerydf$shopper)
+
+
+```
+
+```{r, echo=FALSE, include=FALSE}
+grocerydf = lapply(grocerydf, unique)
+
+grocerytrans = as(grocerydf, "transactions")
+summary(grocerytrans)
+
+```
+
+```{r, echo=FALSE, include=FALSE}
+
+groceryrules2 = apriori(grocerytrans, parameter=list(support=.01, confidence=.5, maxlen=4))
+groceryrules1 = apriori(grocerytrans, parameter=list(support=.005, confidence=.05, maxlen=4))
+```
+
+First, let's create a very broad associations model by using thresholds that are very low (support = 0.005, confidence = 0.05). We allow up to 4 goods to be correlated: 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+plot(groceryrules1)
+
+# can swap the axes and color scales
+plot(groceryrules1, measure = c("support", "lift"), shading = "confidence")
+
+# "two key" plot: coloring is by size (order) of item set
+plot(groceryrules1, method='two-key plot')
+
+# graph-based visualization
+# export
+# associations are represented as edges
+# For rules, each item in the LHS is connected
+# with a directed edge to the item in the RHS. 
+
+```
+```{r, echo = FALSE}
+
+subrules = head(groceryrules1, n=10, by="lift")
+plot(subrules, method = "graph", engine = "htmlwidget")
+plot(subrules, method="paracoord")
+
+```
+
+Here we can see strong 2-way rule associations: ham and white bread, tropical fruit and whole milk, butter and whipped cream, etc. However, it may be the case that whole milk and tropical fruit are just 2 of the most common items, meaning that we are not really capturing an association, but rather just a result of this dual commonality, as seen below.
+
+```{r, ehco=FALSE}
+itemFrequencyPlot(grocerytrans, topN=10,  cex.names=1)
+
+```
+
+If we are using this data analysis for a practical purpose, such as marketing, then we will want these rules to be relevant to a larger number of individuals and more true for those individuals. This means that we should set our confidence and support higher: I don't care about rules which impact less than 1% of consumers, and I don't care about rules which are true less than 50% of the time. Therefore, we can rerun the apriori function with support = 0.01 and confidence = 0.5:
+
+```{r, echo=FALSE, warning=FALSE}
+plot(groceryrules2)
+
+# can swap the axes and color scales
+plot(groceryrules2, measure = c("support", "lift"), shading = "confidence")
+
+# "two key" plot: coloring is by size (order) of item set
+plot(groceryrules2, method='two-key plot')
+
+# graph-based visualization
+# export
+# associations are represented as edges
+# For rules, each item in the LHS is connected
+# with a directed edge to the item in the RHS. 
+
+```
+We do have much less rules, however, the rules that remain are applicable to a larger portion of shoppers and are more strongly true, and are therefore more relevant to application
+
+```{r, ehco=FALSE}
+
+subrules = head(groceryrules2, n=10, by="lift")
+plot(subrules, method = "graph", engine = "htmlwidget")
+plot(subrules, method="paracoord")
+
+```
