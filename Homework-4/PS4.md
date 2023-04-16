@@ -45,16 +45,18 @@ categories for each cluster.
 
 ![](PS4_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
-<table>
+<table style="width:100%;">
 <colgroup>
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
-<col style="width: 12%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
+<col style="width: 10%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -66,6 +68,8 @@ categories for each cluster.
 <th style="text-align: center;">Loadings PC3</th>
 <th>Category</th>
 <th style="text-align: center;">Loadings PC4</th>
+<th>Category</th>
+<th style="text-align: center;">Loadings PC5</th>
 </tr>
 </thead>
 <tbody>
@@ -78,6 +82,8 @@ categories for each cluster.
 <td style="text-align: center;">0.357194859</td>
 <td>fashion</td>
 <td style="text-align: center;">0.2486018310</td>
+<td>fashion</td>
+<td style="text-align: center;">0.286886643</td>
 </tr>
 <tr class="even">
 <td>religion</td>
@@ -88,6 +94,8 @@ categories for each cluster.
 <td style="text-align: center;">0.329012235</td>
 <td>beauty</td>
 <td style="text-align: center;">0.2366545788</td>
+<td>cooking</td>
+<td style="text-align: center;">0.27238276</td>
 </tr>
 <tr class="odd">
 <td>parenting</td>
@@ -98,6 +106,8 @@ categories for each cluster.
 <td style="text-align: center;">0.278810631</td>
 <td>cooking</td>
 <td style="text-align: center;">0.2320392878</td>
+<td>beauty</td>
+<td style="text-align: center;">0.261100664</td>
 </tr>
 <tr class="even">
 <td>food</td>
@@ -108,6 +118,8 @@ categories for each cluster.
 <td style="text-align: center;">0.265768747</td>
 <td>politics</td>
 <td style="text-align: center;">0.2253890276</td>
+<td>news</td>
+<td style="text-align: center;">0.252758649</td>
 </tr>
 <tr class="odd">
 <td>school</td>
@@ -118,8 +130,12 @@ categories for each cluster.
 <td style="text-align: center;">0.264414042</td>
 <td>photo_sharing</td>
 <td style="text-align: center;">0.1936194074</td>
+<td>online_gaming</td>
+<td style="text-align: center;">0.246631776</td>
 </tr>
 <tr class="even">
+<td>.</td>
+<td style="text-align: center;">.</td>
 <td>.</td>
 <td style="text-align: center;">.</td>
 <td>.</td>
@@ -138,6 +154,8 @@ categories for each cluster.
 <td style="text-align: center;">-0.155270893</td>
 <td>food</td>
 <td style="text-align: center;">-0.1071448600</td>
+<td>crafts</td>
+<td style="text-align: center;">-0.150803291</td>
 </tr>
 <tr class="even">
 <td>fashion</td>
@@ -148,6 +166,8 @@ categories for each cluster.
 <td style="text-align: center;">-0.224246899</td>
 <td>tv_film</td>
 <td style="text-align: center;">-0.151685085</td>
+<td>eco</td>
+<td style="text-align: center;">-0.219445309</td>
 </tr>
 <tr class="odd">
 <td>personal_fitness</td>
@@ -158,6 +178,8 @@ categories for each cluster.
 <td style="text-align: center;">-0.243277175</td>
 <td>sports_playing</td>
 <td style="text-align: center;">-0.2903722124</td>
+<td>current_events</td>
+<td style="text-align: center;">-0.262704701</td>
 </tr>
 <tr class="even">
 <td>health_nutrition</td>
@@ -168,6 +190,8 @@ categories for each cluster.
 <td style="text-align: center;">-0.321209763</td>
 <td>online_gaming</td>
 <td style="text-align: center;">-0.4735595614</td>
+<td>photo_sharing</td>
+<td style="text-align: center;">-0.308125501</td>
 </tr>
 <tr class="odd">
 <td>cooking</td>
@@ -178,6 +202,8 @@ categories for each cluster.
 <td style="text-align: center;">-0.339373781</td>
 <td>college_uni</td>
 <td style="text-align: center;">-0.4931870468</td>
+<td>shopping</td>
+<td style="text-align: center;">-0.394375778</td>
 </tr>
 </tbody>
 </table>
@@ -194,8 +220,8 @@ problems.
 
 The second cluster is associated with positive values of PC2 and
 negative values of PC5. In this cluster, the important categories are
-politics, travel, college\_uni, tv\_film, current\_events,
-news,cshopping, photo\_sharing and eco. It is similar to the firs group
+politics, travel, college\_uni, tv\_film, current\_events, news,
+shopping, photo\_sharing and eco. It is similar to the firs group
 (college students and interested in politics and current events), but
 they are probably also interested in spending their free time shopping,
 creating social media content instead of doing physical activities.
