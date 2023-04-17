@@ -57,7 +57,7 @@ The first approach uses KMeans with 2 clusters to determine the types of wine an
     
 Plotting pH vs Alcohol shows us that these attributes are not the right ones to be able to distinguish the differences in the wine. There is almost complete overlap and these cannot be used to predict the type of wine. 
 
-```{r q1_kmeans1, echo=FALSE}
+```{r q1_kmeans1, echo=FALSE,warning=FALSE}
 clust1 = kmeans(X2, 2, nstart=25)
 check1 = clust1$center[1,]*sigma + mu
 check2 = clust1$center[2,]*sigma + mu
@@ -73,7 +73,7 @@ qplot(citric.acid, total.sulfur.dioxide, data=wine, color=factor(clust1$cluster)
 
 Now, using KMeans for predicting wine quality by using 7 clusters. The plots below show that there are minimal to no discernible patterns in the clusters and they are not related to the actual quality of wine. Clustering is not a good method to determine the quality of wine especially when considering only the chemical properties of wine.
 
-```{r q1_kmeans3, echo=FALSE}
+```{r q1_kmeans3, echo=FALSE,warning=FALSE}
 KMeans_Quality = kmeans(X2, 7, nstart=25)
 
 qplot(alcohol, pH, data=wine, color=factor(KMeans_Quality$cluster))
@@ -88,7 +88,7 @@ First, we are trying to predict the color of the wine using PCA with Rank = 2 wh
 
 The plot below shows that this method is quite good at being able to distinguish between red and white wines. The simplified 2 component analysis makes it easy to visually distinguish between red and white wines.
 
-```{r q1_pca1, echo=FALSE}
+```{r q1_pca1, echo=FALSE, warning=FALSE}
 ##  PCA - Color prediction
 pca1 = prcomp(X2, scale=TRUE, rank=2)
 loadings_type = pca1$rotation
@@ -99,7 +99,7 @@ qplot(scores_type[,1], scores_type[,2], color=wine$color, xlab='Component 1', yl
 
 The plot below shows the quality of wine when considering PCA with Rank = 7. There is no discernible pattern and PCA is a not a good approach to predict the quality of wine based on the recorded chemical properties. This result remains true even if different components are used for plotting. 
 
-```{r q1_pca2, echo=FALSE}
+```{r q1_pca2, echo=FALSE, warning=FALSE}
 ## PCA - Quality prediction 
 pca2 = prcomp(X2, scale=TRUE, rank=7)
 loadings_quality = pca2$rotation

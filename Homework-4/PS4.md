@@ -49,8 +49,6 @@ ones to be able to distinguish the differences in the wine. There is
 almost complete overlap and these cannot be used to predict the type of
 wine.
 
-    ## Warning: `qplot()` was deprecated in ggplot2 3.4.0.
-
 ![](PS4_files/figure-markdown_strict/q1_kmeans1-1.png)
 
 Plotting Total Sulfur Dioxide vs Citric Acid shows us a more distinct
