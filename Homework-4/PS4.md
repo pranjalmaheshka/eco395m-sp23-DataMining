@@ -49,6 +49,8 @@ ones to be able to distinguish the differences in the wine. There is
 almost complete overlap and these cannot be used to predict the type of
 wine.
 
+    ## Warning: `qplot()` was deprecated in ggplot2 3.4.0.
+
 ![](PS4_files/figure-markdown_strict/q1_kmeans1-1.png)
 
 Plotting Total Sulfur Dioxide vs Citric Acid shows us a more distinct
@@ -64,10 +66,6 @@ plots below show that there are minimal to no discernible patterns in
 the clusters and they are not related to the actual quality of wine.
 Clustering is not a good method to determine the quality of wine
 especially when considering only the chemical properties of wine.
-
-    ## Warning: did not converge in 10 iterations
-
-    ## Warning: did not converge in 10 iterations
 
 ![](PS4_files/figure-markdown_strict/q1_kmeans3-1.png)![](PS4_files/figure-markdown_strict/q1_kmeans3-2.png)
 

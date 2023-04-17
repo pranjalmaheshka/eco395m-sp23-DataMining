@@ -67,7 +67,7 @@ qplot(alcohol, pH, data=wine, color=factor(clust1$cluster)) + scale_color_manual
 
 Plotting Total Sulfur Dioxide vs Citric Acid shows us a more distinct plot. Here, both wines have a range of citric acids but for citric acid > 0.8, it is usually white wine. The bottom left of the plot with lower citric acid and lower total sulfur dioxide shows the red wine. White wine tends to have higher total sulfur dioxide. 
 
-```{r q1_kmeans2, echo=FALSE}
+```{r q1_kmeans2, echo=FALSE, warning=FALSE}
 qplot(citric.acid, total.sulfur.dioxide, data=wine, color=factor(clust1$cluster)) + scale_color_manual(values=c("orange", "brown"))
 ```
 
