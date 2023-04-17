@@ -349,26 +349,4 @@ ggplot(testdata) + geom_line(aes(x = mileage, y = price_pred), color='red', size
 The 350 trim has data points ranging from $6,600 to 106,010 while the 65 AMG trim has data points ranging from $18,990 to $247,075 and there is significantly more variation in the data for the 65 AMG than the 350. The RMSE values are consistently much higher for the 65 AMG than the 350. The variation in the data can be attributed to the fact that the 65 AMG is an ultra-premium luxury sports car while the 350 is a luxury sedan that sees a much wider audience and much higher sales globally. The exact condition of the 65 AMG and potential sub-trims or add-ons could affect resale price greatly relative to the 350. In other words, more parameters would help create a better predictive model for the 65 AMG. The 350 is a sedan that has fewer options and fewer overall variations. Sports car enthusiasts are likely more discerning about the condition of the car and care more about different subtle aspects than the average sedan buyer who might use the 350 as a daily car. 
 
 Accordingly, the 350 trim sees higher k-values with lower RMSE values thus resulting in the final pick of k=20. Given the greater variation in price vs mileage for the 65 AMG, lower k-values consistently were associated with the minimum RMSE value and accordingly k=10 was chosen for the 350 trim and k=20 was chosen for the 65 AMG trim.  
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
