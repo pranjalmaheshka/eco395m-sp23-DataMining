@@ -11,9 +11,9 @@ output: md_document
 
 ### 2023-01-30
 
-```{r setup, include=FALSE}
+```{r setup1, include=FALSE}
 library(knitr)
-knitr::opts_knit$set()
+knitr::opts_chunk$set(echo = TRUE)
 library(haven)
 library(tidyverse)
 library(kableExtra)
@@ -30,9 +30,7 @@ library(timechange)
 
 ## Question 1 - Data visualization: flights at ABIA
 ```{r setup2, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 abia = read.csv("ABIA.csv", as.is = T, fill = T, header = T)
-
 ```
 
 
