@@ -65,6 +65,10 @@ the clusters and they are not related to the actual quality of wine.
 Clustering is not a good method to determine the quality of wine
 especially when considering only the chemical properties of wine.
 
+    ## Warning: did not converge in 10 iterations
+
+    ## Warning: did not converge in 10 iterations
+
 ![](PS4_files/figure-markdown_strict/q1_kmeans3-1.png)![](PS4_files/figure-markdown_strict/q1_kmeans3-2.png)
 
 ### PCA
@@ -383,8 +387,6 @@ most common items, meaning that we are not really capturing an
 association, but rather just a result of this dual commonality, as seen
 below.
 
-    itemFrequencyPlot(grocerytrans, topN=10,  cex.names=1)
-
 ![](PS4_files/figure-markdown_strict/unnamed-chunk-11-1.png)
 
 If we are using this data analysis for a practical purpose, such as
@@ -396,15 +398,9 @@ rules which are true less than 50% of the time. Therefore, we can rerun
 the apriori function with support = 0.01 and confidence = 0.5:
 
 ![](PS4_files/figure-markdown_strict/unnamed-chunk-12-1.png)![](PS4_files/figure-markdown_strict/unnamed-chunk-12-2.png)![](PS4_files/figure-markdown_strict/unnamed-chunk-12-3.png)
+
 We do have much less rules, however, the rules that remain are
 applicable to a larger portion of shoppers and are more strongly true,
 and are therefore more relevant to application
 
-    subrules = head(groceryrules2, n=10, by="lift")
-    plot(subrules, method = "graph", engine = "htmlwidget")
-
-![](PS4_files/figure-markdown_strict/unnamed-chunk-13-1.png)
-
-    plot(subrules, method="paracoord")
-
-![](PS4_files/figure-markdown_strict/unnamed-chunk-13-2.png)
+![](PS4_files/figure-markdown_strict/unnamed-chunk-14-1.png)![](PS4_files/figure-markdown_strict/unnamed-chunk-14-2.png)

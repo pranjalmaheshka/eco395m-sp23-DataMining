@@ -318,7 +318,7 @@ plot(subrules, method="paracoord")
 
 Here we can see strong 2-way rule associations: ham and white bread, tropical fruit and whole milk, butter and whipped cream, etc. However, it may be the case that whole milk and tropical fruit are just 2 of the most common items, meaning that we are not really capturing an association, but rather just a result of this dual commonality, as seen below.
 
-```{r, ehco=FALSE}
+```{r, echo=FALSE}
 itemFrequencyPlot(grocerytrans, topN=10,  cex.names=1)
 
 ```
@@ -341,11 +341,13 @@ plot(groceryrules2, method='two-key plot')
 # with a directed edge to the item in the RHS. 
 
 ```
+
 We do have much less rules, however, the rules that remain are applicable to a larger portion of shoppers and are more strongly true, and are therefore more relevant to application
-
-```{r, ehco=FALSE}
-
+```{r, include=FALSE}
 subrules = head(groceryrules2, n=10, by="lift")
+```
+
+```{r, echo=FALSE}
 plot(subrules, method = "graph", engine = "htmlwidget")
 plot(subrules, method="paracoord")
 
