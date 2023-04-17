@@ -6,7 +6,7 @@ output: md_document
 always_allow_html: true
 ---
 
-# DataMining_PS4
+# Data Mining PS4
 
 ## Pranjal Maheshka, Asha Christensen, Marco Navarro
 ### 2023-04-17
