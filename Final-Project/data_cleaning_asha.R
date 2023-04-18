@@ -5,11 +5,11 @@ colnames(hospitaldf)
 
 opioid_df = hospitaldf
 #opioid_df = hospitaldf[,c("DRUGID1", "DRUGID2", "DRUGID3", "DRUGID4",
-                          "DRUGID5", "DRUGID6", "DRUGID7", "DRUGID8",
-                          "DRUGID9", "DRUGID10", "DRUGID11", "DRUGID12",
-                          "GPMED1", "GPMED2", "GPMED3", "GPMED4",
-                          "GPMED5", "GPMED6", "GPMED7", "GPMED8",
-                          "GPMED9", "GPMED10", "GPMED11", "GPMED12")]
+#                          "DRUGID5", "DRUGID6", "DRUGID7", "DRUGID8",
+#                          "DRUGID9", "DRUGID10", "DRUGID11", "DRUGID12",
+#                          "GPMED1", "GPMED2", "GPMED3", "GPMED4",
+#                          "GPMED5", "GPMED6", "GPMED7", "GPMED8",
+#                          "GPMED9", "GPMED10", "GPMED11", "GPMED12")]
 
 #sources: https://www.ncbi.nlm.nih.gov/books/NBK537482/table/appannex6.tab2/
 # https://www.asam.org/docs/default-source/education-docs/opioid-names_generic-brand-street_it-matttrs_8-28-17.pdf?sfvrsn=7b0640c2_2
