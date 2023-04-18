@@ -9,7 +9,7 @@ output: pdf_document
 
 * Sociodemographics: "AGE","RESIDNCE","SEX","ETHUN","RACEUN",
 "REGION","MSA","PATCODE","BDATEFL","SEXFL","ETHNICFL","RACERFL",
-"ETHIM","RACER","RACERETH","AGEDAYS","AGER"                         #keep all
+"ETHIM","RACER","RACERETH","AGEDAYS","AGER"                         #keep all   
 
 * ER Experience: "ARRTIME","WAITTIME","LOV","ARREMS"                #DROP ALL
 
