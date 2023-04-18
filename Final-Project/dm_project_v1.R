@@ -1,24 +1,29 @@
 ## Import libraries
-library(tidyverse)
 library(ggplot2)
-library(modelr)
-library(mosaic)
-library(psych)
-library(rsample)  
+library(dplyr)
+library(rsample)
 library(caret)
-library(parallel)
-library(foreach)
-library(gamlr)
-library(verification)
-library(groupdata2) 
-library(rpart)
-library(randomForest)
-library(pdp)
+
+library(tidyverse)
+# library(ggplot2)
+# library(modelr)
+# library(mosaic)
+# library(psych)
+# library(rsample)  
+# library(parallel)
+# library(foreach)
+# library(gamlr)
+# library(verification)
+# library(groupdata2) 
+# library(rpart)
+# library(randomForest)
+# library(pdp)
 
 ## Import data set 
 # If you are currently in X/Y/Github/Repo/Final_Project folder then create a "Final-Project-Data" folder for data in 'Y'
-df2011 = read.csv('.//../..//Final-Project-Data//ED2011.csv')
-# Uncomment when needed 
+df2011 = read.csv('./../../Final-Project-Data/ED2011.csv')
+df2011 = read.csv("C:/Users/pranj/Documents/Final-Project-Data/ED2011.csv") # for pranjal
+
 # df2012 = read.csv('.//../..//Final-Project-Data//ED2012.csv')
 # df2013 = read.csv('.//../..//Final-Project-Data//ED2013.csv')
 # df2014 = read.csv('.//../..//Final-Project-Data//ED2014.csv')
@@ -28,27 +33,54 @@ df2011 = read.csv('.//../..//Final-Project-Data//ED2011.csv')
 # df2018 = read.csv('.//../..//Final-Project-Data//ED2018.csv')
 # df2019 = read.csv('.//../..//Final-Project-Data//ED2019.csv')
 
+#######################################################################################################
 ## Primary data cleaning
-# Make sure all columns can be read by R
-# Drop irrelevant columns
-
+df2011 = select(df2011, -c("BLANK1","BLANK2","BLANK3","BLANK4","BLANK5","BLANK6",
+                           "BLANK7","BLANK8"))
 
 ## Data wrangling
-# Make one giant dataframe and ensure hospital codes dont get matched across years 
+factor(df2011$episode)
+df2011$opioid<-ifelse(df2011$CONTSUB1=="Schedule II",1,0)
+sum(df2011$opioid)
 
+df2011$AGE<-ifelse(df2011$AGE=="Under one year",1, df2011$AGE)
+df2011$AGE<-ifelse(df2011$AGE=="93 years and over",93, df2011$AGE)
+df2011$DISCH7DA<-ifelse(df2011$DISCH7DA=="Yes",1,0)
+# df2011$DISCH7DA<-ifelse(df2011$DISCH7DA=="No",0,df2011$DISCH7DA)
+# df2011$DISCH7DA<-ifelse(df2011$DISCH7DA=="Unknown",0,df2011$DISCH7DA)
+df2011$Sex<-ifelse(df2011$Sex=="Female",1,0)
 
-## Data overview
-# Simple summary statistics or analysis as needed
-# sum(df2011)
+factor(df2011$VDAYR)
+factor(df2011$VMONTH)
+factor(df2011$RACEUN)
 factor(df2011$IMMEDR)
-factor(df2011$PAYTYPER)
-factor(df2011$RESIDNCE)
-factor(df2011$GPMED1)
 
-## Machine Learning: Process 1
-# PCA / other 
+df2011$PAINSCALE<-ifelse(df2011$PAINSCALE=="Blank"|df2011$PAINSCALE=="Unknown",0,df2011$PAINSCALE)
 
+# factor(df2011$PAYTYPER)
+# factor(df2011$RESIDNCE)
+# factor(df2011$GPMED1)
 
+#######################################################################################################
+#### Pranjal - test code 
+
+df2011_split =  initial_split(df2011, prop=0.5)
+traindata = training(df2011_split)
+testdata  = testing(df2011_split)
+
+lm1 = glm(opioid ~ VMONTH + VDAYR + AGE + SEX + RACEUN + IMMEDR + PAINSCALE + DISCH7DA, data=traindata)
+traindata <- subset(traindata, select=c(VMONTH,VDAYR,AGE,SEX,RACEUN,IMMEDR,PAINSCALE,DISCH7DA,opioid))
+traindata$lm1_pred = predict(lm1)
+
+# yhat_train = ifelse(predict(lm1) >= 0.5, 1, 0)
+traindata$yhat_train = ifelse(predict(lm1) >= 0.20, 1, 0)
+table(opioid=traindata$opioid, yhat=traindata$yhat_train)
+
+sum(traindata$opioid)
+sum(traindata$yhat_train)
+max(traindata$lm1_pred)
+
+#######################################################################################################
 ## Machine Learning: Process 2
 # Random Forests / other
 
@@ -70,7 +102,7 @@ trial_sim1 = do(1)*{
 }
 forest_means0 = colMeans(rmse_simulation)
 
-
+#######################################################################################################
 ## Plots
 # Partial dependence
 # Variable importance
