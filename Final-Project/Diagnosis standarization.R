@@ -2,6 +2,7 @@ library(haven)
 library(tidyverse)
 library(foreach)
 library(mosaic)
+library(dplyr)
 
 setwd("C:/Users/ACER/Desktop/Stats Learning/Project")
 
@@ -66,4 +67,39 @@ icd10toicd9=icd10toicd9[!duplicated(icd10toicd9$icd10),]
 
 diag = merge(diag,icd10toicd9,by="icd10",all.x  =TRUE)
 diag =diag [!duplicated(diag$icd10),]  
+
+hospital = read.csv("hospital.csv")
+
+## DIAG1
+hospital$icd10=substring(hospital$DIAG1,1,3)
+hospital=merge(hospital,diag,by="icd10",all.x  =TRUE)
+hospital= hospital %>%
+    mutate(DIAG1AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospital$icd9,hospital$icd10))
+hospital = subset(hospital, select = -c(DIAG1,icd10,icd9))
+colnames(hospital)[colnames(hospital) == "DIAG1AX"] ="DIAG1"
+
+## DIAG2
+hospital$icd10=substring(hospital$DIAG2,1,3)
+hospital=merge(hospital,diag,by="icd10",all.x  =TRUE)
+hospital= hospital %>%
+   mutate(DIAG2AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospital$icd9,hospital$icd10))
+hospital = subset(hospital, select = -c(DIAG2,icd10,icd9))
+colnames(hospital)[colnames(hospital) == "DIAG2AX"] ="DIAG2"
+
+## DIAG3
+hospital$icd10=substring(hospital$DIAG3,1,3)
+hospital=merge(hospital,diag,by="icd10",all.x  =TRUE)
+hospital= hospital %>%
+   mutate(DIAG3AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospital$icd9,hospital$icd10))
+hospital = subset(hospital, select = -c(DIAG3,icd10,icd9))
+colnames(hospital)[colnames(hospital) == "DIAG3AX"] ="DIAG3"
+
+
+
+
+
+
+
+
+
 
