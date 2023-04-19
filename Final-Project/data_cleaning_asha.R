@@ -231,5 +231,23 @@ opioid_df = opioid_df %>%
            (t_codeine*p_codeine)
   )
   
+opioid_df %>%
+  group_by(year_id) %>%
+  summarize(perc_opioid = mean(opioid)*100) %>%
+  ggplot() +
+  geom_line(aes(x=year_id, y=perc_opioid))
 
+opioid_df %>%
+  group_by(year_id) %>%
+  summarize(num_opioids = mean(opioids)) %>%
+  ggplot() +
+  geom_line(aes(x=year_id, y=num_opioids))
+
+opioid_df %>%
+  filter(opioid == 1) %>%
+  group_by(year_id) %>%
+  summarize(potency = mean(potency)) %>%
+  ggplot() +
+  geom_line(aes(x=year_id, y=potency))
            
+  
