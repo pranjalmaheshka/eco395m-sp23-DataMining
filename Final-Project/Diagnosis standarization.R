@@ -6,15 +6,32 @@ library(dplyr)
 
 setwd("C:/Users/ACER/Desktop/Stats Learning/Project")
 
-df2011 = read_dta('ed2011-stata.dta') 
+hospitaldf = read.csv("hospital.csv")
+
+df2013 = hospitaldf %>%
+  filter(hospitaldf$YEAR=="2013")
+df2014 = hospitaldf %>%
+  filter(hospitaldf$YEAR=="2014")
+df2015 = hospitaldf %>%
+  filter(hospitaldf$YEAR=="2015")
+df2016 = hospitaldf %>%
+  filter(hospitaldf$YEAR=="2016")
+df2017 = hospitaldf %>%
+  filter(hospitaldf$YEAR=="2017")
+df2018 = hospitaldf %>%
+  filter(hospitaldf$YEAR=="2018")
+df2019 = hospitaldf %>%
+  filter(hospitaldf$YEAR=="2019")
+
+df2011 = read_dta('ed2011-stata.dta')
 df2012 = read_dta('ed2012-stata.dta')
-df2013 = read_dta('ed2013-stata.dta')
-df2014 = read_dta('ed2014-stata.dta')
-df2015 = read_dta('ed2015-stata.dta')
-df2016 = read_dta('ed2016-stata.dta')
-df2017 = read_dta('ed2017-stata.dta')
-df2018 = read_dta('ed2018-stata.dta')
-df2019 = read_dta('ed2019-stata.dta')
+# df2013 = read_dta('ed2013-stata.dta')
+# df2014 = read_dta('ed2014-stata.dta')
+# df2015 = read_dta('ed2015-stata.dta')
+# df2016 = read_dta('ed2016-stata.dta')
+# df2017 = read_dta('ed2017-stata.dta')
+# df2018 = read_dta('ed2018-stata.dta')
+# df2019 = read_dta('ed2019-stata.dta')
 
 ##### Standarized disease variables ICD10 to ICD9
 
@@ -64,35 +81,35 @@ icd10toicd9 = subset(icd10toicd9, select = -c(icd10cm,icd9cm))
 
 icd10toicd9=icd10toicd9[!duplicated(icd10toicd9$icd10),]               
 
-
 diag = merge(diag,icd10toicd9,by="icd10",all.x  =TRUE)
 diag =diag [!duplicated(diag$icd10),]  
 
-hospital = read.csv("hospital.csv")
+remove(df2011,df2012,df2013,df2014,df2015,df2016,df2017,df2018,df2019,diag12016,diag22016,diag32016,
+       diag12017,diag22017,diag32017,diag12018,diag22018,diag32018,diag12019,diag22019,diag32019)
 
 ## DIAG1
-hospital$icd10=substring(hospital$DIAG1,1,3)
-hospital=merge(hospital,diag,by="icd10",all.x  =TRUE)
-hospital= hospital %>%
-    mutate(DIAG1AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospital$icd9,hospital$icd10))
-hospital = subset(hospital, select = -c(DIAG1,icd10,icd9))
-colnames(hospital)[colnames(hospital) == "DIAG1AX"] ="DIAG1"
+hospitaldf$icd10=substring(hospitaldf$DIAG1,1,3)
+hospitaldf=merge(hospitaldf,diag,by="icd10",all.x  =TRUE)
+hospitaldf= hospitaldf %>%
+    mutate(DIAG1AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospitaldf$icd9,hospitaldf$icd10))
+hospitaldf = subset(hospitaldf, select = -c(DIAG1,icd10,icd9))
+colnames(hospitaldf)[colnames(hospitaldf) == "DIAG1AX"] ="DIAG1"
 
 ## DIAG2
-hospital$icd10=substring(hospital$DIAG2,1,3)
-hospital=merge(hospital,diag,by="icd10",all.x  =TRUE)
-hospital= hospital %>%
-   mutate(DIAG2AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospital$icd9,hospital$icd10))
-hospital = subset(hospital, select = -c(DIAG2,icd10,icd9))
-colnames(hospital)[colnames(hospital) == "DIAG2AX"] ="DIAG2"
+hospitaldf$icd10=substring(hospitaldf$DIAG2,1,3)
+hospitaldf=merge(hospitaldf,diag,by="icd10",all.x  =TRUE)
+hospitaldf= hospitaldf %>%
+   mutate(DIAG2AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospitaldf$icd9,hospitaldf$icd10))
+hospitaldf = subset(hospitaldf, select = -c(DIAG2,icd10,icd9))
+colnames(hospitaldf)[colnames(hospitaldf) == "DIAG2AX"] ="DIAG2"
 
 ## DIAG3
-hospital$icd10=substring(hospital$DIAG3,1,3)
-hospital=merge(hospital,diag,by="icd10",all.x  =TRUE)
-hospital= hospital %>%
-   mutate(DIAG3AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospital$icd9,hospital$icd10))
-hospital = subset(hospital, select = -c(DIAG3,icd10,icd9))
-colnames(hospital)[colnames(hospital) == "DIAG3AX"] ="DIAG3"
+hospitaldf$icd10=substring(hospitaldf$DIAG3,1,3)
+hospitaldf=merge(hospitaldf,diag,by="icd10",all.x  =TRUE)
+hospitaldf= hospitaldf %>%
+   mutate(DIAG3AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospitaldf$icd9,hospitaldf$icd10))
+hospitaldf = subset(hospitaldf, select = -c(DIAG3,icd10,icd9))
+colnames(hospitaldf)[colnames(hospitaldf) == "DIAG3AX"] ="DIAG3"
 
 
 
