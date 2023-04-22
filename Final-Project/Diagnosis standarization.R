@@ -6,22 +6,26 @@ library(dplyr)
 
 setwd("C:/Users/ACER/Desktop/Stats Learning/Project")
 
-hospitaldf = read.csv("hospital.csv")
+opioid_df = read.csv("hospital.csv")
 
-df2013 = hospitaldf %>%
-  filter(hospitaldf$YEAR=="2013")
-df2014 = hospitaldf %>%
-  filter(hospitaldf$YEAR=="2014")
-df2015 = hospitaldf %>%
-  filter(hospitaldf$YEAR=="2015")
-df2016 = hospitaldf %>%
-  filter(hospitaldf$YEAR=="2016")
-df2017 = hospitaldf %>%
-  filter(hospitaldf$YEAR=="2017")
-df2018 = hospitaldf %>%
-  filter(hospitaldf$YEAR=="2018")
-df2019 = hospitaldf %>%
-  filter(hospitaldf$YEAR=="2019")
+# df2011 = opioid_df %>%
+  filter(opioid_df$YEAR=="2011")
+# df2012 = opioid_df %>%
+  filter(opioid_df$YEAR=="2012")
+df2013 = opioid_df %>%
+  filter(opioid_df$YEAR=="2013")
+df2014 = opioid_df %>%
+  filter(opioid_df$YEAR=="2014")
+df2015 = opioid_df %>%
+  filter(opioid_df$YEAR=="2015")
+df2016 = opioid_df %>%
+  filter(opioid_df$YEAR=="2016")
+df2017 = opioid_df %>%
+  filter(opioid_df$YEAR=="2017")
+df2018 = opioid_df %>%
+  filter(opioid_df$YEAR=="2018")
+df2019 = opioid_df %>%
+  filter(opioid_df$YEAR=="2019")
 
 df2011 = read_dta('ed2011-stata.dta')
 df2012 = read_dta('ed2012-stata.dta')
@@ -88,28 +92,31 @@ remove(df2011,df2012,df2013,df2014,df2015,df2016,df2017,df2018,df2019,diag12016,
        diag12017,diag22017,diag32017,diag12018,diag22018,diag32018,diag12019,diag22019,diag32019)
 
 ## DIAG1
-hospitaldf$icd10=substring(hospitaldf$DIAG1,1,3)
-hospitaldf=merge(hospitaldf,diag,by="icd10",all.x  =TRUE)
-hospitaldf= hospitaldf %>%
-    mutate(DIAG1AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospitaldf$icd9,hospitaldf$icd10))
-hospitaldf = subset(hospitaldf, select = -c(DIAG1,icd10,icd9))
-colnames(hospitaldf)[colnames(hospitaldf) == "DIAG1AX"] ="DIAG1"
+opioid_df$icd10=substring(opioid_df$DIAG1,1,3)
+opioid_df=merge(opioid_df,diag,by="icd10",all.x  =TRUE)
+opioid_df= opioid_df %>%
+    mutate(DIAG1AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",opioid_df$icd9,opioid_df$icd10))
+opioid_df = subset(opioid_df, select = -c(DIAG1,icd10,icd9))
+colnames(opioid_df)[colnames(opioid_df) == "DIAG1AX"] ="DIAG1"
 
 ## DIAG2
-hospitaldf$icd10=substring(hospitaldf$DIAG2,1,3)
-hospitaldf=merge(hospitaldf,diag,by="icd10",all.x  =TRUE)
-hospitaldf= hospitaldf %>%
-   mutate(DIAG2AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospitaldf$icd9,hospitaldf$icd10))
-hospitaldf = subset(hospitaldf, select = -c(DIAG2,icd10,icd9))
-colnames(hospitaldf)[colnames(hospitaldf) == "DIAG2AX"] ="DIAG2"
+opioid_df$icd10=substring(opioid_df$DIAG2,1,3)
+opioid_df=merge(opioid_df,diag,by="icd10",all.x  =TRUE)
+opioid_df= opioid_df %>%
+   mutate(DIAG2AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",opioid_df$icd9,opioid_df$icd10))
+opioid_df = subset(opioid_df, select = -c(DIAG2,icd10,icd9))
+colnames(opioid_df)[colnames(opioid_df) == "DIAG2AX"] ="DIAG2"
 
 ## DIAG3
-hospitaldf$icd10=substring(hospitaldf$DIAG3,1,3)
-hospitaldf=merge(hospitaldf,diag,by="icd10",all.x  =TRUE)
-hospitaldf= hospitaldf %>%
-   mutate(DIAG3AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",hospitaldf$icd9,hospitaldf$icd10))
-hospitaldf = subset(hospitaldf, select = -c(DIAG3,icd10,icd9))
-colnames(hospitaldf)[colnames(hospitaldf) == "DIAG3AX"] ="DIAG3"
+opioid_df$icd10=substring(opioid_df$DIAG3,1,3)
+opioid_df=merge(opioid_df,diag,by="icd10",all.x  =TRUE)
+opioid_df= opioid_df %>%
+   mutate(DIAG3AX= ifelse(YEAR=="2016"|YEAR=="2017"|YEAR=="2018"|YEAR=="2019",opioid_df$icd9,opioid_df$icd10))
+opioid_df = subset(opioid_df, select = -c(DIAG3,icd10,icd9))
+colnames(opioid_df)[colnames(opioid_df) == "DIAG3AX"] ="DIAG3"
+
+
+
 
 
 
