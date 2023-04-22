@@ -24,6 +24,35 @@ opioid_df = hospitaldf
 # https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NHAMCS/doc16_ed.pdf
 
 ##  keep useful variables
+###########################################
+# Pranjal's edit attempt 1
+setwd("C:/Users/pranj/Documents/Final-Project-Data")
+
+df2012 = read.csv('ED2012.csv')
+df2013 = read.csv('ED2013.csv')
+df2014 = read.csv('ED2014.csv')
+
+opioid_pm = data.frame()
+
+opioid_pm = subset(df2012, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
+                                         REGION,MSA,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
+                                         ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
+                                         PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
+                                         PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
+                                         ONO2,IMMEDR,PAINSCALE,SEEN72,
+                                         CEBVD,CHF,EDDIAL,EDHIV,DIABETES,NOCHRON,RFV1,RFV2,
+                                         RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
+                                         CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
+                                         BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
+                                         FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
+                                         ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
+                                         ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
+                                         SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
+                                         PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
+                                         GPMED2,GPMED3,GPMED4,GPMED5,GPME6,GPMED7,GPMED8,GPMED9,
+                                         GPMED10,GPMED11,GPMED12,DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
+                                         DRUGID6,DRUGID7,DRUGID8,DRUGID9,DRUGID10,DRUGID11,DRUGID12)) 
+
 
 opioid_df = subset(opioid_df, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
                                          REGION,MSA,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
