@@ -12,6 +12,7 @@ library(modelr)
 knitr::opts_chunk$set(echo = TRUE)
 
 setwd = ("C:/Users/pranj/Documents/Final-Project-Data/") #Pranjal
+setwd = ("C:/Users/ACER/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/") #Pranjal
 opioid_df = read.csv("data/data_final.csv") 
 
 factor(opioid_df$episode)
