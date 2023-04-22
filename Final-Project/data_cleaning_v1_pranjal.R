@@ -6,11 +6,11 @@ library(foreach)
 library(mosaic)
 library(dplyr)
 
-setwd("C:/Users/ACER/Desktop/Stats Learning/Project")
+# setwd("C:/Users/ACER/Desktop/Stats Learning/Project")
 
-hospitaldf = read.csv("hospital.csv")
+# hospitaldf = read.csv("hospital.csv")
 
-opioid_df = hospitaldf
+# opioid_df = hospitaldf
 
 #opioid_df = hospitaldf[,c("DRUGID1", "DRUGID2", "DRUGID3", "DRUGID4",
 #                          "DRUGID5", "DRUGID6", "DRUGID7", "DRUGID8",
@@ -24,54 +24,223 @@ opioid_df = hospitaldf
 # https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/NHAMCS/doc16_ed.pdf
 
 ##  keep useful variables
+
+
 ###########################################
 # Pranjal's edit attempt 1
 setwd("C:/Users/pranj/Documents/Final-Project-Data")
 
-df2012 = read.csv('ED2012.csv')
+# df2011 = read.csv('ED2011.csv')
+# df2012 = read.csv('ED2012.csv')
 df2013 = read.csv('ED2013.csv')
+df2014 = read.csv('ED2014.csv')
+df2015 = read.csv('ED2015.csv')
+df2016 = read.csv('ED2016.csv')
 df2017 = read.csv('ED2017.csv')
+df2018 = read.csv('ED2018.csv')
+df2019 = read.csv('ED2019.csv')
 
-opioid_pm = data.frame()
+opioid_df = data.frame()
 
-opioid_pm = subset(df2017, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
-                                      REGION,MSA,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
-                                      ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
-                                      PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
-                                      PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
-                                      IMMEDR,PAINSCALE,SEEN72,
-                                      CEBVD,CHF,EDHIV,NOCHRON,RFV1,RFV2,
-                                      RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
-                                      CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
-                                      BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
-                                      FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
-                                      ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
-                                      ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
-                                      SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
-                                      PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
-                                      GPMED2,GPMED3,GPMED4,GPMED5,GPMED7,GPMED8,GPMED9,
-                                      GPMED10,GPMED11,GPMED12,DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
-                                      DRUGID6,DRUGID7,DRUGID8,DRUGID9,DRUGID10,DRUGID11,DRUGID12)) 
+# df2014$DIABETES<-ifelse(df2014$DIABTYP0=="No" & df2014$DIABTYP1=="No" & df2014$DIABTYP2=="No", 0, 1)
+# df2015$DIABETES<-ifelse(df2015$DIABTYP0=="No" & df2015$DIABTYP1=="No" & df2015$DIABTYP2=="No", 0, 1)
+# df2016$DIABETES<-ifelse(df2016$DIABTYP0=="No" & df2016$DIABTYP1=="No" & df2016$DIABTYP2=="No", 0, 1)
+# df2017$DIABETES<-ifelse(df2017$DIABTYP0=="No" & df2017$DIABTYP1=="No" & df2017$DIABTYP2=="No", 0, 1)
+# df2018$DIABETES<-ifelse(df2018$DIABTYP0=="No" & df2018$DIABTYP1=="No" & df2018$DIABTYP2=="No", 0, 1)
+# df2019$DIABETES<-ifelse(df2019$DIABTYP0=="No" & df2019$DIABTYP1=="No" & df2019$DIABTYP2=="No", 0, 1)
 
+df.list <- list(df2014, df2015, df2016, df2017, df2018, df2019)
+rename_diabetes <- lapply(df.list, function(x) {x$DIABETES<-ifelse(x$DIABTYP0=="No" & x$DIABTYP1=="No" & x$DIABTYP2=="No", 0, 1)})
 
-opioid_df = subset(opioid_df, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
-                                         REGION,MSA,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
-                                         ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
-                                         PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
-                                         PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
-                                         ONO2,IMMEDR,PAINSCALE,SEEN72,
-                                         CEBVD,CHF,EDDIAL,EDHIV,DIABETES,NOCHRON,RFV1,RFV2,
-                                         RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
-                                         CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
-                                         BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
-                                         FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
-                                         ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
-                                         ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
-                                         SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
-                                         PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
-                                         GPMED2,GPMED3,GPMED4,GPMED5,GPME6,GPMED7,GPMED8,GPMED9,
-                                         GPMED10,GPMED11,GPMED12,DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
-                                         DRUGID6,DRUGID7,DRUGID8,DRUGID9,DRUGID10,DRUGID11,DRUGID12)) 
+opioid_df = rbind(opioid_df, subset(df2013, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
+                                                       REGION,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
+                                                       ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
+                                                       PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
+                                                       PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
+                                                       IMMEDR,PAINSCALE,SEEN72,
+                                                       CEBVD,CHF,EDHIV,DIABETES,NOCHRON,RFV1,RFV2,
+                                                       RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
+                                                       CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
+                                                       BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
+                                                       FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
+                                                       ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
+                                                       ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
+                                                       SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
+                                                       PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
+                                                       GPMED2,GPMED3,GPMED4,GPMED5,GPMED6,GPMED7,GPMED8,GPMED9,
+                                                       GPMED10,GPMED11,GPMED12,DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
+                                                       DRUGID6,DRUGID7,DRUGID8,DRUGID9,DRUGID10,DRUGID11,DRUGID12)))  
+opioid_df = rbind(opioid_df, subset(df2014, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
+                                                       REGION,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
+                                                       ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
+                                                       PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
+                                                       PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
+                                                       IMMEDR,PAINSCALE,SEEN72,
+                                                       CEBVD,CHF,EDHIV,DIABETES,NOCHRON,RFV1,RFV2,
+                                                       RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
+                                                       CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
+                                                       BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
+                                                       FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
+                                                       ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
+                                                       ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
+                                                       SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
+                                                       PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
+                                                       GPMED2,GPMED3,GPMED4,GPMED5,GPMED6,GPMED7,GPMED8,GPMED9,
+                                                       GPMED10,GPMED11,GPMED12,DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
+                                                       DRUGID6,DRUGID7,DRUGID8,DRUGID9,DRUGID10,DRUGID11,DRUGID12)))  
+opioid_df = rbind(opioid_df, subset(df2015, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
+                                                       REGION,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
+                                                       ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
+                                                       PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
+                                                       PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
+                                                       IMMEDR,PAINSCALE,SEEN72,
+                                                       CEBVD,CHF,EDHIV,DIABETES,NOCHRON,RFV1,RFV2,
+                                                       RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
+                                                       CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
+                                                       BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
+                                                       FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
+                                                       ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
+                                                       ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
+                                                       SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
+                                                       PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
+                                                       GPMED2,GPMED3,GPMED4,GPMED5,GPMED6,GPMED7,GPMED8,GPMED9,
+                                                       GPMED10,GPMED11,GPMED12,DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
+                                                       DRUGID6,DRUGID7,DRUGID8,DRUGID9,DRUGID10,DRUGID11,DRUGID12)))  
+opioid_df = rbind(opioid_df, subset(df2016, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
+                                                       REGION,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
+                                                       ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
+                                                       PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
+                                                       PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
+                                                       IMMEDR,PAINSCALE,SEEN72,
+                                                       CEBVD,CHF,EDHIV,DIABETES,NOCHRON,RFV1,RFV2,
+                                                       RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
+                                                       CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
+                                                       BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
+                                                       FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
+                                                       ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
+                                                       ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
+                                                       SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
+                                                       PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
+                                                       GPMED2,GPMED3,GPMED4,GPMED5,GPMED6,GPMED7,GPMED8,GPMED9,
+                                                       GPMED10,GPMED11,GPMED12,DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
+                                                       DRUGID6,DRUGID7,DRUGID8,DRUGID9,DRUGID10,DRUGID11,DRUGID12)))  
+opioid_df = rbind(opioid_df, subset(df2017, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
+                                                       REGION,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
+                                                       ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
+                                                       PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
+                                                       PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
+                                                       IMMEDR,PAINSCALE,SEEN72,
+                                                       CEBVD,CHF,EDHIV,DIABETES,NOCHRON,RFV1,RFV2,
+                                                       RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
+                                                       CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
+                                                       BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
+                                                       FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
+                                                       ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
+                                                       ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
+                                                       SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
+                                                       PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
+                                                       GPMED2,GPMED3,GPMED4,GPMED5,GPMED6,GPMED7,GPMED8,GPMED9,
+                                                       GPMED10,GPMED11,GPMED12,DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
+                                                       DRUGID6,DRUGID7,DRUGID8,DRUGID9,DRUGID10,DRUGID11,DRUGID12)))  
+opioid_df = rbind(opioid_df, subset(df2018, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
+                                                       REGION,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
+                                                       ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
+                                                       PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
+                                                       PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
+                                                       IMMEDR,PAINSCALE,SEEN72,
+                                                       CEBVD,CHF,EDHIV,DIABETES,NOCHRON,RFV1,RFV2,
+                                                       RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
+                                                       CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
+                                                       BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
+                                                       FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
+                                                       ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
+                                                       ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
+                                                       SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
+                                                       PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
+                                                       GPMED2,GPMED3,GPMED4,GPMED5,GPMED6,GPMED7,GPMED8,GPMED9,
+                                                       GPMED10,GPMED11,GPMED12,DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
+                                                       DRUGID6,DRUGID7,DRUGID8,DRUGID9,DRUGID10,DRUGID11,DRUGID12)))  
+opioid_df = rbind(opioid_df, subset(df2019, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
+                                                       REGION,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
+                                                       ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
+                                                       PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
+                                                       PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
+                                                       IMMEDR,PAINSCALE,SEEN72,
+                                                       CEBVD,CHF,EDHIV,DIABETES,NOCHRON,RFV1,RFV2,
+                                                       RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
+                                                       CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
+                                                       BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
+                                                       FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
+                                                       ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
+                                                       ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
+                                                       SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
+                                                       PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
+                                                       GPMED2,GPMED3,GPMED4,GPMED5,GPMED6,GPMED7,GPMED8,GPMED9,
+                                                       GPMED10,GPMED11,GPMED12,DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
+                                                       DRUGID6,DRUGID7,DRUGID8,DRUGID9,DRUGID10,DRUGID11,DRUGID12)))
+
+remove(df2013, df2014, df2015, df2016, df2017, df2018, df2019)                
+
+# opioid1 <- lapply(df.list, function(x) cbind(x, subset.data.frame(select = c("VMONTH","VDAYR","YEAR","AGE","RESIDNCE","SEX","ETHUN","RACEUN","
+#                                                             REGION","MSA"," PATCODE","BDATEFL","SEXFL","ETHNICFL","RACERFL","
+#                                                             ETHIM","RACER","RACERETH","AGEDAYS","AGER","PAYPRIV","PAYMCARE","
+#                                                             PAYMCAID","PAYWKCMP","PAYSELF","PAYNOCHG","PAYOTH","PAYDK","
+#                                                             PAYTYPER","TEMPF","PULSE","RESPR","BPSYS","BPDIAS","POPCT","   
+#                                                             IMMEDR","PAINSCALE","SEEN72","
+#                                                             CEBVD","CHF","EDHIV","DIABETES","NOCHRON","RFV1","RFV2","
+#                                                             RFV3","DIAG1","DIAG2","DIAG3","DIAGSCRN","CBC","BUNCREAT","
+#                                                             CARDENZ","ELECTROL","GLUCOSE","LFT","ABG","PTTINR","
+#                                                             BLOODCX","BAC","OTHERBLD","CARDMON","EKG","HIVTEST","
+#                                                             FLUTEST","PREGTEST","TOXSCREN","URINE","WOUNDCX","OTHRTEST","  
+#                                                             ANYIMAGE","XRAY","CATSCAN","CTHEAD","CTUNK","MRI","
+#                                                             ULTRASND","OTHIMAGE","TOTDIAG","PROC","IVFLUIDS","
+#                                                             SUTURE","INCDRAIN","NEBUTHER","BLADCATH","
+#                                                             PELVIC","CENTLINE","CPR","ENDOINT","OTHPROC","TOTPROC","GPMED1","
+#                                                             GPMED2","GPMED3","GPMED4","GPMED5","GPMED6","GPMED7","GPMED8","
+#                                                             DRUGID1","DRUGID2","DRUGID3","DRUGID4","DRUGID5","
+#                                                             DRUGID6","DRUGID7","DRUGID8")), na.rm = TRUE))
+# 
+# 
+# res <- lapply(df.list, function(x) cbind(x, subset(x, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
+#                                                                                    REGION,MSA, PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
+#                                                                                    ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
+#                                                                                    PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
+#                                                                                    PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
+#                                                                                    IMMEDR,PAINSCALE,SEEN72,
+#                                                                                    CEBVD,CHF,EDHIV,DIABETES,NOCHRON,RFV1,RFV2,
+#                                                                                    RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
+#                                                                                    CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
+#                                                                                    BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
+#                                                                                    FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
+#                                                                                    ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
+#                                                                                    ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
+#                                                                                    SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
+#                                                                                    PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
+#                                                                                    GPMED2,GPMED3,GPMED4,GPMED5,GPMED6,GPMED7,GPMED8,
+#                                                                                    DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
+#                                                                                    DRUGID6,DRUGID7,DRUGID8)), na.rm = TRUE))
+
+# 
+# 
+# 
+# opioid_df = subset(df2014, select = c(VMONTH,VDAYR,YEAR,AGE,RESIDNCE,SEX,ETHUN,RACEUN,
+#                                          REGION,PATCODE,BDATEFL,SEXFL,ETHNICFL,RACERFL,
+#                                          ETHIM,RACER,RACERETH,AGEDAYS,AGER,PAYPRIV,PAYMCARE,
+#                                          PAYMCAID,PAYWKCMP,PAYSELF,PAYNOCHG,PAYOTH,PAYDK,
+#                                          PAYTYPER,TEMPF,PULSE,RESPR,BPSYS,BPDIAS,POPCT,   
+#                                          IMMEDR,PAINSCALE,SEEN72,
+#                                          CEBVD,CHF,EDHIV,DIABETES,NOCHRON,RFV1,RFV2,
+#                                          RFV3,DIAG1,DIAG2,DIAG3,DIAGSCRN,CBC,BUNCREAT,
+#                                          CARDENZ,ELECTROL,GLUCOSE,LFT,ABG,PTTINR,
+#                                          BLOODCX,BAC,OTHERBLD,CARDMON,EKG,HIVTEST,
+#                                          FLUTEST,PREGTEST,TOXSCREN,URINE,WOUNDCX,OTHRTEST,  
+#                                          ANYIMAGE,XRAY,CATSCAN,CTHEAD,CTUNK,MRI,
+#                                          ULTRASND,OTHIMAGE,TOTDIAG,PROC,IVFLUIDS,
+#                                          SUTURE,INCDRAIN,NEBUTHER,BLADCATH,
+#                                          PELVIC,CENTLINE,CPR,ENDOINT,OTHPROC,TOTPROC,GPMED1,
+#                                          GPMED2,GPMED3,GPMED4,GPMED5,GPMED6,GPMED7,GPMED8,GPMED9,
+#                                          GPMED10,GPMED11,GPMED12,DRUGID1,DRUGID2,DRUGID3,DRUGID4,DRUGID5,
+#                                          DRUGID6,DRUGID7,DRUGID8,DRUGID9,DRUGID10,DRUGID11,DRUGID12)) 
 
 #list of opiods DRUGIDs
 fentanyl = "d00233"
