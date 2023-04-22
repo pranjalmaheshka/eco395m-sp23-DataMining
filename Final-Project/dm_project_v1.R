@@ -3,8 +3,8 @@ library(ggplot2)
 library(dplyr)
 library(rsample)
 library(caret)
-
 library(tidyverse)
+
 # library(ggplot2)
 # library(modelr)
 # library(mosaic)
@@ -19,24 +19,8 @@ library(tidyverse)
 # library(randomForest)
 # library(pdp)
 
-## Import data set 
-# If you are currently in X/Y/Github/Repo/Final_Project folder then create a "Final-Project-Data" folder for data in 'Y'
-df2011 = read.csv('./../../Final-Project-Data/ED2011.csv')
-df2011 = read.csv("C:/Users/pranj/Documents/Final-Project-Data/ED2011.csv") # for pranjal
-
-# df2012 = read.csv('.//../..//Final-Project-Data//ED2012.csv')
-# df2013 = read.csv('.//../..//Final-Project-Data//ED2013.csv')
-# df2014 = read.csv('.//../..//Final-Project-Data//ED2014.csv')
-# df2015 = read.csv('.//../..//Final-Project-Data//ED2015.csv')
-# df2016 = read.csv('.//../..//Final-Project-Data//ED2016.csv')
-# df2017 = read.csv('.//../..//Final-Project-Data//ED2017.csv')
-# df2018 = read.csv('.//../..//Final-Project-Data//ED2018.csv')
-# df2019 = read.csv('.//../..//Final-Project-Data//ED2019.csv')
-
-#######################################################################################################
-## Primary data cleaning
-df2011 = select(df2011, -c("BLANK1","BLANK2","BLANK3","BLANK4","BLANK5","BLANK6",
-                           "BLANK7","BLANK8"))
+setwd = ("C:/Users/pranj/Documents/Final-Project-Data/")
+opioid_df = read.csv("data/data_final.csv") #Pranjal
 
 ## Data wrangling
 factor(df2011$episode)
@@ -46,8 +30,6 @@ sum(df2011$opioid)
 df2011$AGE<-ifelse(df2011$AGE=="Under one year",1, df2011$AGE)
 df2011$AGE<-ifelse(df2011$AGE=="93 years and over",93, df2011$AGE)
 df2011$DISCH7DA<-ifelse(df2011$DISCH7DA=="Yes",1,0)
-# df2011$DISCH7DA<-ifelse(df2011$DISCH7DA=="No",0,df2011$DISCH7DA)
-# df2011$DISCH7DA<-ifelse(df2011$DISCH7DA=="Unknown",0,df2011$DISCH7DA)
 df2011$Sex<-ifelse(df2011$Sex=="Female",1,0)
 
 factor(df2011$VDAYR)
@@ -57,9 +39,61 @@ factor(df2011$IMMEDR)
 
 df2011$PAINSCALE<-ifelse(df2011$PAINSCALE=="Blank"|df2011$PAINSCALE=="Unknown",0,df2011$PAINSCALE)
 
-# factor(df2011$PAYTYPER)
-# factor(df2011$RESIDNCE)
-# factor(df2011$GPMED1)
+opioid_df$PAINSCALE<-ifelse(opioid_df$PAINSCALE=="Blank"|opioid_df$PAINSCALE=="Unknown",0,opioid_df$PAINSCALE)
+opioid_df$PAINSCALE<-as.numeric(opioid_df$PAINSCALE)
+
+factor(opioid_df$PAYTYPER)
+factor(opioid_df$RESIDNCE)
+factor(opioid_df$REGION)
+factor(opioid_df$ETHUN)
+factor(opioid_df$MSA)
+
+factor(opioid_df$CEBVD)
+factor(opioid_df$EDHIV)
+factor(opioid_df$NOCHRON)
+factor(opioid_df$RFV1)
+factor(opioid_df$DIAG1)
+
+opioid_df$AGE = as.numeric(opioid_df$AGE)
+
+
+#################################################################
+##RANDOM FORESTS##
+opioid_split =  initial_split(opioid_df, prop=0.8)
+traindata = training(opioid_split)
+testdata  = testing(opioid_split)
+
+
+library(rpart)
+library(rpart.plot)
+library(rsample) 
+library(randomForest)
+library(lubridate)
+library(modelr)
+
+
+# let's fit a random forest
+# notice: no tuning parameters!  just using the default
+# downside: takes longer because we're fitting hundreds of trees (500 by default)
+# the importance=TRUE flag tells randomForest to calculate variable importance metrics
+load.forest = randomForest(opioid ~ DIAG1 + REGION + MSA + IMMEDR + 
+                             PAYTYPER + PAINSCALE + RACEUN + male,
+                           data=traindata, importance = TRUE, ntree=100)
+
+# shows out-of-bag MSE as a function of the number of trees used
+plot(load.forest)
+
+modelr::rmse(load.forest, testdata) 
+
+# variable importance measures
+# how much does mean-squared error increase when we ignore a variable?
+vi = varImpPlot(load.forest, type=1)
+
+
+# partial dependence plots
+# these are trying to isolate the partial effect of specific features
+# on the outcome
+partialPlot(load.forest, testdata, 'PAINSCALE', las=1)
 
 #######################################################################################################
 #### Pranjal - test code 
@@ -79,35 +113,4 @@ table(opioid=traindata$opioid, yhat=traindata$yhat_train)
 sum(traindata$opioid)
 sum(traindata$yhat_train)
 max(traindata$lm1_pred)
-
 #######################################################################################################
-## Machine Learning: Process 2
-# Random Forests / other
-
-# Does not work right now 
-trial_sim1 = do(1)*{
-  # Split data into training and testing sets
-  load_split =  initial_split(df2011, prop=0.8)
-  load_train = training(load_split)
-  load_test  = testing(load_split)
-  
-  # Random forest
-  load.forest = randomForest(GPMED1 ~ IMMEDR + PAYTYPER + AGE + SEX + RESIDNCE + PAINSCALE,
-                             data=load_train, na.action=na.exclude)
-  
-  # Calculate RMSE
-  rmse_in = modelr::rmse(load.tree_prune, load_train)
-  rmse_out = modelr::rmse(load.tree_prune, load_test)
-  rmse = c(rmse_in, rmse_out)
-}
-forest_means0 = colMeans(rmse_simulation)
-
-#######################################################################################################
-## Plots
-# Partial dependence
-# Variable importance
-# Anything else 
-
-
-## Additional analysis 
-# TBD 
