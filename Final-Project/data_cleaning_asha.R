@@ -230,6 +230,52 @@ opioid_df = opioid_df %>%
            (t_oxycodone*p_oxycodone) +
            (t_codeine*p_codeine)
   )
+
+
+
+drop <- c("fentanyl1", "fentanyl2", "fentanyl3", 
+           "fentanyl4", "fentanyl5", "fentanyl6", 
+           "fentanyl7", "fentanyl8", "fentanyl9",
+           "fentanyl10", "fentanyl11", "fentanyl12",
+           "buprenorphine1" , "buprenorphine2" , "buprenorphine3" ,
+             "buprenorphine4" , "buprenorphine5" , "buprenorphine6" , 
+             "buprenorphine7" , "buprenorphine8" , "buprenorphine9" ,
+             "buprenorphine10" , "buprenorphine11" , "buprenorphine12",
+           "hydromorphone1", "hydromorphone2" , "hydromorphone3" ,
+             "hydromorphone4","hydromorphone5","hydromorphone6",
+             "hydromorphone7","hydromorphone8","hydromorphone9",
+             "hydromorphone10","hydromorphone11","hydromorphone12",
+           "hydrocodone1","hydrocodone2","hydrocodone3",
+             "hydrocodone4","hydrocodone5","hydrocodone6",
+             "hydrocodone7","hydrocodone8","hydrocodone9",
+             "hydrocodone10","hydrocodone11","hydrocodone12",
+           "methadone1","methadone2","methadone3",
+             "methadone4","methadone5","methadone6",
+             "methadone7","methadone8","methadone9",
+             "methadone10","methadone11","methadone12",
+           "morphine1","morphine2","morphine3",
+             "morphine4","morphine5","morphine6",
+             "morphine7","morphine8","morphine9",
+             "morphine10","morphine11","morphine12",
+           "tapentadol1", "tapentadol2","tapentadol3",
+             "tapentadol4","tapentadol5","tapentadol6",
+             "tapentadol7","tapentadol8","tapentadol9",
+             "tapentadol10","tapentadol11","tapentadol12",
+           "oxycodone1","oxycodone2","oxycodone3",
+             "oxycodone4","oxycodone5","oxycodone6",
+             "oxycodone7","oxycodone8","oxycodone9",
+             "oxycodone10","oxycodone11","oxycodone12",
+           "codeine1","codeine2","codeine3",
+             "codeine4","codeine5","codeine6",
+             "codeine7","codeine8","codeine9",
+             "codeine10","codeine11","codeine12",
+           "t_fentanyl", "t_buprenorphine" , "t_hydromorphone",
+             "t_hydrocodone", "t_methadone", "t_morphine",
+             "t_tapentadol", "t_oxycodone", "t_codeine", 
+          "p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8", "p9",
+          "p10", "p11", "p12")
+
+opioid_df = opioid_df[,!(names(opioid_df) %in% drop)]
   
 opioid_df %>%
   group_by(year_id) %>%
