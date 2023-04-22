@@ -9,9 +9,9 @@ setwd("C:/Users/ACER/Desktop/Stats Learning/Project")
 opioid_df = read.csv("hospital.csv")
 
 # df2011 = opioid_df %>%
-  filter(opioid_df$YEAR=="2011")
+# filter(opioid_df$YEAR=="2011")
 # df2012 = opioid_df %>%
-  filter(opioid_df$YEAR=="2012")
+#  filter(opioid_df$YEAR=="2012")
 df2013 = opioid_df %>%
   filter(opioid_df$YEAR=="2013")
 df2014 = opioid_df %>%
