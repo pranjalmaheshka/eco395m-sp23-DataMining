@@ -1,3 +1,11 @@
+---
+title: "project_v1"
+author: "Pranjal Maheshka, Asha Christensen, Marco Navarro"
+date: "2023-04-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
 library(ggplot2)
 library(dplyr)
 library(rsample)
@@ -13,10 +21,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 setwd = ("C:/Users/pranj/Documents/Final-Project-Data/") #Pranjal
 opioid_df = read.csv("data/data_final.csv") 
+```
 
+## R Markdown
+
+
+```{r data_wrangling, include=FALSE}
 factor(opioid_df$episode)
 opioid_df$opioid<-ifelse(opioid_df$CONTSUB1=="Schedule II",1,0)
 sum(opioid_df$opioid)
+
 
 factor(opioid_df$VDAYR)
 factor(opioid_df$VMONTH)
@@ -43,16 +57,19 @@ opioid_df$Sex<-ifelse(opioid_df$Sex=="Female",1,0)
 opioid_df$PAINSCALE<-ifelse(opioid_df$PAINSCALE=="Blank"|opioid_df$PAINSCALE=="Unknown",0,opioid_df$PAINSCALE)
 opioid_df$PAINSCALE<-as.numeric(opioid_df$PAINSCALE)
 opioid_df$AGE = as.numeric(opioid_df$AGE)
+```
+
+## Including Plots
 
 
-
+```{r random_forests1, include=TRUE}
 opioid_model = subset(opioid_df, YEAR == 2018 | YEAR == 2019)
 opioid_split =  initial_split(opioid_model, prop=0.8)
 traindata = training(opioid_split)
 testdata  = testing(opioid_split)
 
-load.forest = randomForest(opioid ~ DIAG1 + REGION  + IMMEDR + 
-                             PAYTYPER + PAINSCALE + RACEUN + SEX,
+load.forest = randomForest(opioid ~ DIAG1 + REGION + MSA + IMMEDR + 
+                             PAYTYPER + PAINSCALE + RACEUN + male,
                            data=traindata, importance = TRUE, ntree=100)
 plot(load.forest)
 
@@ -64,23 +81,5 @@ vi = varImpPlot(load.forest, type=1)
 # partial dependence plots
 partialPlot(load.forest, testdata, 'PAINSCALE', las=1)
 
+```
 
-#######################################################################################################
-#### Pranjal - test code 
-
-df2011_split =  initial_split(df2011, prop=0.5)
-traindata = training(df2011_split)
-testdata  = testing(df2011_split)
-
-lm1 = glm(opioid ~ VMONTH + VDAYR + AGE + SEX + RACEUN + IMMEDR + PAINSCALE + DISCH7DA, data=traindata)
-traindata <- subset(traindata, select=c(VMONTH,VDAYR,AGE,SEX,RACEUN,IMMEDR,PAINSCALE,DISCH7DA,opioid))
-traindata$lm1_pred = predict(lm1)
-
-# yhat_train = ifelse(predict(lm1) >= 0.5, 1, 0)
-traindata$yhat_train = ifelse(predict(lm1) >= 0.20, 1, 0)
-table(opioid=traindata$opioid, yhat=traindata$yhat_train)
-
-sum(traindata$opioid)
-sum(traindata$yhat_train)
-max(traindata$lm1_pred)
-#######################################################################################################
