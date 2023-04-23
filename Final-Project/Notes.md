@@ -22,7 +22,7 @@ This section provides an overview of the methodology used for analysis including
 * Data was downloaded for 2013-2019. The default file format is .dta (STATA dataset). Each year contains about 20,000 observations across 1000 variables including information on the prescription of opioids. 
 * Pre-processing was done in STATA using a [cleaning script](google.com) provided by the CDC and then the files were exported as .csv’s in order to process them in R. 
 * In order to reproduce the results, save the csv files were saved locally due to their size and then run [data_cleaning.r](https://github.com/pranjalmaheshka/eco395m-sp23-DataMining/blob/main/Final-Project/data_cleaning.R). This file subsets the data down to relevant socio-demographic features, medical diagnoses, patient’s medical history, and type of care provided. 
-+ Information about prescribed medication is cross-referenced with CDC data to determine which patients were given opioids including type and potency which were saved as `opioid` (=1 if prescribed an opioid), `potency` (measured relative to morphine = 1), `opioids` (total number of opioids prescribed). Two opioid classification information files needed to the data cleaning script can be found [here]( https://github.com/pranjalmaheshka/eco395m-sp23-DataMining/tree/main/Final-Project/data). 
++ Information about prescribed medication is cross-referenced with CDC data to determine which patients were given opioids including type and potency which were saved as `opioid` (=1 if prescribed an opioid), `potency` (measured relative to morphine = 1), `opioids` (total number of opioids prescribed). Two opioid classification information files needed to run the data cleaning script can be found [here]( https://github.com/pranjalmaheshka/eco395m-sp23-DataMining/tree/main/Final-Project/data). 
 * The final cleaned file is available [here]( https://github.com/pranjalmaheshka/eco395m-sp23-DataMining/tree/main/Final-Project/data). 
 The final data set includes 145,630 observations across 94 variables including 3 opioid variables generated. 
 
@@ -50,12 +50,15 @@ Table 4: Confusion matrix for 2013-2016 (until Feb) data or all data 2013-2017
 ### Random Forests
 ### Logistic Regression 
 ### Plots
-•	Discuss why RF is not working
+•	Discuss why RF is not working  
+
 •	Discuss confusion matrix for 2018-19 data in detail then discuss it for 2013-17 and say why our analysis is not significant given the error rates
 
 ## Conclusion
 The opioid crisis has seen some respite by the suits against both manufacturers like Johnson & Johnson ([$26 billion settlement in 2021]( https://www.naag.org/issues/opioids/)) and retailers like Walmart ([$3.1 billion settlement in 2022]( https://www.nytimes.com/2022/11/15/health/walmart-opioids-settlement.html)) and some relief with changing prescription guidelines, the development of non-opioid pain relievers, and general awareness amongst the general public and medical practitioners. 
+
 •	Our model build process and drawbacks
+
 •	Main takeaways
 
 #### Future Considerations
