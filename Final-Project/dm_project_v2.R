@@ -67,14 +67,17 @@ plot(load.forest)
 
 modelr::rmse(load.forest, testdata) 
 
-# variable importance measures
+# Variable importance measures
+
 vi = varImpPlot(load.forest, type=1)
 
-# partial dependence plots
+# Partial dependence plots
+
 partialPlot(load.forest, testdata, 'PAINSCALE', las=1)
 partialPlot(load.forest, testdata, 'AGE', las=1)
 
 
+## Confusion matrix (we need to decide cutoff)
 
 testdata$predict_opioid = predict(load.forest, testdata)
 
@@ -84,11 +87,12 @@ testdata = testdata %>%
 
 table(real_opioid=testdata$opioid, predict_opioid=testdata$predict_opioid)
 
-############
+##############################################################################
+
 #Look at false negatives in the pre-2016 data
 
 pre16_df= opioid_df %>%
-  filter(pre2016== 1)
+   filter(pre2016== 1)
 
 pre16_df$predict_opioid = predict(load.forest, pre16_df)
 
@@ -97,6 +101,15 @@ pre16_df = pre16_df %>%
          false_neg = ifelse(predict_opioid < opioid, 1, 0))
 
 table(real_opioid=pre16_df$opioid, predict_opioid=pre16_df$predict_opioid)
+
+
+
+
+
+
+
+
+
 
 pre16_df %>%
   filter(false_neg == 1) %>%
