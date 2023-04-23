@@ -108,6 +108,34 @@ partialPlot(load.forest, testdata, 'PAINSCALE', las=1)
 
 ```
 
+```{r random_forests_treshold, include=TRUE}
+testdata$predict_opioid = predict(load.forest, testdata)
+
+## F1 test to choose treshhold
+x <- factor(testdata$opioid)
+y <- factor(testdata$predict_opioid)
+
+confusionMatrix(y, x, mode = "everything", positive="1")
+
+testdata = testdata %>%
+  mutate(predict_opioid = ifelse(predict_opioid >= 0.17, 1, 0), 
+         false_neg = ifelse(predict_opioid < opioid, 1, 0))
+
+table(real_opioid=testdata$opioid, predict_opioid=testdata$predict_opioid)
+
+## ROC Curve
+
+#w <- (testdata$opioid)
+#z <- (testdata$predict_opioid)
+#rocdata <- data.frame(w,z)
+#roc.plot(rocdata$w, rocdata$z, show.thres=FALSE)
+
+
+```
+
+
+
+
 ## Conclusion
 The opioid crisis has seen some respite by the suits against both manufacturers like Johnson & Johnson ([$26 billion settlement in 2021]( https://www.naag.org/issues/opioids/)) and retailers like Walmart ([$3.1 billion settlement in 2022]( https://www.nytimes.com/2022/11/15/health/walmart-opioids-settlement.html)) and some relief with changing prescription guidelines, the development of non-opioid pain relievers, and general awareness amongst the general public and medical practitioners. 
 
