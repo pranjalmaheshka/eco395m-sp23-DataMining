@@ -105,7 +105,7 @@ opioid_df = opioid_df %>%
 ## Results 
 
 
-```{r random_forests1, include=TRUE, warning=FALSE, echo=FALSE}
+```{r random_forests1, include=TRUE, warning=FALSE, echo=FALSE, cache=TRUE}
 opioid_model = subset(opioid_df, YEAR== 2018 | YEAR==2019)
 opioid_model = na.omit(opioid_model)
 opioid_split =  initial_split(opioid_model, prop=0.8)
