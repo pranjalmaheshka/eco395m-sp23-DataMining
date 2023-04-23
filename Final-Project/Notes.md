@@ -13,25 +13,31 @@
   
 Opioids provides a very effective treatment for chronic and acute pain, but they are also the cause of one of the biggest public health crisis in recent years. According to the Centers for Disease Control and Prevention (CDC), around half a million deaths were caused by opioids overdose from 1999–2020, including prescribed and illegal opioids. 
 
-Risks  of opioid therapy for chronic pain, 
 
 First contact at ED. ED increase risk of overuse.
 
 Using data from the National Hospital Ambulatory Medical Care Survey (NHAMCS),
 
 
-### Opioid Crisis
+### Overview of 2016 CDC Guidelines
+
+### The Opioid Crisis 
 
 
 ## Methodology 
-### Data Collection 
-### Data Processing
-### Running Code
+This section provides an overview of the methodology used for analysis including steps on data collection, processing, and running the predictive models to replicate our results. 
+### Data Collection and Processing
+[Source]( https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NHAMCS/): National Hospital Ambulatory Medical Care Survey (NHAMCS)
+•	Data was downloaded for 2013-2019. The default file format is .dta (STATA dataset).
+•	Pre-processing was done in STATA using a [cleaning script](google.com) provided by the CDC and then the files were exported as .csv’s in order to process them in R
+•	In order to reproduce the results, save the csv files were saved locally due to their size and then run [data_cleaning.r]( https://github.com/pranjalmaheshka/eco395m-sp23-DataMining/blob/main/Final-Project/data_cleaning.R). The final cleaned file is available [here]( https://github.com/pranjalmaheshka/eco395m-sp23-DataMining/tree/main/Final-Project/data) 
 
-## ML Model 1
+### Model Selection
 
-## ML Model 2
 
-## Plots
+## Analysis
+### Random Forests
+### Logistic Regression 
+### Plots
 
-## Reproducing Code
+## Conclusion
