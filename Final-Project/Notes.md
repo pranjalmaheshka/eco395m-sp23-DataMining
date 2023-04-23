@@ -19,6 +19,7 @@ This section provides an overview of the methodology used for analysis including
 
 ### Data Collection and Processing
 [Source]( https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Datasets/NHAMCS/): National Hospital Ambulatory Medical Care Survey (NHAMCS)
+* The National Hospital Ambulatory Medical Care Survey (NHAMCS) collects data on the utilization and provision of ambulatory care services in hospital emergency and outpatient departments and ambulatory surgery locations. This is a national sample of visits to the emergency departments,  outpatient departments, and ambulatory surgery locations of noninstitutional general and short-stay hospitals.
 * Data was downloaded for 2013-2019. The default file format is .dta (STATA dataset). Each year contains about 20,000 observations across 1000 variables including information on the prescription of opioids. 
 * Pre-processing was done in STATA using a [cleaning script](https://github.com/pranjalmaheshka/eco395m-sp23-DataMining/tree/main/Final-Project/stata) provided by the CDC and then the files were exported as .csv’s in order to process them in R. 
 * In order to reproduce the results, save the csv files were saved locally due to their size and then run [data_cleaning.r](https://github.com/pranjalmaheshka/eco395m-sp23-DataMining/blob/main/Final-Project/data_cleaning.R). This file subsets the data down to relevant socio-demographic features, medical diagnoses, patient’s medical history, and type of care provided. 
