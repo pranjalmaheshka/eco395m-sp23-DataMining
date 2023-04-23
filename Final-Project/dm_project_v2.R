@@ -93,6 +93,13 @@ vi = varImpPlot(load.forest, type=1)
 partialPlot(load.forest, testdata, 'PAINSCALE', las=1)
 partialPlot(load.forest, testdata, 'AGE', las=1)
 
+## ROC Curve
+
+x <- testdata$opioid
+y <- testdata$predict_opioid
+rocdata <- data.frame(x,y)
+roc.plot(rocdata$x, rocdata$y, show.thres=FALSE)
+
 
 ## Confusion matrix (we need to decide cutoff)
 
