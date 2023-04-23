@@ -38,19 +38,21 @@ The final data set includes 145,630 observations across 94 variables including 3
 
 ## Analysis
 ### Summary Statistics
-Opioid prescriptions have been trending downward since 2013. The CDC guidelines  
-
-**insert plot here** 
-
+Opioid prescriptions have been trending downward since 2013. The CDC guidelines do seem to affect the slope of the downward trend significantly in 2016 or 2017. 2018-19 see more stable levels of opioid prescriptions as seen below. 
 *Plot: Opioid Prescriptions from 2013-2019*
 
-Note: No more than 4-6 plots or tables  
-Plot 1: Variable Importance Plot  
-Plot 2: Faceted partial dependence plot with age and painscale   
-Table 3: Confusion matrix for 2018-2019 data  
-Table 4: Confusion matrix for 2013-2016 (until Feb) data or all data 2013-2017  
 
-### Random Forests
+Note: No more than 4-6 plots or tables
+Plot 1: Variable Importance Plot
+Plot 2: Faceted partial dependence plot with age and painscale 
+Table 3: Confusion matrix for 2018-2019 data
+Table 4: Confusion matrix for 2013-2016 (until Feb) data or all data 2013-2017
+
+### Random Forests  
+*Plot: Variable Importance Plot*
+
+*Plot: Partial Dependence Plot for Age, Painscale, Primary Patient Diagnosis* 
+
 ### Logistic Regression 
 ### Plots
 •	Discuss why RF is not working  
