@@ -9,9 +9,11 @@ library(rsample)
 library(randomForest)
 library(lubridate)
 library(modelr)
+library(verification)
+library(gamlr)
 
 setwd = ("C:/Users/pranj/Documents/Final-Project-Data/") #Pranjal
-setwd = ("C:/Users/ACER/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/") #Pranjal
+setwd = ("C:/Users/ACER/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/") #Marco
 setwd("C:/Users/ashac/OneDrive/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/")
 opioid_df = read.csv("data/data_final.csv") 
 
@@ -46,14 +48,29 @@ opioid_df = opioid_df %>%
          PAYMCARE = ifelse(PAYMCARE == "Yes", 1, 0),
          PAYPRIV = ifelse(PAYPRIV == "Yes", 1, 0))
 
+###Opioid prescription plot
+
+opioid_df %>%
+  group_by(YEAR) %>%
+  summarize(perc_opioid = mean(opioid)*100) %>%
+  ggplot() +
+  geom_col(aes(x=YEAR, y=perc_opioid))
+
+
 ##### POST Regulation modelling #####
 opioid_model = subset(opioid_df, YEAR == 2018 | YEAR == 2019)
-opioid_model = subset(opioid_model, select=-c(DIAG2, DIAG3))
+opioid_model = opioid_model%>%
+  mutate(DIAG1 = ifelse(is.na(DIAG1), "BLANK", DIAG1))
+opioid_model = opioid_model%>%
+  mutate(DIAG2 = ifelse(is.na(DIAG2), "BLANK", DIAG2))
+opioid_model = opioid_model%>%
+  mutate(DIAG3 = ifelse(is.na(DIAG3), "BLANK", DIAG3))
 opioid_model = na.omit(opioid_model)
 opioid_split =  initial_split(opioid_model, prop=0.8)
 traindata = training(opioid_split)
 testdata  = testing(opioid_split)
 
+#### Random forest
 load.forest = randomForest(opioid ~ . -RFV1
                            -RFV2 - RFV3 -opioids
                            -PAYPRIV - PAYMCARE - PAYMCAID - PAYWKCMP
