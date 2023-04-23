@@ -5,13 +5,13 @@
 ---  
 
 ## Abstract
-The opioid epidemic in the United States is a problem that has only recently seen sharper corrective action including the 2016 CDC guidelines on opioid prescription. Using CDC data, we developed a random forests model and a logistic regression model to predict opioid prescription during 2018-19. These models were then used to predict prescriptions from 2013-2016 and the difference between actual data and the model’s predictions were used to determine the overprescription of opioids. The most important variables were determined to be age, reported painscale, and pre-existing chronic conditions. The model had **low specificity** and was unsuccessful at predictions, likely attributed to the unexplained variation in patient characteristics not captured by the data set or due to inherent randomness in opioid prescriptions that were conducted without a formal framework. 
+The opioid epidemic in the United States is a problem that has only recently seen sharper corrective action including the 2016 CDC guidelines on opioid prescription. Using CDC data, we developed a random forests model and a logistic regression model to predict opioid prescription during 2018-19. These models were then used to predict prescriptions from 2013-2016 and the difference between actual data and the model’s predictions were used to determine the overprescription of opioids. The most important variables were determined to be age, reported painscale, and pre-existing chronic conditions. The model had **low specificity** and was unsuccessful at predictions, likely attributed to the unexplained variation in patient characteristics not captured by the data set or due to inherent randomness in opioid prescriptions that were conducted without a formal framework. **REVIEW**
 
 ## Introduction
   The overprescription of opioids has become a growing concern in the United States, with an estimated [1.6 million](https://www.hhs.gov/opioids/statistics/index.html#:~:text=Facts%20about%20Drug%20Overdose,epidemic%20data%20from%20the%20CDC) Americans struggling with opioid addiction. There were over [70,000 opioid overdose related deaths in 2021](https://nida.nih.gov/research-topics/trends-statistics/overdose-death-rates). In 2016, the Centers for Disease Control and Prevention (CDC) released [guidelines](https://www.cdc.gov/mmwr/volumes/65/rr/rr6501e1.htm) for prescribing opioids for chronic pain, aiming to address the issue of overprescription. However, the effectiveness of these guidelines in reducing opioid prescriptions and opioid-related harm is yet to be fully understood. In this project, we will use machine learning models in R to analyze the impact of the 2016 CDC guidelines (treated as the correct standard for prescription in our approach) on opioid prescription rates and the associated harm. We will explore various factors that contribute to overprescription of opioids, such as patient socio-demographics, medical conditions, diagnoses, and treatment characteristics. The goal of this project is to train a model on data after the CDC published new guidelines and then use this model to find the level of over-prescription of opioids in the previous years.  
 
 #### Overview of 2016 CDC Guidelines
-The CDC guidelines for prescribing opioids for chronic pain, published in 2016, provide recommendations to healthcare providers to improve patient safety and reduce the risk of opioid-related harms. The guidelines recommend the use of non-opioid therapies as the preferred treatment for chronic pain and suggest that opioids should only be prescribed after considering other treatment options. The guidelines also recommend that healthcare providers establish treatment goals and regularly monitor patients for benefits and harms of opioid therapy. Additionally, the guidelines suggest limiting the duration of opioid therapy to three days or less for acute pain and to the lowest effective dose for chronic pain. Finally, the guidelines provide recommendations for mitigating the risks associated with opioid therapy, such as using prescription drug monitoring programs and assessing patients for risk factors for opioid misuse or addiction.
+The CDC guidelines for prescribing opioids for chronic pain, published in March 2016, provide recommendations to healthcare providers to improve patient safety and reduce the risk of opioid-related harms. The guidelines recommend the use of non-opioid therapies as the preferred treatment for chronic pain and suggest that opioids should only be prescribed after considering other treatment options. The guidelines also recommend that healthcare providers establish treatment goals and regularly monitor patients for benefits and harms of opioid therapy. Additionally, the guidelines suggest limiting the duration of opioid therapy to three days or less for acute pain and to the lowest effective dose for chronic pain. Finally, the guidelines provide recommendations for mitigating the risks associated with opioid therapy, such as using prescription drug monitoring programs and assessing patients for risk factors for opioid misuse or addiction.
 
 
 ## Methodology 
@@ -28,15 +28,19 @@ The final data set includes 145,630 observations across 94 variables including 3
 
 ### Model Selection
 1.	Random Forests: Chosen because it adds more randomness to our sample data the way we would expect to see in the real world. We consider a total of 83 features in the final model design so using random forests helps subset the number of features. 
-2.	Logistic Regression: Chosen because a binary outcome is being considered here which is whether an opioid was prescribed or not.   
+2.	Logistic Regression: Chosen because a binary outcome is being considered here which is whether an opioid was prescribed or not.  **REVIEW**
 
-**Model Training: ** The data show that opioid prescriptions are relatively stable in 2018-2019 relative to the previous years. There might be a lag in broader adoption of the 2016 CDC guidelines and the prescriptions drop from 2013-2018. Therefore, 2018-2019 data were taken as “ideal” prescription rates and the model was trained on this data using an 80/20 train test split. The model was then run on data from 2013-2017 to determine overprescription of opioids in the past.   
+**Model Training:** The data show that opioid prescriptions are relatively stable in 2018-2019 relative to the previous years. There might be a lag in broader adoption of the 2016 CDC guidelines and the prescriptions drop from 2013-2018. Therefore, 2018-2019 data were taken as “ideal” prescription rates and the model was trained on this data using an 80/20 train test split. The model was then run on data from 2013-2017 to determine overprescription of opioids in the past.   
 
 **Model Evaluation:** Both models were evaluated using a confusion matrix focusing on their specificity, sensitivity, and precision. **(slide deck 04 – 31) MARCOOOO**
 
-**Performance Optimization: ** XX
+**Performance Optimization:** **MARCOOO**
 
 ## Analysis
+### Summary Statistics
+Opioid prescriptions have been trending downward since 2013. The CDC guidelines 
+*Plot: Opioid Prescriptions from 2013-2019*
+
 Note: No more than 4-6 plots or tables
 Plot 1: Variable Importance Plot
 Plot 2: Faceted partial dependence plot with age and painscale 
@@ -46,7 +50,15 @@ Table 4: Confusion matrix for 2013-2016 (until Feb) data or all data 2013-2017
 ### Random Forests
 ### Logistic Regression 
 ### Plots
+•	Discuss why RF is not working
+•	Discuss confusion matrix for 2018-19 data in detail then discuss it for 2013-17 and say why our analysis is not significant given the error rates
 
 ## Conclusion
+The opioid crisis has seen some respite by the suits against both manufacturers like Johnson & Johnson ([$26 billion settlement in 2021]( https://www.naag.org/issues/opioids/)) and retailers like Walmart ([$3.1 billion settlement in 2022]( https://www.nytimes.com/2022/11/15/health/walmart-opioids-settlement.html)) and some relief with changing prescription guidelines, the development of non-opioid pain relievers, and general awareness amongst the general public and medical practitioners. 
+•	Our model build process and drawbacks
+•	Main takeaways
+
+#### Future Considerations
 
 ## Appendix
+Optional
