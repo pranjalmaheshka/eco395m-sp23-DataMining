@@ -93,6 +93,16 @@ vi = varImpPlot(load.forest, type=1)
 partialPlot(load.forest, testdata, 'PAINSCALE', las=1)
 partialPlot(load.forest, testdata, 'AGE', las=1)
 
+## Confusion matrix (we need to decide cutoff)
+
+testdata$predict_opioid = predict(load.forest, testdata)
+
+testdata = testdata %>%
+  mutate(predict_opioid = ifelse(predict_opioid >= 0.9, 1, 0), 
+         false_neg = ifelse(predict_opioid < opioid, 1, 0))
+
+table(real_opioid=testdata$opioid, predict_opioid=testdata$predict_opioid)
+
 ## ROC Curve
 
 x <- testdata$opioid
@@ -100,16 +110,6 @@ y <- testdata$predict_opioid
 rocdata <- data.frame(x,y)
 roc.plot(rocdata$x, rocdata$y, show.thres=FALSE)
 
-
-## Confusion matrix (we need to decide cutoff)
-
-testdata$predict_opioid = predict(load.forest, testdata)
-
-testdata = testdata %>%
-  mutate(predict_opioid = ifelse(predict_opioid >= 0.20, 1, 0), 
-         false_neg = ifelse(predict_opioid < opioid, 1, 0))
-
-table(real_opioid=testdata$opioid, predict_opioid=testdata$predict_opioid)
 
 ##############################################################################
 
