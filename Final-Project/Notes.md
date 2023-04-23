@@ -28,9 +28,12 @@ The final data set includes 145,630 observations across 94 variables including 3
 
 ### Model Selection
 1.	Random Forests: Chosen because it adds more randomness to our sample data the way we would expect to see in the real world. We consider a total of 83 features in the final model design so using random forests helps subset the number of features. 
-2.	Logistic Regression: Chosen because a binary outcome is being considered here which is whether an opioid was prescribed or not. 
+2.	Logistic Regression: Chosen because a binary outcome is being considered here which is whether an opioid was prescribed or not.   
+
 **Model Training: ** The data show that opioid prescriptions are relatively stable in 2018-2019 relative to the previous years. There might be a lag in broader adoption of the 2016 CDC guidelines and the prescriptions drop from 2013-2018. Therefore, 2018-2019 data were taken as “ideal” prescription rates and the model was trained on this data using an 80/20 train test split. The model was then run on data from 2013-2017 to determine overprescription of opioids in the past.   
+
 **Model Evaluation:** Both models were evaluated using a confusion matrix focusing on their specificity, sensitivity, and precision. **(slide deck 04 – 31) MARCOOOO**
+
 **Performance Optimization: ** XX
 
 ## Analysis
