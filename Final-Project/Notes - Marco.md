@@ -20,7 +20,10 @@ Additionally, we present here some popular metrics obtained from the results of 
 
 The purpose of this segment is to identify probable systematic overprescription to a specific types of people in the pre 2016 Guideline period. Therefore, we apply our prediction model, trained and tested with 2018 and 2019 data, to the initial period from 2013 to February 2016. This subset of our date contains 72,199 observations.
 
-?Confusion matrix
+|       |$\hat y=0$|$\hat y=1$  |   
+| ----- |:------:|:------:| 
+|$y=0$	|  5664      |    1794    |
+|$y=1$  |  227      |   226      |
 
 After that, we define the group of the overprescribed patients as patients who received a prescription but should not have received it according to the prediction of our model. In addition, we define a second group of patients, accurately non prescribed, that includes people who did not receive an opioid prescription and our model also predict they should not have received one.
 
