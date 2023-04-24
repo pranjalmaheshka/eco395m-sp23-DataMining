@@ -81,7 +81,7 @@ load.forest = randomForest(opioid ~ . -ETHUN-PATCODE-BDATEFL-SEXFL
 #plot(load.forest)
 
 
-modelr::rmse(load.forest, testdata) 
+#modelr::rmse(load.forest, testdata) 
 
 # Variable importance measures
 
@@ -109,8 +109,10 @@ y <- testdata$predict_opioid
 rocdata <- data.frame(x,y)
 roc.plot(rocdata$x, rocdata$y, show.thres=FALSE)
 
-
-##############################################################################
+###PUT THIS INTO THE RMD FILE#################################################
+####IT'S NOT THERE YET!!!!####################################################
+###EVERYTHING BELOW THIS COPY/PASTE ##########################################
+############################################################################## 
 
 #Look at false negatives in the pre-2016 data
 
@@ -172,5 +174,5 @@ df = tribble(~Outcome, ~Falsely_Prescribed, ~Correct_Nonprescribed,
         '% Asian', false$perc_asian, correct$perc_asian,
         '% Hispanic', false$perc_hisp, correct$perc_hisp)
 
-df$difference = df$Falsely_Prescribed- df$Correct_Nonprescribed
+df$Difference = df$Falsely_Prescribed- df$Correct_Nonprescribed
 
