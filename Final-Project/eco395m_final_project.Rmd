@@ -111,15 +111,6 @@ load.forest = randomForest(opioid ~ . -ETHUN-PATCODE-BDATEFL-SEXFL
 ```
 
 ```{r random_forests_threshold, include=FALSE}
-## Confusion matrix (we need to decide cutoff)
-# testdata$predict_opioid = predict(load.forest, testdata)
-# 
-# testdata = testdata %>%
-#   mutate(predict_opioid = ifelse(predict_opioid >= 0.17, 1, 0), 
-#          false_neg = ifelse(predict_opioid < opioid, 1, 0))
-# 
-# conf_mat1 = table(real_opioid=testdata$opioid, predict_opioid=testdata$predict_opioid)
-
 testdata$predict_opioid = predict(load.forest, testdata)
 
 testdata = testdata %>%
@@ -183,7 +174,6 @@ The random forest model was run against the data from Jan 2013 - Feb 2016. The f
 # Variable importance measures
 vi = varImpPlot(load.forest, type=1)
 ```
-![](Rplot05.jpeg){height=50%} 
 
 *Plot: Variable Importance Plot for the Random Forest Model showing Age, Medical Diagnostics (like blood pressure), and Painscale as Primary Indicators of Opioid Prescriptions* 
 
