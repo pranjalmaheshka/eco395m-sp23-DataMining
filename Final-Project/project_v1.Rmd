@@ -145,6 +145,17 @@ table(real_opioid=testdata$opioid, predict_opioid=testdata$predict_opioid)
 #rocdata <- data.frame(w,z)
 #roc.plot(rocdata$w, rocdata$z, show.thres=FALSE)
 
+## Sensitivity
+0.42
+
+## Specificity
+0.84
+
+## Precision : 
+0.13148        
+## Recall : 
+
+0.42271
 
 ```
 
