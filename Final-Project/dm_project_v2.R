@@ -30,7 +30,7 @@ factor(opioid_df$ETHUN)
 factor(opioid_df$CEBVD)
 factor(opioid_df$EDHIV)
 factor(opioid_df$NOCHRON)
-factor(opioid_df$RFV1)
+
 
 opioid_df$AGE<-ifelse(opioid_df$AGE=="Under one year",1, opioid_df$AGE)
 opioid_df$AGE<-ifelse(opioid_df$AGE=="93 years and over",93, opioid_df$AGE)
@@ -56,6 +56,9 @@ opioid_df = opioid_df%>%
 factor(opioid_df$DIAG1)
 factor(opioid_df$DIAG2)
 factor(opioid_df$DIAG3)
+factor(opioid_df$RFV1)
+factor(opioid_df$RFV2)
+factor(opioid_df$RFV3)
 
 ###Opioid prescription plot
 
