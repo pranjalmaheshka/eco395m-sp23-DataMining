@@ -27,6 +27,7 @@ library(rsample)
 library(randomForest)
 library(lubridate)
 library(modelr)
+library(verification)
 knitr::opts_chunk$set(echo = TRUE)
 
 setwd = ("C:/Users/pranj/Documents/Final-Project-Data/") #Pranjal
@@ -82,21 +83,48 @@ opioid_df$SEX<-ifelse(opioid_df$SEX=="Female",1,0)
 opioid_df$PAINSCALE<-ifelse(opioid_df$PAINSCALE=="Blank"|opioid_df$PAINSCALE=="Unknown",0,opioid_df$PAINSCALE)
 opioid_df$PAINSCALE<-as.numeric(opioid_df$PAINSCALE)
 opioid_df$AGE = as.numeric(opioid_df$AGE)
+
+opioid_df = opioid_df %>%
+  mutate(DIAG1 = ifelse(is.na(DIAG1), "BLANK", DIAG1))
+opioid_df = opioid_df%>%
+  mutate(DIAG2 = ifelse(is.na(DIAG2), "BLANK", DIAG2))
+opioid_df = opioid_df%>%
+  mutate(DIAG3 = ifelse(is.na(DIAG3), "BLANK", DIAG3))
+
+factor(opioid_df$DIAG2)
+factor(opioid_df$DIAG3)
+
+opioid_df = opioid_df %>%
+  mutate(pre2016 = ifelse(YEAR < 2016 | (YEAR==2016 & 
+                                           (VMONTH == 'January' | VMONTH == 'February')), 1, 0),
+         PAYMCARE = ifelse(PAYMCARE == "Yes", 1, 0),
+         PAYPRIV = ifelse(PAYPRIV == "Yes", 1, 0))
+
 ```
 
 ## Results 
 
 
-```{r random_forests1, include=TRUE}
-opioid_model = subset(opioid_df, YEAR == 2018 | YEAR == 2019)
+```{r random_forests1, include=TRUE, warning=FALSE, echo=FALSE, cache=TRUE}
+opioid_model = subset(opioid_df, YEAR== 2018 | YEAR==2019)
+opioid_model = na.omit(opioid_model)
 opioid_split =  initial_split(opioid_model, prop=0.8)
+
 traindata = training(opioid_split)
 testdata  = testing(opioid_split)
 
-load.forest = randomForest(opioid ~ DIAG1 + REGION + MSA + IMMEDR + 
-                             PAYTYPER + PAINSCALE + RACEUN + male,
+load.forest = randomForest(opioid ~ . -RFV1
+                           -RFV2 - RFV3 -opioids
+                           -PAYPRIV - PAYMCARE - PAYMCAID - PAYWKCMP
+                           -PAYSELF - PAYNOCHG - PAYOTH - PAYDK 
+                           -PATCODE - BDATEFL - SEXFL - AGER -YEAR 
+                           -RACER - RACERETH - ETHIM - AGEDAYS 
+                           -potency,
                            data=traindata, importance = TRUE, ntree=100)
-plot(load.forest)
+```
+
+```{r, echo=FALSE, warning=FALSE}
+#plot(load.forest)
 
 modelr::rmse(load.forest, testdata) 
 
@@ -105,6 +133,47 @@ vi = varImpPlot(load.forest, type=1)
 
 # partial dependence plots
 partialPlot(load.forest, testdata, 'PAINSCALE', las=1)
+partialPlot(load.forest, testdata, 'AGE', las=1)
+
+
+testdata$predict_opioidn = predict(load.forest, testdata)
+x <- testdata$opioid
+y <- testdata$predict_opioidn
+rocdata <- data.frame(x,y)
+roc.plot(rocdata$x, rocdata$y, show.thres=FALSE)
+
+```
+
+```{r, echo=FALSE}
+testdata = testdata %>%
+  mutate(predict_opioid = ifelse(predict_opioidn >= 0.4, 1, 0), 
+         false_pos = ifelse(predict_opioid > opioid, 1, 0))
+
+table(real_opioid=testdata$opioid, predict_opioid=testdata$predict_opioid)
+
+#Dumb model is 87.1% accurate
+
+```
+
+```{r, echo=FALSE}
+post16_df= opioid_df %>%
+   filter(YEAR == 2017 | YEAR == 2018 | YEAR == 2019)
+
+post16_df$predict_opioid = predict(load.forest, post16_df)
+
+post16_df = post16_df %>%
+  mutate(predict_opioid = ifelse(predict_opioid >= 0.20, 1, 0), 
+         false_neg = ifelse(predict_opioid < opioid, 1, 0))
+
+table(real_opioid=post16_df$opioid, predict_opioid=post16_df$predict_opioid)
+
+post16_df %>%
+  filter(false_pos == 1) %>%
+  summarize(perc_female = mean(SEX)*100, 
+            mean_age = mean(AGE),
+            perc_mcare = mean(PAYMCARE)*100,
+            perc_privins = mean(PAYPRIV)*100,
+            pain = mean(PAINSCALE))
 
 ```
 
