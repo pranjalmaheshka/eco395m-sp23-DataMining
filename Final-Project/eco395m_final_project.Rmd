@@ -107,7 +107,7 @@ load.forest = randomForest(opioid ~ . -ETHUN-PATCODE-BDATEFL-SEXFL
                            -ETHNICFL-RACERFL-RACER-RACERETH-AGEDAYS-AGER-PAYPRIV
                            -PAYMCARE-PAYMCAID-PAYWKCMP-PAYSELF 
                            -PAYNOCHG-PAYOTH-PAYDK-opioid-opioids-potency-pre2016,
-                           data=traindata, importance = TRUE, ntree=5)
+                           data=traindata, importance = TRUE, ntree=100)
 ```
 
 ```{r random_forests_threshold, include=FALSE}
