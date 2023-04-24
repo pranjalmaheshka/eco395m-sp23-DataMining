@@ -18,6 +18,19 @@ Additionally, we present here some popular metrics obtained from the results of 
 
 **The overprescribed and the accurately non prescribed**
 
+The purpose of this segment is to identify probable systematic overprescription to a specific types of people in the pre 2016 Guideline period. Therefore, we apply our prediction model, trained and tested with 2018 and 2019 data, to the initial period from 2013 to February 2016. This subset of our date contains 72,199 observations.
+
+?Confusion matrix
+
+After that, we define the group of the overprescribed patients as patients who received a prescription but should not have received it according to the prediction of our model. In addition, we define a second group of patients, accurately non prescribed, that includes people who did not receive an opioid prescription and our model also predict they should not have received one.
+
+Having identified these two groups of patients, we proceed to calculate summary statistics of some variables we consider relevant. Our initial assumption is that we should not observed differences in these summary statistics for these two groups and The results are presented in the table below.
+
+
+
+
+
+
 The comparative stats code of the overprescribed and the accurately non prescribed is done also. 
 If we're systematically overprescribing to a specific type of people, it'll show up as a difference
 
