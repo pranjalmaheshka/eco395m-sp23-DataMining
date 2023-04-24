@@ -17,24 +17,21 @@ setwd = ("C:/Users/ACER/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/"
 setwd("C:/Users/ashac/OneDrive/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/")
 opioid_df = read.csv("data/data_final.csv") 
 
+#opioid-opioids-potency-pre2016
+
 factor(opioid_df$VDAYR)
 factor(opioid_df$VMONTH)
-factor(opioid_df$RACEUN)
-factor(opioid_df$IMMEDR)
-
-factor(opioid_df$PAYTYPER)
 factor(opioid_df$RESIDNCE)
+opioid_df$SEX<-ifelse(opioid_df$SEX=="Female",1,0)
+factor(opioid_df$RACEUN)
 factor(opioid_df$REGION)
-factor(opioid_df$ETHUN)
-
-factor(opioid_df$CEBVD)
-factor(opioid_df$EDHIV)
-factor(opioid_df$NOCHRON)
+factor(opioid_df$ETHIM)
+factor(opioid_df$IMMEDR)
+factor(opioid_df$PAYTYPER)
 
 
 opioid_df$AGE<-ifelse(opioid_df$AGE=="Under one year",1, opioid_df$AGE)
 opioid_df$AGE<-ifelse(opioid_df$AGE=="93 years and over",93, opioid_df$AGE)
-opioid_df$SEX<-ifelse(opioid_df$SEX=="Female",1,0)
 
 opioid_df$PAINSCALE<-ifelse(opioid_df$PAINSCALE=="Blank"|opioid_df$PAINSCALE=="Unknown",0,opioid_df$PAINSCALE)
 opioid_df$PAINSCALE<-as.numeric(opioid_df$PAINSCALE)
@@ -77,7 +74,7 @@ traindata = training(opioid_split)
 testdata  = testing(opioid_split)
 
 #### Random forest
-load.forest = randomForest(opioid ~ . -ETHUN-RACEUN-PATCODE-BDATEFL-SEXFL
+load.forest = randomForest(opioid ~ . -ETHUN-PATCODE-BDATEFL-SEXFL
                            -ETHNICFL-RACERFL-RACER-RACERETH-AGEDAYS-AGER-PAYPRIV
                            -PAYMCARE-PAYMCAID-PAYWKCMP-PAYSELF 
                            -PAYNOCHG-PAYOTH-PAYDK-opioid-opioids-potency-pre2016,
