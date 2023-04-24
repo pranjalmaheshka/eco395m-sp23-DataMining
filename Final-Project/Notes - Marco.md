@@ -22,8 +22,8 @@ The purpose of this segment is to identify probable systematic overprescription 
 
 |       |$\hat y=0$|$\hat y=1$  |   
 | ----- |:------:|:------:| 
-|$y=0$	|  5664      |    1794    |
-|$y=1$  |  227      |   226      |
+|$y=0$	|  5664  |    1794|
+|$y=1$  |  227   |   226  |
 
 After that, we define the group of the overprescribed patients as patients who received a prescription but should not have received it according to the prediction of our model. In addition, we define a second group of patients, accurately non prescribed, that includes people who did not receive an opioid prescription and our model also predict they should not have received one.
 
