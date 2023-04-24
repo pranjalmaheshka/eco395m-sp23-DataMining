@@ -8,7 +8,7 @@ library(dplyr)
 
 starttime = Sys.time()
 
-# setwd("C:/Users/ACER/Desktop/Stats Learning/Project")
+# Download CDC data and change to your local directory
 setwd("C:/Users/pranj/Documents/Final-Project-Data")
 
 #sources: https://www.ncbi.nlm.nih.gov/books/NBK537482/table/appannex6.tab2/
@@ -162,8 +162,6 @@ remove(df2013, df2014, df2015, df2016, df2017, df2018, df2019)
 
 #######################################################################################################################
 ## Opioid Classification
-setwd("C:/Users/pranj/Documents/GitHub/eco395m-sp23-DataMining/Final-Project")
-
 fentanyl = "d00233"
 buprenorphine = "d00840"
 hydromorphone = "d00255"
