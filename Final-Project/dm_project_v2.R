@@ -12,9 +12,11 @@ library(modelr)
 library(verification)
 library(gamlr)
 
+t1 = Sys.time()
+
 setwd = ("C:/Users/pranj/Documents/Final-Project-Data/") #Pranjal
 setwd = ("C:/Users/ACER/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/") #Marco
-setwd("C:/Users/ashac/OneDrive/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/")
+setwd = ("C:/Users/ashac/OneDrive/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/")
 opioid_df = read.csv("data/data_final.csv") 
 
 
@@ -55,7 +57,7 @@ factor(opioid_df$RFV1)
 factor(opioid_df$RFV2)
 factor(opioid_df$RFV3)
 
-###Opioid prescription plot
+## Opioid prescription plot
 
 opioid_df %>%
   group_by(YEAR) %>%
@@ -76,7 +78,7 @@ load.forest = randomForest(opioid ~ . -ETHUN-PATCODE-BDATEFL-SEXFL
                            -ETHNICFL-RACERFL-RACER-RACERETH-AGEDAYS-AGER-PAYPRIV
                            -PAYMCARE-PAYMCAID-PAYWKCMP-PAYSELF 
                            -PAYNOCHG-PAYOTH-PAYDK-opioid-opioids-potency-pre2016,
-                           data=traindata, importance = TRUE, ntree=5)
+                           data=traindata, importance = TRUE, ntree=100)
 
 #plot(load.forest)
 
@@ -176,3 +178,5 @@ df = tribble(~Outcome, ~Falsely_Prescribed, ~Correct_Nonprescribed,
 
 df$Difference = df$Falsely_Prescribed- df$Correct_Nonprescribed
 
+t2 = Sys.time()
+t2-t1

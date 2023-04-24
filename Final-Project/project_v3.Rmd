@@ -4,8 +4,10 @@ author: "Pranjal Maheshka, Asha Christensen, Marco Navarro"
 date: "2023-04-24"
 output: pdf_document
 ---
-```{r}
+```{r test1}
 startt=Sys.time()
+# rmarkdown::render("project_v3.Rmd")
+load(file = "data1.RData")
 ```
 
 ## Abstract
@@ -18,7 +20,7 @@ The overprescription of opioids has become a growing concern in the United State
 The CDC guidelines for prescribing opioids for chronic pain, published in March 2016, provide recommendations to healthcare providers to improve patient safety and reduce the risk of opioid-related harms. The guidelines recommend the use of non-opioid therapies as the preferred treatment for chronic pain and suggest that opioids should only be prescribed after considering other treatment options. The guidelines also recommend that healthcare providers establish treatment goals and regularly monitor patients for benefits and harms of opioid therapy. Additionally, the guidelines suggest limiting the duration of opioid therapy to three days or less for acute pain and to the lowest effective dose for chronic pain. Finally, the guidelines provide recommendations for mitigating the risks associated with opioid therapy, such as using prescription drug monitoring programs and assessing patients for risk factors for opioid misuse or addiction.
 
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, eval = FALSE}
 library(ggplot2)
 library(dplyr)
 library(rsample)
@@ -51,7 +53,7 @@ This section provides an overview of the methodology used for analysis including
 + Information about prescribed medication is cross-referenced with CDC data to determine which patients were given opioids including type and potency which were saved as `opioid` (=1 if prescribed an opioid), `potency` (measured relative to morphine = 1), `opioids` (total number of opioids prescribed). Two opioid classification information files needed to run the data cleaning script can be found [here]( https://github.com/pranjalmaheshka/eco395m-sp23-DataMining/tree/main/Final-Project/data). 
 * The final cleaned file is available [here]( https://github.com/pranjalmaheshka/eco395m-sp23-DataMining/tree/main/Final-Project/data). 
 The final data set includes 145,630 observations across 94 variables including 3 opioid variables generated. 
-```{r data_wrangling, include=FALSE}
+```{r data_wrangling, include=FALSE, cache=TRUE, eval = FALSE}
 factor(opioid_df$VDAYR)
 factor(opioid_df$VMONTH)
 factor(opioid_df$RESIDNCE)
@@ -90,7 +92,7 @@ factor(opioid_df$RFV2)
 factor(opioid_df$RFV3)
 ```
 
-```{r random_forests1, include=TRUE, warning=FALSE, echo=FALSE, cache=TRUE}
+```{r random_forests1, include=TRUE, warning=FALSE, echo=FALSE, cache=TRUE, eval = FALSE}
 ##### POST Regulation modelling #####
 opioid_model = subset(opioid_df, YEAR == 2018 | YEAR == 2019)
 opioid_model = na.omit(opioid_model)
