@@ -113,15 +113,39 @@ opioid_split =  initial_split(opioid_model, prop=0.8)
 traindata = training(opioid_split)
 testdata  = testing(opioid_split)
 
-load.forest = randomForest(opioid ~ . -RFV1
-                           -RFV2 - RFV3 -opioids
-                           -PAYPRIV - PAYMCARE - PAYMCAID - PAYWKCMP
-                           -PAYSELF - PAYNOCHG - PAYOTH - PAYDK 
-                           -PATCODE - BDATEFL - SEXFL - AGER -YEAR 
-                           -RACER - RACERETH - ETHIM - AGEDAYS 
-                           -potency,
+#### Random forest
+load.forest = randomForest(opioid ~ . -ETHUN-PATCODE-BDATEFL-SEXFL
+                           -ETHNICFL-RACERFL-RACER-RACERETH-AGEDAYS-AGER-PAYPRIV
+                           -PAYMCARE-PAYMCAID-PAYWKCMP-PAYSELF 
+                           -PAYNOCHG-PAYOTH-PAYDK-opioid-opioids-potency-pre2016,
                            data=traindata, importance = TRUE, ntree=100)
 ```
+
+```{r random_forests_treshold, include=TRUE}
+testdata$predict_opioid = predict(load.forest, testdata)
+
+## F1 test to choose treshhold
+x <- factor(testdata$opioid)
+y <- factor(testdata$predict_opioid)
+
+confusionMatrix(y, x, mode = "everything", positive="1")
+
+testdata = testdata %>%
+  mutate(predict_opioid = ifelse(predict_opioid >= 0.17, 1, 0), 
+         false_neg = ifelse(predict_opioid < opioid, 1, 0))
+
+table(real_opioid=testdata$opioid, predict_opioid=testdata$predict_opioid)
+
+## ROC Curve
+
+#w <- (testdata$opioid)
+#z <- (testdata$predict_opioid)
+#rocdata <- data.frame(w,z)
+#roc.plot(rocdata$w, rocdata$z, show.thres=FALSE)
+
+
+```
+
 
 ```{r, echo=FALSE, warning=FALSE}
 #plot(load.forest)
@@ -174,31 +198,6 @@ post16_df %>%
             perc_mcare = mean(PAYMCARE)*100,
             perc_privins = mean(PAYPRIV)*100,
             pain = mean(PAINSCALE))
-
-```
-
-```{r random_forests_treshold, include=TRUE}
-testdata$predict_opioid = predict(load.forest, testdata)
-
-## F1 test to choose treshhold
-x <- factor(testdata$opioid)
-y <- factor(testdata$predict_opioid)
-
-confusionMatrix(y, x, mode = "everything", positive="1")
-
-testdata = testdata %>%
-  mutate(predict_opioid = ifelse(predict_opioid >= 0.17, 1, 0), 
-         false_neg = ifelse(predict_opioid < opioid, 1, 0))
-
-table(real_opioid=testdata$opioid, predict_opioid=testdata$predict_opioid)
-
-## ROC Curve
-
-#w <- (testdata$opioid)
-#z <- (testdata$predict_opioid)
-#rocdata <- data.frame(w,z)
-#roc.plot(rocdata$w, rocdata$z, show.thres=FALSE)
-
 
 ```
 
