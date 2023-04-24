@@ -14,11 +14,10 @@ library(gamlr)
 
 t1 = Sys.time()
 
-setwd = ("C:/Users/pranj/Documents/Final-Project-Data/") #Pranjal
-setwd = ("C:/Users/ACER/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/") #Marco
-setwd = ("C:/Users/ashac/OneDrive/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/")
+setwd = ("C:/Users/pranj/Documents/GitHub/eco395m-sp23-DataMining/Final-Project") #Pranjal
+# setwd = ("C:/Users/ACER/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/") #Marco
+# setwd = ("C:/Users/ashac/OneDrive/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/") #Asha
 opioid_df = read.csv("data/data_final.csv") 
-
 
 factor(opioid_df$VDAYR)
 factor(opioid_df$VMONTH)
