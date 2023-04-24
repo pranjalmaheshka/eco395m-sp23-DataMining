@@ -17,7 +17,6 @@ setwd = ("C:/Users/ACER/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/"
 setwd("C:/Users/ashac/OneDrive/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/")
 opioid_df = read.csv("data/data_final.csv") 
 
-#opioid-opioids-potency-pre2016
 
 factor(opioid_df$VDAYR)
 factor(opioid_df$VMONTH)
@@ -28,7 +27,6 @@ factor(opioid_df$REGION)
 factor(opioid_df$ETHIM)
 factor(opioid_df$IMMEDR)
 factor(opioid_df$PAYTYPER)
-
 
 opioid_df$AGE<-ifelse(opioid_df$AGE=="Under one year",1, opioid_df$AGE)
 opioid_df$AGE<-ifelse(opioid_df$AGE=="93 years and over",93, opioid_df$AGE)
@@ -78,7 +76,7 @@ load.forest = randomForest(opioid ~ . -ETHUN-PATCODE-BDATEFL-SEXFL
                            -ETHNICFL-RACERFL-RACER-RACERETH-AGEDAYS-AGER-PAYPRIV
                            -PAYMCARE-PAYMCAID-PAYWKCMP-PAYSELF 
                            -PAYNOCHG-PAYOTH-PAYDK-opioid-opioids-potency-pre2016,
-                           data=traindata, importance = TRUE, ntree=100)
+                           data=traindata, importance = TRUE, ntree=5)
 
 #plot(load.forest)
 
@@ -93,7 +91,6 @@ vi = varImpPlot(load.forest, type=1)
 
 partialPlot(load.forest, testdata, 'PAINSCALE', las=1)
 partialPlot(load.forest, testdata, 'AGE', las=1)
-library(plotmo)
 
 
 ## Confusion matrix (we need to decide cutoff)
@@ -129,20 +126,51 @@ pre16_df = pre16_df %>%
 
 table(real_opioid=pre16_df$opioid, predict_opioid=pre16_df$predict_opioid)
 
-pre16_df %>%
+pre16_df = pre16_df %>%
+  mutate(homeless = ifelse(RESIDNCE == 'Homeless' | RESIDNCE == "Homeless/homeless shelter", 1, 0),
+         hispanic = ifelse(ETHIM == "Hispanic or Latino", 1, 0),
+         black = ifelse(RACEUN == "Black/African American Only", 1, 0),
+         white = ifelse(RACEUN == "White Only", 1, 0),
+         asian = ifelse(RACEUN == "Asian Only", 1, 0))
+
+false = pre16_df %>%
   filter(false_neg == 1) %>%
   summarize(perc_female = mean(SEX)*100, 
-            mean_age = mean(AGE),
+            avg_age = mean(AGE),
             perc_mcare = mean(PAYMCARE)*100,
             perc_privins = mean(PAYPRIV)*100,
-            pain = mean(PAINSCALE))
+            avg_pain = mean(PAINSCALE),
+            perc_homeless = mean(homeless)*100,
+            perc_hisp = mean(hispanic)*100,
+            perc_black = mean(black)*100,
+            perc_white = mean(white)*100,
+            perc_asian = mean(asian)*100)
 
 
-testdata %>%
-  filter(false_neg == 1) %>%
+correct = pre16_df %>%
+  filter(correct_neg == 1) %>%
   summarize(perc_female = mean(SEX)*100, 
-            mean_age = mean(AGE),
+            avg_age = mean(AGE),
             perc_mcare = mean(PAYMCARE)*100,
             perc_privins = mean(PAYPRIV)*100,
-            pain = mean(PAINSCALE))
+            avg_pain = mean(PAINSCALE),
+            perc_homeless = mean(homeless)*100,
+            perc_hisp = mean(hispanic)*100,
+            perc_black = mean(black)*100,
+            perc_white = mean(white)*100,
+            perc_asian = mean(asian)*100)
+
+df = tribble(~Outcome, ~Falsely_Prescribed, ~Correct_Nonprescribed,
+        'Avg. Age', false$avg_age, correct$avg_age,
+        '% Female', false$perc_female, correct$perc_female,
+        '% Medicare', false$perc_mcare, correct$perc_mcare,
+        '% Private Insurance', false$perc_privins, correct$perc_privins,
+        '% Homeless', false$perc_homeless, correct$perc_homeless,
+        'Avg. Pain', false$avg_pain, correct$avg_pain,
+        '% Black', false$perc_black, correct$perc_black,
+        '% White', false$perc_white, correct$perc_white,
+        '% Asian', false$perc_asian, correct$perc_asian,
+        '% Hispanic', false$perc_hisp, correct$perc_hisp)
+
+df$difference = df$Falsely_Prescribed- df$Correct_Nonprescribed
 
