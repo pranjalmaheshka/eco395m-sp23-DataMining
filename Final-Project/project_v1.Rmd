@@ -32,8 +32,8 @@ library(plotmo)
 library(gamlr)
 knitr::opts_chunk$set(echo = TRUE)
 
-setwd = ("C:/Users/pranj/Documents/Final-Project-Data/") #Pranjal
-setwd = ("C:/Users/ashac/OneDrive/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/")
+# setwd = ("C:/Users/pranj/Documents/Final-Project-Data/") #Pranjal
+# setwd = ("C:/Users/ashac/OneDrive/Documents/GitHub/eco395m-sp23-DataMining/Final-Project/")
 opioid_df = read.csv("data/data_final.csv") 
 ```
 
@@ -55,9 +55,31 @@ The final data set includes 145,630 observations across 94 variables including 3
 
 **Model Training:** The data show that opioid prescriptions are relatively stable in 2018-2019 relative to the previous years. There might be a lag in broader adoption of the 2016 CDC guidelines and the prescriptions drop from 2013-2018. Therefore, 2018-2019 data were taken as “ideal” prescription rates and the model was trained on this data using an 80/20 train test split. The model was then run on data from 2013-2017 to determine overprescription of opioids in the past.   
 
-**Model Evaluation:** Both models were evaluated using a confusion matrix focusing on their specificity, sensitivity, and precision. **(slide deck 04 – 31) MARCOOOO**
+**Model Evaluation:** It is worth mentioning that this is an severely imbalanced classification problem, since "Opioid Prescription = 0" is the most likely outcome, with less than 5% of patients getting prescribed an opioid in 2018-2019. Consequently, that percentage sets our baseline or null model, the one that guesses "not opioid prescription" for every observation in the test set.
 
-**Performance Optimization:** **MARCOOO**
+After choosing the optimal threshold, we evaluate the out-of-sample performance of our classifier calculating the confusion matrix,which tabulates predicted status versus true status, for the test set.
+
+*CONFUSION MATRIX HERE*
+
+We can calculate from the table above that our random forest model has an 83% out-of-sample accuracy rate. Therefore, it is worse compared to the null model. A detailed discussion can be found in the next section. 
+
+Additionally, we present here some popular metrics obtained from the results of the confusion matrix. 
+
+* Sensitivity or recall = 0.41
+* Specificity or false positive rate = 0.86
+* Precision = 0.14
+
+
+
+*The overprescribed and the accurately non prescribed**
+
+The purpose of this segment is to identify probable systematic overprescription to a specific types of people in the pre 2016 Guideline period. Therefore, we apply our prediction model, trained and tested with 2018 and 2019 data, to the initial period from 2013 to February 2016. This subset of our date contains 72,199 observations.
+
+*Confusion matrix*
+
+After that, we define the group of the overprescribed patients as patients who received a prescription but should not have received it according to the prediction of our model. In addition, we define a second group of patients, accurately non prescribed, that includes people who did not receive an opioid prescription and our model also predict they should not have received one.
+
+Having identified these two groups of patients, we proceed to calculate summary statistics of some variables we consider relevant. Our initial assumption is that we should not observed differences in these summary statistics for these two groups and The results are presented in the table below.
 
 
 ```{r data_wrangling, include=FALSE}
@@ -136,33 +158,30 @@ confusionMatrix(y, x, mode = "everything", positive="1") ### Best cuttoff 0.17
 
 table(real_opioid=testdata$opioid, predict_opioid=testdata$predict_opioid)
 
-#Dumb model is 87.1% accurate
+# Null model is 95% accurate
 
-## ROC Curve
+## ROC Curve (Now shownin MD file but used for picking threshold)
+# w <- (testdata$opioid)
+# z <- (testdata$predict_opioid)
+# rocdata <- data.frame(w,z)
+# roc.plot(rocdata$w, rocdata$z, show.thres=FALSE)
 
-#w <- (testdata$opioid)
-#z <- (testdata$predict_opioid)
-#rocdata <- data.frame(w,z)
-#roc.plot(rocdata$w, rocdata$z, show.thres=FALSE)
-
-## Sensitivity
-0.42
-
-## Specificity
-0.84
-
-## Precision : 
-0.13148        
-## Recall : 
-
-0.42271
+# ## Sensitivity:
+# 0.42
+# 
+# ## Specificity:
+# 0.84
+# 
+# ## Precision: 
+# 0.13148
+# 
+# ## Recall: 
+# 0.42271
 
 ```
 
 
 ```{r, echo=FALSE, warning=FALSE}
-#plot(load.forest)
-
 modelr::rmse(load.forest, testdata) 
 
 # variable importance measures
@@ -180,9 +199,6 @@ testdata = testdata %>%
          false_pos = ifelse(predict_opioid > opioid, 1, 0))
 
 table(real_opioid=testdata$opioid, predict_opioid=testdata$predict_opioid)
-
-#Dumb model is 87.1% accurate
-
 ```
 
 ```{r, echo=FALSE}
@@ -208,8 +224,7 @@ post16_df %>%
 ```
 
 ```{r}
-#Look at false negatives in the pre-2016 data
-
+## Look at false negatives in the pre-2016 data
 pre16_df= opioid_df %>%
    filter(pre2016== 1)
 
